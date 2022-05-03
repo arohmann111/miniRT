@@ -1,24 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   read_file.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/03 12:57:53 by arohmann          #+#    #+#             */
-/*   Updated: 2022/05/03 15:22:10 by arohmann         ###   ########.fr       */
+/*   Created: 2022/05/03 15:19:09 by arohmann          #+#    #+#             */
+/*   Updated: 2022/05/03 15:34:46 by arohmann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-int	main(int ac, char **av)
+int	read_file(char *file)
 {
-	int fd;
+	FILE	*file;
+	char	*line;
+	int		size;
 	
-	if (ac != 2)
+	line = NULL;
+	size = 0;
+	file = fopen(file, O_RDONLY);
+	if (file == NULL)
 		return (ERROR);
-	read_file(av[1]);
-	
+	while (getline(&line, &size, file) != EOF)
+	{
+		
+	}
 	
 }
