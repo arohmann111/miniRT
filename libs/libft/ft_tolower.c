@@ -1,31 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   read_file.c                                        :+:      :+:    :+:   */
+/*   ft_tolower.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
+/*   By: afrasch <afrasch@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/03 15:19:09 by arohmann          #+#    #+#             */
-/*   Updated: 2022/05/03 15:34:46 by arohmann         ###   ########.fr       */
+/*   Created: 2021/06/17 15:33:30 by afrasch           #+#    #+#             */
+/*   Updated: 2021/10/25 22:06:57 by afrasch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minirt.h"
+#include "libft.h"
 
-int	read_file(char *file)
+/* Converts uppercase to lowercase. */
+int	ft_tolower(int c)
 {
-	FILE	*file;
-	char	*line;
-	int		size;
-	
-	line = NULL;
-	size = 0;
-	file = fopen(file, O_RDONLY);
-	if (file == NULL)
-		return (ERROR);
-	while (getline(&line, &size, file) != EOF)
-	{
-		
-	}
-	
+	if (c > 64 && c < 91)
+		c += 32;
+	return (c);
 }
