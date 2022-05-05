@@ -13,6 +13,8 @@
 
 # define ERROR -1
 # define SUCCESS 0
+# define NEXT_NUM 1
+# define NEXT_SPACE 2
 
 /* enums */
 enum e_object
@@ -65,11 +67,13 @@ typedef struct s_scene
 {
 	int hight;
 	int width;
+	int a_light_c;
 	t_object object;
 }t_scene;
 
 /* prototypes */
 int	read_file(char *file);
+int	print_error(char *err_msg);
 
 
 

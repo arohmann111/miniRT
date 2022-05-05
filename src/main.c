@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/03 12:57:53 by arohmann          #+#    #+#             */
-/*   Updated: 2022/05/03 17:12:37 by afrasch          ###   ########.fr       */
+/*   Updated: 2022/05/05 14:10:41 by arohmann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 int	main(int ac, char **av)
 {
 	if (ac != 2)
-		return (ERROR);
-	read_file(av[1]);
-	
-	
+		return (print_error("wrong number of arguments\nTry: ./miniRT <file.rt>\n"));
+	if (read_file(av[1]) == ERROR)
+		return (print_error("File cannot be read\n"));
+	return (0);
 }
