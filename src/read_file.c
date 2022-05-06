@@ -6,7 +6,7 @@
 /*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/06 11:23:22 by afrasch           #+#    #+#             */
-/*   Updated: 2022/05/06 13:44:21 by afrasch          ###   ########.fr       */
+/*   Updated: 2022/05/06 17:24:33 by afrasch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	print_error(char *err_msg)
 {
-	write(STDERR_FILENO, "Error:", 6);
+	write(STDERR_FILENO, "Error: ", 7);
 	write(STDERR_FILENO, err_msg, ft_strlen(err_msg));
 	return (ERROR);
 }
@@ -41,7 +41,7 @@ int	arrlen(char **arr)
 	return (i);
 }
 
-int	get_colors(t_object *object, char *split_str)
+int	get_colors(t_colors *c, char *split_str)
 {
 	char	**colors;
 	int		i;
@@ -57,6 +57,7 @@ int	get_colors(t_object *object, char *split_str)
 		return (print_error("Wrong number of colors\n"));
 	while (i < 3)
 	{
+		printf("color |%s|\n", colors[i]);
 		rgb[i] = ft_atoi(colors[i], &error);
 		if (error == ERROR)
 			return (print_error("Color can't be converted\n"));
@@ -64,11 +65,13 @@ int	get_colors(t_object *object, char *split_str)
 			return(print_error("Color is not in range\n"));
 		i++;
 	}
-	(void)object;
+	c->r = rgb[0];
+	c->g = rgb[1];
+	c->b = rgb[2];
 	return (0);
 }
 
-int	get_vector(t_object *object, char *split_str, int type)
+int	get_vector(t_vec3d *v, char *split_str, int type)
 {
 	char	**vector;
 	int		i;
@@ -84,6 +87,8 @@ int	get_vector(t_object *object, char *split_str, int type)
 		return (print_error("Wrong number of vector coordinates\n"));
 	while (i < 3)
 	{
+		printf("vector |%s|\n", vector[i]);
+
 		xyz[i] = ft_atod(vector[i], &error);
 		if (error == ERROR)
 			return (print_error("Vector can't be converted\n"));
@@ -100,15 +105,19 @@ int	get_vector(t_object *object, char *split_str, int type)
 		i++;
 	}
 	// normalise();
-	(void)object;
+	v->x = xyz[0];
+	v->y = xyz[1];
+	v->z = xyz[2];
 	return (0);
 }
 
-int get_a_light(t_scene *scene, char **split)
+int get_ambiente(t_scene *scene, char **split)
 {
 	double	ratio;
 	int		error;
 
+	if (scene->ambiente.is_set == true)
+		return (print_error("Ambient light already exists\n"));
 	if (arrlen(split) != 3)
 		return (print_error("Wrong ambient light input\n"));
 	ratio = ft_atod(split[1], &error);
@@ -116,8 +125,10 @@ int get_a_light(t_scene *scene, char **split)
 		return (print_error("Ambient light ratio can't be converted\n"));
 	if (check_range(0.0, 1.0, ratio) == false)
 		return (print_error("Ambient light ratio is not in range\n"));
-	if (get_colors(scene->object->(a_light)data, split[2]) == ERROR)
+	scene->ambiente.ratio = ratio;
+	if (get_colors(&scene->ambiente.colors, split[2]) == ERROR)
 		return (ERROR);
+	scene->ambiente.is_set = true;
 	return (0);
 }
 
@@ -128,18 +139,21 @@ int get_camera(t_scene *scene, char **split)
 
 	field_of_view = 0;
 	error = 0;
+	if (scene->camera.is_set == true)
+		return (print_error("Camera already exists\n"));
 	if (arrlen(split) != 4)
 		return (print_error("Wrong camera input\n"));
-	if (get_vector(scene->object, split[1], COORDINATES) == ERROR)
+	if (get_vector(&scene->camera.pos, split[1], COORDINATES) == ERROR)
 		return (ERROR);
-	if (get_vector(scene->object, split[2], ORIENTATION) == ERROR)
+	if (get_vector(&scene->camera.orient, split[2], ORIENTATION) == ERROR)
 		return (ERROR);
 	field_of_view = ft_atoi(split[3], &error);
 	if (error == ERROR)
 		return (print_error("Field of view can't be converted\n"));
 	if (check_range(0.0, 180.0, (double)field_of_view) == false)
 		return (print_error("Field of view is not in range\n"));
-	//fov in struct speichern
+	scene->camera.fov = field_of_view;
+	scene->camera.is_set = true;
 	return (0);
 }
 
@@ -150,25 +164,76 @@ int	get_light(t_scene *scene, char **split)
 
 	brightness_ratio = 0;
 	error = 0;
+	if (scene->light.is_set == true)
+		return (print_error("Light already exists\n"));
 	if (arrlen(split) != 4)
 		return (print_error("Wrong light input\n"));
-	get_vector(scene->object, split[1], COORDINATES) == ERROR)
+	if (get_vector(&scene->light.pos, split[1], COORDINATES) == ERROR)
 		return (ERROR);
-	brightness_ratio = ft_atoi(split[2], &error);
+	brightness_ratio = ft_atod(split[2], &error);
 	if (error == ERROR)
 		return (print_error("Brightness ratio can't be converted\n"));
 	if (check_range(0.0, 1.0, (double)brightness_ratio) == false)
 		return (print_error("Brightness ratio is not in range\n"));
-	//br in struct abspeichern
-	if (get_colors(scene->object->(light)data, split[3]) == ERROR)
+	//range in print_error angeben
+	scene->light.bright = brightness_ratio;
+	if (get_colors(&scene->light.colors, split[3]) == ERROR)
 		return (ERROR);
+	scene->light.is_set = true;
 	return (0);
+}
+
+int	get_resolution(t_scene *scene, char **split)
+{
+	int	w;
+	int	h;
+	int	error;
+
+	error = 0;
+	if (scene->res.is_set == true)
+		return (print_error("Resolution already exists\n"));
+	if (arrlen(split) != 3)
+		return (print_error("Wrong resolution input\n"));
+	w = ft_atoi(split[1], &error);
+	if (error == ERROR)
+		return (print_error("Width can't be converted\n"));
+	h = ft_atoi(split[2], &error);
+	if (error == ERROR)
+		return (print_error("Height can't be converted\n"));
+	printf("res w |%d| h |%d|\n", w, h);
+	scene->res.width = w;
+	scene->res.height = h;
+	scene->res.is_set = true;
+	return (0);
+}
+
+int get_plane(t_scene *scene, char **split)
+{
+	t_list		*new_elem;
+	t_object	*obj;
+
+	if (arrlen(split) != 4)
+		return (print_error("Wrong plane input\n"));
+	new_elem = ft_lstnew(obj);
+	ft_lstadd_back(&scene->list, new_elem);
+	
+}
+
+int	get_obj(t_scene *scene, char **split)
+{
+	if (split[0][0] == 'p' && split[0][1] == 'l')
+		return (get_plane(scene, split));
+	// if (split[0][0] == 's' && split[0][1] == 'p')
+	// 	return (get_sphere(scene, split));
+	// if (split[0][0] == 'c' && split[0][1] == 'y')
+	// 	return (get_cylinder(scene, split));
+	else
+		return (ERROR);//wrong letter
 }
 
 int	parsing(t_scene *scene, char *line)
 {
 	int i;
-	int a;
 	char **split;
 
 	i = 0;
@@ -177,12 +242,16 @@ int	parsing(t_scene *scene, char *line)
 	split = ft_split(line, ' ');
 	if (split == NULL)
 		return (print_error("Split\n"));
-	if (split[0][0] == 'A')
-		return (get_a_light(scene, split));
-	if (split[0][0] == 'C')
+	else if (split[0][0] == 'A')
+		return (get_ambiente(scene, split));
+	else if (split[0][0] == 'C')
 		return (get_camera(scene, split));
-	if (split[0][0] == 'L')
+	else if (split[0][0] == 'L')
 		return (get_light(scene, split));
+	else if (split[0][0] == 'R')
+		return (get_resolution(scene, split));
+	else
+		return (get_obj(scene, split));
 	return(0);
 }
 
@@ -201,7 +270,9 @@ int	read_file(t_scene *scene, char *file)
 		printf("|%s|\n", line);
 		if (line == NULL)
 			break ;
-		if (line[0] == '#')
+		if (line[ft_strlen(line) - 1] == '\n')
+			line[ft_strlen(line) - 1] = '\0';
+		if (line[0] == '#' || line[0] == '\n' || line[0] == '\0')
 			continue ;
 		if (parsing(scene, line) != 0)
 			return (ERROR);

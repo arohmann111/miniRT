@@ -23,11 +23,8 @@ enum e_object
 {
 	NONE,
 	PLANE,
-	LIGHT,
-	CAMERA,
-	A_LIGHT,
 	SPHERE,
-	CYLINNDER
+	CYLINDER
 };
 
 /* structs */
@@ -38,6 +35,13 @@ typedef struct s_vec3d
 	int	z;
 }t_vec3d;
 
+typedef struct s_colors
+{
+	int	r;
+	int	g;
+	int	b;
+}t_colors;
+
 // typedef struct s_vec2d
 // {
 // 	int	x;
@@ -46,29 +50,72 @@ typedef struct s_vec3d
 
 typedef struct s_sphere
 {
-	t_vec3d coord;
+	double		diameter;
 }t_sphere;
+
+typedef struct s_plane
+{
+	t_vec3d		orient;
+}t_plane;
 
 typedef struct s_cylinder
 {
-	t_vec3d coord;
-	t_vec3d orient;
-	double	diameter;
-	double	hight;
+	t_vec3d		orient;
+	double		diameter;
+	double		hight;
 }t_cylinder;
 
 typedef struct s_object
 {
-	void *data;
-	enum e_object type;
-	struct s_object *next;
+	enum e_object	type;
+	t_vec3d			pos;
+	t_colors		colors;
+	union
+	{
+		t_cylinder	cy;
+		t_sphere	sp;
+		t_plane		pl;
+	};
+	
 }t_object;
+
+typedef struct s_ambiente
+{
+	bool		is_set;
+	double		ratio;
+	t_colors	colors;
+}t_ambiente;
+
+typedef struct s_camera
+{
+	bool		is_set;
+	t_vec3d		pos;
+	t_vec3d		orient;
+	int		fov;
+}t_camera;
+
+typedef struct s_light
+{
+	bool		is_set;
+	t_vec3d		pos;
+	double		bright;
+	t_colors	colors;
+}t_light;
+
+typedef struct s_res
+{
+	bool		is_set;
+	int			width;
+	int			height;
+}t_res;
 
 typedef struct s_scene
 {
-	int hight;
-	int width;
-	t_object object;
+	t_ambiente	ambiente;
+	t_light		light;
+	t_camera	camera;
+	t_res		res;
+	t_list		*list;
 }t_scene;
 
 /* prototypes */
