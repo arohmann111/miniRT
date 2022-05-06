@@ -15,10 +15,13 @@
 # define SUCCESS 0
 # define NEXT_NUM 1
 # define NEXT_SPACE 2
+# define ORIENTATION 0
+# define COORDINATES 1
 
 /* enums */
 enum e_object
 {
+	NONE,
 	PLANE,
 	LIGHT,
 	CAMERA,
@@ -35,16 +38,15 @@ typedef struct s_vec3d
 	int	z;
 }t_vec3d;
 
-typedef struct s_vec2d
-{
-	int	x;
-	int	y;
-}t_vec2d;
+// typedef struct s_vec2d
+// {
+// 	int	x;
+// 	int	y;
+// }t_vec2d;
 
 typedef struct s_sphere
 {
 	t_vec3d coord;
-	char hannes;
 }t_sphere;
 
 typedef struct s_cylinder
@@ -53,7 +55,6 @@ typedef struct s_cylinder
 	t_vec3d orient;
 	double	diameter;
 	double	hight;
-	char hannes;
 }t_cylinder;
 
 typedef struct s_object
@@ -67,12 +68,11 @@ typedef struct s_scene
 {
 	int hight;
 	int width;
-	int a_light_c;
 	t_object object;
 }t_scene;
 
 /* prototypes */
-int	read_file(char *file);
+int	read_file(t_scene * scene, char *file);
 int	print_error(char *err_msg);
 
 
