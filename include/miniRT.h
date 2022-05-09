@@ -7,6 +7,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <fcntl.h>
+# include <math.h>
 # include <stdbool.h>
 
 /* macros */
@@ -17,6 +18,7 @@
 # define NEXT_SPACE 2
 # define ORIENTATION 0
 # define COORDINATES 1
+# define 
 
 /* enums */
 enum e_object
@@ -120,7 +122,7 @@ typedef struct s_scene
 
 /* prototypes */
 int	read_file(t_scene * scene, char *file);
-int	print_error(char *err_msg);
+int	print_error(char *err_msg, int line_cnt);
 
 
 
