@@ -1,7 +1,9 @@
 #ifndef MINIRT_H
 # define MINIRT_H
 
-/* includes */
+/* ************************************************************************** */
+/*                                  includes                                  */
+/* ************************************************************************** */
 # include "libft.h"
 # include <stdio.h>
 # include <stdlib.h>
@@ -10,17 +12,19 @@
 # include <math.h>
 # include <stdbool.h>
 
-/* macros */
-
+/* ************************************************************************** */
+/*                                   macros                                   */
+/* ************************************************************************** */
 # define ERROR -1
 # define SUCCESS 0
 # define NEXT_NUM 1
 # define NEXT_SPACE 2
 # define ORIENTATION 0
 # define COORDINATES 1
-# define 
 
-/* enums */
+/* ************************************************************************** */
+/*                                    enums                                   */
+/* ************************************************************************** */
 enum e_object
 {
 	NONE,
@@ -29,7 +33,9 @@ enum e_object
 	CYLINDER
 };
 
-/* structs */
+/* ************************************************************************** */
+/*                                   structs                                  */
+/* ************************************************************************** */
 typedef struct s_vec3d
 {
 	double	x;
@@ -43,12 +49,6 @@ typedef struct s_colors
 	int	g;
 	int	b;
 }t_colors;
-
-// typedef struct s_vec2d
-// {
-// 	int	x;
-// 	int	y;
-// }t_vec2d;
 
 typedef struct s_sphere
 {
@@ -120,10 +120,24 @@ typedef struct s_scene
 	t_list		*list;
 }t_scene;
 
-/* prototypes */
+/* ************************************************************************** */
+/*                                  prototypes                                */
+/* ************************************************************************** */
+/* parsing */
 int	read_file(t_scene * scene, char *file);
+
+
+/* error handling */
 int	print_error(char *err_msg, int line_cnt);
 
-
+/* math functions */
+t_vec3d	add_vec3(t_vec3d one, t_vec3d two);
+t_vec3d	sub_vec3(t_vec3d one, t_vec3d two);
+t_vec3d	multi_vec3(t_vec3d vec, double t);
+double	skalar_vec3d(t_vec3d one, t_vec3d two);
+double	len_vec3d(t_vec3d vec);
+t_vec3d	div_vec3(t_vec3d vec, double t);
+t_vec3d	norm_vec3d(t_vec3d vec);
+t_vec3d	cross_vec3d(t_vec3d one, t_vec3d two);
 
 #endif

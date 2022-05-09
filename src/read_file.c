@@ -6,7 +6,7 @@
 /*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/06 11:23:22 by afrasch           #+#    #+#             */
-/*   Updated: 2022/05/09 16:57:34 by afrasch          ###   ########.fr       */
+/*   Updated: 2022/05/09 17:08:26 by afrasch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,17 +70,6 @@ int	get_colors(t_colors *c, char *split_str, int line_cnt)
 	return (0);
 }
 
-// t_vec3d	normalise(t_vec3d v)
-// {
-// 	double	len;
-
-// 	len = sqrt((v.x * v.x) + (v.y * v.y) + (v.z * v.z));
-// 	v.x = v.x / len;
-// 	v.y = v.y / len;
-// 	v.z = v.z / len;
-// 	return (v);
-// }
-
 int	get_vector(t_vec3d *v, char *split_str, int type, int line_cnt)
 {
 	char	**vector;
@@ -109,7 +98,7 @@ int	get_vector(t_vec3d *v, char *split_str, int type, int line_cnt)
 		}
 		else if (type == ORIENTATION)
 		{
-			if (check_range(-1000.0, 1000.0, xyz[i]) == false)
+			if (check_range(-1000.0, 1000.0, xyz[i]) == false)//not important, but should be in resolution range
 				return(print_error("Orientation vector is not in range [-1000.0,1000.0]", line_cnt));
 		}
 		i++;
@@ -117,8 +106,8 @@ int	get_vector(t_vec3d *v, char *split_str, int type, int line_cnt)
 	v->x = xyz[0];
 	v->y = xyz[1];
 	v->z = xyz[2];
-	// if (type == ORIENTATION)
-	// 	normalise(*v);
+	if (type == ORIENTATION)
+		norm_vec3d(*v);
 	return (0);
 }
 

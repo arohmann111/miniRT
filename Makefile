@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+         #
+#    By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/03 09:52:37 by afrasch           #+#    #+#              #
-#    Updated: 2022/05/05 11:33:29 by arohmann         ###   ########.fr        #
+#    Updated: 2022/05/09 17:05:25 by afrasch          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ CFLAGS		= -Wall -Wextra -Werror
 
 CC			= cc
 
-SRC			:= main.c read_file.c \
+SRC			:= main.c read_file.c vec_math.c \
 
 LDLIBS		:= -lft
 
