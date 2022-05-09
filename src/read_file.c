@@ -6,7 +6,7 @@
 /*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/06 11:23:22 by afrasch           #+#    #+#             */
-/*   Updated: 2022/05/09 14:30:21 by afrasch          ###   ########.fr       */
+/*   Updated: 2022/05/09 14:47:11 by afrasch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	get_vector(t_vec3d *v, char *split_str, int type)
 	char	**vector;
 	int		i;
 	int		error;
-	int		xyz[3];
+	double	xyz[3];
 
 	i = 0;
 	error = 0;
@@ -241,6 +241,7 @@ int get_sphere(t_scene *scene, char **split)
 	double	dia;
 	int		error;
 
+	error = 0;
 	if (arrlen(split) != 4)
 		return (print_error("Wrong sphere input\n"));
 	new = get_new_obj(SPHERE);
@@ -258,7 +259,36 @@ int get_sphere(t_scene *scene, char **split)
 	return (0);
 }
 
-int	
+int	get_cylinder(t_scene *scene, char **split)
+{
+	t_list	*new;
+	double	dia;
+	double	height;
+	int		error;
+
+	error = 0;
+	if (arrlen(split) != 6)
+		return (print_error("Wrong cylinder input\n"));
+	new = get_new_obj(CYLINDER);
+	if (!new)
+		return (print_error("Cylinder object can't be allocated\n"));
+	ft_lstadd_back(&scene->list, new);
+	if (get_vector(&((t_object*)new->content)->pos, split[1], COORDINATES) == ERROR)
+		return (ERROR);
+	if (get_vector(&((t_object*)new->content)->cy.orient, split[2], ORIENTATION) == ERROR)
+		return (ERROR);
+	dia = ft_atod(split[3], &error);
+	if (error == ERROR)
+		return (print_error("Cylinder diameter can't be converted\n"));
+	((t_object*)new->content)->cy.diameter = dia;
+	height = ft_atod(split[4], &error);
+	if (error == ERROR)
+		return (print_error("Cylinder height can't be converted\n"));
+	((t_object*)new->content)->cy.height = dia;
+	if (get_colors(&((t_object*)new->content)->colors, split[5]) == ERROR)
+		return (ERROR);
+	return (0);
+}
 
 int	get_obj(t_scene *scene, char **split)
 {
@@ -266,8 +296,8 @@ int	get_obj(t_scene *scene, char **split)
 		return (get_plane(scene, split));
 	if (split[0][0] == 's' && split[0][1] == 'p')
 		return (get_sphere(scene, split));
-	// if (split[0][0] == 'c' && split[0][1] == 'y')
-	// 	return (get_cylinder(scene, split));
+	if (split[0][0] == 'c' && split[0][1] == 'y')
+		return (get_cylinder(scene, split));
 	else
 		return (ERROR);//wrong letter
 }
@@ -307,6 +337,7 @@ int	read_file(t_scene *scene, char *file)
 		return (ERROR);
 	while (1)
 	{
+		//line counter for print_error
 		line = get_next_line(fd);
 		printf("|%s|\n", line);
 		if (line == NULL)

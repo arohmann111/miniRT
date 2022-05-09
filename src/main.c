@@ -6,7 +6,7 @@
 /*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/03 12:57:53 by arohmann          #+#    #+#             */
-/*   Updated: 2022/05/09 13:16:24 by afrasch          ###   ########.fr       */
+/*   Updated: 2022/05/09 14:50:01 by afrasch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	init_struct(t_scene *scene)
 	scene->ambiente.is_set = false;
 	scene->camera.is_set = false;
 	scene->light.is_set = false;
+	scene->res.is_set = false;
 	scene->list = NULL;
 }
 

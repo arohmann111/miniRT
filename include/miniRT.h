@@ -30,9 +30,9 @@ enum e_object
 /* structs */
 typedef struct s_vec3d
 {
-	int	x;
-	int	y;
-	int	z;
+	double	x;
+	double	y;
+	double	z;
 }t_vec3d;
 
 typedef struct s_colors
@@ -62,7 +62,7 @@ typedef struct s_cylinder
 {
 	t_vec3d		orient;
 	double		diameter;
-	double		hight;
+	double		height;
 }t_cylinder;
 
 typedef struct s_object
