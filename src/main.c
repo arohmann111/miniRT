@@ -6,7 +6,7 @@
 /*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/03 12:57:53 by arohmann          #+#    #+#             */
-/*   Updated: 2022/05/09 15:27:07 by afrasch          ###   ########.fr       */
+/*   Updated: 2022/05/10 11:02:32 by afrasch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,6 @@ int	main(int ac, char **av)
 		ft_lstclear(&scene.list, free);
 		return (ERROR);
 	}
+	mlx_stuff();
 	return (0);
 }

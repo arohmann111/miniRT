@@ -5,12 +5,14 @@
 /*                                  includes                                  */
 /* ************************************************************************** */
 # include "libft.h"
+# include "MLX42.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include <fcntl.h>
 # include <math.h>
 # include <stdbool.h>
+
 
 /* ************************************************************************** */
 /*                                   macros                                   */
@@ -21,6 +23,8 @@
 # define NEXT_SPACE 2
 # define ORIENTATION 0
 # define COORDINATES 1
+
+
 
 /* ************************************************************************** */
 /*                                    enums                                   */
@@ -126,6 +130,8 @@ typedef struct s_scene
 /* parsing */
 int	read_file(t_scene * scene, char *file);
 
+/* window */
+int32_t	mlx_stuff(void);
 
 /* error handling */
 int	print_error(char *err_msg, int line_cnt);
