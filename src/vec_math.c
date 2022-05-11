@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   vec_math.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
+/*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 16:45:28 by arohmann          #+#    #+#             */
-/*   Updated: 2022/05/09 16:56:41 by arohmann         ###   ########.fr       */
+/*   Updated: 2022/05/11 14:20:17 by afrasch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
 
-t_vec3d	add_vec3(t_vec3d one, t_vec3d two)
+t_vec3d	add_vec3d(t_vec3d one, t_vec3d two)
 {
 	t_vec3d	add;
 
@@ -22,7 +22,7 @@ t_vec3d	add_vec3(t_vec3d one, t_vec3d two)
 	return (add);
 }
 
-t_vec3d	sub_vec3(t_vec3d one, t_vec3d two)
+t_vec3d	sub_vec3d(t_vec3d one, t_vec3d two)
 {
 	t_vec3d	sub;
 
@@ -32,7 +32,7 @@ t_vec3d	sub_vec3(t_vec3d one, t_vec3d two)
 	return (sub);
 }
 
-t_vec3d	multi_vec3(t_vec3d vec, double t)
+t_vec3d	multi_vec3d(t_vec3d vec, double t)
 {
 	t_vec3d	multi;
 
@@ -58,7 +58,7 @@ double	len_vec3d(t_vec3d vec)
 	return (res);
 }
 
-t_vec3d	div_vec3(t_vec3d vec, double t)
+t_vec3d	div_vec3d(t_vec3d vec, double t)
 {
 	t_vec3d	div;
 
@@ -70,12 +70,13 @@ t_vec3d	div_vec3(t_vec3d vec, double t)
 
 t_vec3d	norm_vec3d(t_vec3d vec)
 {
-	double	len;
-	t_vec3d	norm;
+	// double	len;
+	// t_vec3d	norm;
 
-	len = len_vec3d(vec);
-	norm = div_vec3(vec, len);
-	return (norm);
+	// len = len_vec3d(vec);
+	// norm = div_vec3d(vec, len);
+	// return (norm);
+	return (multi_vec3d(vec, 1 / len_vec3d(vec)));
 }
 
 t_vec3d	cross_vec3d(t_vec3d one, t_vec3d two)
@@ -85,5 +86,5 @@ t_vec3d	cross_vec3d(t_vec3d one, t_vec3d two)
 	cross.x = (one.y * two.z) - (one.z * two.y);
 	cross.y = (one.z * two.x) - (one.x * two.z);
 	cross.z = (one.x * two.y) - (one.y * two.x);
-	return (cross);
+	return (cross);//parallel vecs -> 0, else orthogonal vec
 }

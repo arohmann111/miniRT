@@ -6,7 +6,7 @@
 /*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/06 11:23:22 by afrasch           #+#    #+#             */
-/*   Updated: 2022/05/09 17:08:26 by afrasch          ###   ########.fr       */
+/*   Updated: 2022/05/11 16:57:38 by afrasch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	get_colors(t_colors *c, char *split_str, int line_cnt)
 		return (print_error("Wrong number of colors", line_cnt));
 	while (i < 3)
 	{
-		printf("color |%s|\n", colors[i]);
+		// printf("color |%s|\n", colors[i]);
 		rgb[i] = ft_atoi(colors[i], &error);
 		if (error == ERROR)
 			return (print_error("Color can't be converted", line_cnt));
@@ -86,7 +86,7 @@ int	get_vector(t_vec3d *v, char *split_str, int type, int line_cnt)
 		return (print_error("Wrong number of vector coordinates", line_cnt));
 	while (i < 3)
 	{
-		printf("vector |%s|\n", vector[i]);
+		// printf("vector |%s|\n", vector[i]);
 
 		xyz[i] = ft_atod(vector[i], &error);
 		if (error == ERROR)
@@ -107,7 +107,7 @@ int	get_vector(t_vec3d *v, char *split_str, int type, int line_cnt)
 	v->y = xyz[1];
 	v->z = xyz[2];
 	if (type == ORIENTATION)
-		norm_vec3d(*v);
+		*v = norm_vec3d(*v);
 	return (0);
 }
 
@@ -150,8 +150,8 @@ int get_camera(t_scene *scene, char **split, int line_cnt)
 	field_of_view = ft_atoi(split[3], &error);
 	if (error == ERROR)
 		return (print_error("Field of view can't be converted", line_cnt));
-	if (check_range(0.0, 180.0, (double)field_of_view) == false)
-		return (print_error("Field of view is not in range [0-180]", line_cnt));
+	if (check_range(1.0, 179.0, (double)field_of_view) == false)
+		return (print_error("Field of view is not in range [1-179]", line_cnt));
 	scene->camera.fov = field_of_view;
 	scene->camera.is_set = true;
 	return (0);
@@ -175,7 +175,6 @@ int	get_light(t_scene *scene, char **split, int line_cnt)
 		return (print_error("Brightness ratio can't be converted", line_cnt));
 	if (check_range(0.0, 1.0, (double)brightness_ratio) == false)
 		return (print_error("Brightness ratio is not in range [0.0,1.0]", line_cnt));
-	//range in print_error angeben
 	scene->light.bright = brightness_ratio;
 	if (get_colors(&scene->light.colors, split[3], line_cnt) == ERROR)
 		return (ERROR);
@@ -200,7 +199,7 @@ int	get_resolution(t_scene *scene, char **split, int line_cnt)
 	h = ft_atoi(split[2], &error);
 	if (error == ERROR)
 		return (print_error("Height can't be converted", line_cnt));
-	printf("res w |%d| h |%d|\n", w, h);
+	// printf("res w |%d| h |%d|\n", w, h);
 	scene->res.width = w;
 	scene->res.height = h;
 	scene->res.is_set = true;
@@ -344,7 +343,7 @@ int	read_file(t_scene *scene, char *file)
 	{
 		line = get_next_line(fd);
 		line_cnt++;
-		printf("|%s|\n", line);
+		// printf("|%s|\n", line);
 		if (line == NULL)
 			break ;
 		if (line[ft_strlen(line) - 1] == '\n')

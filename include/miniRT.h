@@ -26,6 +26,7 @@
 
 
 
+
 /* ************************************************************************** */
 /*                                    enums                                   */
 /* ************************************************************************** */
@@ -97,7 +98,7 @@ typedef struct s_camera
 	bool		is_set;
 	t_vec3d		pos;
 	t_vec3d		orient;
-	int		fov;
+	int			fov;
 }t_camera;
 
 typedef struct s_light
@@ -117,6 +118,8 @@ typedef struct s_res
 
 typedef struct s_scene
 {
+	t_vec3d		px;
+	t_vec3d		py;
 	t_ambiente	ambiente;
 	t_light		light;
 	t_camera	camera;
@@ -131,18 +134,20 @@ typedef struct s_scene
 int	read_file(t_scene * scene, char *file);
 
 /* window */
-int32_t	mlx_stuff(void);
+int32_t	mlx_stuff(t_scene *scene);
+t_vec3d	get_corner_pixel(t_scene *scene);
+
 
 /* error handling */
 int	print_error(char *err_msg, int line_cnt);
 
 /* math functions */
-t_vec3d	add_vec3(t_vec3d one, t_vec3d two);
-t_vec3d	sub_vec3(t_vec3d one, t_vec3d two);
-t_vec3d	multi_vec3(t_vec3d vec, double t);
+t_vec3d	add_vec3d(t_vec3d one, t_vec3d two);
+t_vec3d	sub_vec3d(t_vec3d one, t_vec3d two);
+t_vec3d	multi_vec3d(t_vec3d vec, double t);
 double	skalar_vec3d(t_vec3d one, t_vec3d two);
 double	len_vec3d(t_vec3d vec);
-t_vec3d	div_vec3(t_vec3d vec, double t);
+t_vec3d	div_vec3d(t_vec3d vec, double t);
 t_vec3d	norm_vec3d(t_vec3d vec);
 t_vec3d	cross_vec3d(t_vec3d one, t_vec3d two);
 
