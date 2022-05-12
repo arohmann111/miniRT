@@ -6,7 +6,7 @@
 /*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 10:43:21 by afrasch           #+#    #+#             */
-/*   Updated: 2022/05/12 16:24:43 by arohmann         ###   ########.fr       */
+/*   Updated: 2022/05/12 16:31:40 by arohmann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,8 @@ int32_t	mlx_stuff(t_scene *scene)
 		x = 0;
 		while (x < scene->res.width)
 		{
-			// if (x % 10 == 0)
-				// mlx_put_pixel(g_img, x, y, rand() % RAND_MAX);
-			
-			dir = add_vec3d(pix, add_vec3d(multi_vec3d(scene->px, x), multi_vec3d(scene->py, scene->res.height - 1 - y)));
+			dir = add_vec3d(pix, add_vec3d(multi_vec3d(scene->px, x + 0.5), multi_vec3d(scene->py, scene->res.height - 1 - y + 0.5)));
 			dir = norm_vec3d(dir);
-			// printf("dir %f %f %f\n", dir.x, dir.y, dir.z);
 			
 
 				// mlx_put_pixel(g_img, x, y, col(0.0, 0.0, (dir.z ) * 255.0));
@@ -53,8 +49,6 @@ int32_t	mlx_stuff(t_scene *scene)
 				mlx_put_pixel(g_img, x, y, trace(scene, dir));
 			// else
 			// 	mlx_put_pixel(g_img, x, y, 0xFFFF88FF);
-
-			
 			x++;
 		}
 		y++;
@@ -65,3 +59,5 @@ int32_t	mlx_stuff(t_scene *scene)
 	mlx_terminate(mlx);
 	return (0);
 }
+
+			// printf("dir %f %f %f\n", dir.x, dir.y, dir.z);
