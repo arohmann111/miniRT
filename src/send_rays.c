@@ -10,9 +10,11 @@
 //len(w) = tan(fov / 2) -> wenn w normiert
 // q normieren
 //len(q) = k * len(w)
+
 //pt = pos + dir - w - q -> linke untere Ecke vom Bild
 //a = w / (0.5*width) -> bei width = Anzahl Pixel in Breite
 //b = q / (0.5*height) -> bei height = Anzahl Pixel in Bildschirmhöhe
+
 //pt = Koordinaten (0/0) von origin aus -> campos abziehen um von pos auszugehen
 //vector für pixel = (pt-campos) + x*a + y*b -> pt-campos = Koordinaten (0/0) von cam aus
 // vector für pixel normieren
@@ -39,16 +41,14 @@ t_vec3d	mk_v(double x, double y, double z)
 /* w: vec from middle to right edge */
 /* q: vec from middle to upper edge */
 /* p: vec from origin to left bottom corner // Eckpunkt */
-/* a: vec from p in dir x-axis with length of one pixel */
-/* b: vec from p in dir y-axis with length of one pixel */
+/* px: vec from p in dir x-axis with length of one pixel */
+/* py: vec from p in dir y-axis with length of one pixel */
 t_vec3d	get_corner_pixel(t_scene *scene)
 {
 	double	relation;
 	t_vec3d	w;
 	t_vec3d	q;
 	t_vec3d	p;
-	// t_vec3d	a;
-	// t_vec3d	b;
 
 	relation = (double)scene->res.height / (double)scene->res.width;
 	w = cross_vec3d(scene->camera.orient, mk_v(0.0, 1.0, 0.0));
@@ -68,9 +68,4 @@ printf("tan: %f fov: %d\n", tan((scene->camera.fov / 2.0) / 180 * M_PI), scene->
 //loop?
 
 	return (sub_vec3d(p, scene->camera.pos));
-
-	// t_vec3d	pixel;
-	// pixel = add_vec3d(sub_vec3d(p, scene->camera.pos), add_vec3d(multi_vec3d(a, x), multi_vec3d(b, y)));
-	// pixel = norm_vec3d(pixel);
-
 }

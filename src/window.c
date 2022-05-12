@@ -6,7 +6,7 @@
 /*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 10:43:21 by afrasch           #+#    #+#             */
-/*   Updated: 2022/05/11 16:54:38 by afrasch          ###   ########.fr       */
+/*   Updated: 2022/05/12 11:57:38 by afrasch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,21 +39,15 @@ int32_t	mlx_stuff(t_scene *scene)
 		x = 0;
 		while (x < scene->res.width)
 		{
-			// if (x % 10 == 0)
-				// mlx_put_pixel(g_img, x, y, rand() % RAND_MAX);
-			
-			dir = add_vec3d(pix, add_vec3d(multi_vec3d(scene->px, x), multi_vec3d(scene->py, scene->res.height - 1 - y)));
+			dir = add_vec3d(pix, add_vec3d(multi_vec3d(scene->px, x + 0.5), multi_vec3d(scene->py, scene->res.height - 1 - y + 0.5)));
 			dir = norm_vec3d(dir);
-			// printf("dir %f %f %f\n", dir.x, dir.y, dir.z);
 			
 
 				// mlx_put_pixel(g_img, x, y, col(0.0, 0.0, (dir.z ) * 255.0));
 				// mlx_put_pixel(g_img, x, y, col(0.0, 0.0, (dir.y + 1.0) / 2.0 * 255.0));
 				mlx_put_pixel(g_img, x, y, col((dir.x + 1.0) / 2.0 * 255.0, (dir.y + 1.0) / 2.0 * 255.0, (dir.z + 1.0) / 2.0 * 255.0));
-			// else
-			// 	mlx_put_pixel(g_img, x, y, 0xFFFF88FF);
 
-			
+
 			x++;
 		}
 		y++;
@@ -64,3 +58,5 @@ int32_t	mlx_stuff(t_scene *scene)
 	mlx_terminate(mlx);
 	return (0);
 }
+
+			// printf("dir %f %f %f\n", dir.x, dir.y, dir.z);
