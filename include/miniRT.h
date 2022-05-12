@@ -133,9 +133,13 @@ typedef struct s_scene
 /* parsing */
 int	read_file(t_scene * scene, char *file);
 
+
 /* window */
 int32_t	mlx_stuff(t_scene *scene);
 t_vec3d	get_corner_pixel(t_scene *scene);
+int	trace(t_scene *scene, t_vec3d dir);
+int	col(int r, int g, int b);
+
 
 
 /* error handling */

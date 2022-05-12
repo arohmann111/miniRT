@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   window.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 10:43:21 by afrasch           #+#    #+#             */
-/*   Updated: 2022/05/11 16:54:38 by afrasch          ###   ########.fr       */
+/*   Updated: 2022/05/12 16:24:43 by arohmann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ int	col(int r, int g, int b)
 {
 	return ((int)r << 24 | (int)g << 16 | (int)b << 8 | (int)(0xFF));
 }
+
 
 int32_t	mlx_stuff(t_scene *scene)
 {
@@ -49,7 +50,7 @@ int32_t	mlx_stuff(t_scene *scene)
 
 				// mlx_put_pixel(g_img, x, y, col(0.0, 0.0, (dir.z ) * 255.0));
 				// mlx_put_pixel(g_img, x, y, col(0.0, 0.0, (dir.y + 1.0) / 2.0 * 255.0));
-				mlx_put_pixel(g_img, x, y, col((dir.x + 1.0) / 2.0 * 255.0, (dir.y + 1.0) / 2.0 * 255.0, (dir.z + 1.0) / 2.0 * 255.0));
+				mlx_put_pixel(g_img, x, y, trace(scene, dir));
 			// else
 			// 	mlx_put_pixel(g_img, x, y, 0xFFFF88FF);
 
