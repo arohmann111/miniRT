@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+         #
+#    By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/03 09:52:37 by afrasch           #+#    #+#              #
-#    Updated: 2022/05/03 19:36:28 by afrasch          ###   ########.fr        #
+#    Updated: 2022/05/12 16:26:06 by arohmann         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,9 +16,9 @@ CFLAGS		= -Wall -Wextra -Werror
 
 CC			= cc
 
-SRC			:= main.c read_file.c \
+SRC			:= main.c read_file.c vec_math.c window.c send_rays.c trace_rays.c\
 
-LDLIBS		:= -lft
+LDLIBS		:= -lft -lglfw -L "/Users/$(USER)/goinfre/.brew/opt/glfw/lib/" -lMLX42
 
 LIBDIRS		:= $(wildcard libs/*)
 LDLIBS		:= $(addprefix -L./, $(LIBDIRS)) $(LDLIBS)
