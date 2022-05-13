@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vec_math.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 16:45:28 by arohmann          #+#    #+#             */
-/*   Updated: 2022/05/12 09:53:16 by afrasch          ###   ########.fr       */
+/*   Updated: 2022/05/13 13:29:41 by arohmann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,15 +58,15 @@ double	len_vec3d(t_vec3d vec)
 	return (res);
 }
 
-// t_vec3d	div_vec3d(t_vec3d vec, double t)
-// {
-// 	t_vec3d	div;
+t_vec3d	div_vec3d(t_vec3d vec, double t)
+{
+	t_vec3d	div;
 
-// 	div.x = vec.x / t;
-// 	div.y = vec.y / t;
-// 	div.z = vec.z / t;
-// 	return (div);
-// }
+	div.x = vec.x / t;
+	div.y = vec.y / t;
+	div.z = vec.z / t;
+	return (div);
+}
 
 t_vec3d	norm_vec3d(t_vec3d vec)
 {

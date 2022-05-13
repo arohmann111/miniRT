@@ -154,5 +154,7 @@ double	len_vec3d(t_vec3d vec);
 t_vec3d	div_vec3d(t_vec3d vec, double t);
 t_vec3d	norm_vec3d(t_vec3d vec);
 t_vec3d	cross_vec3d(t_vec3d one, t_vec3d two);
+t_vec3d	mk_v(double x, double y, double z);
+
 
 #endif
