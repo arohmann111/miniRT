@@ -125,6 +125,7 @@ typedef struct s_scene
 	t_camera	camera;
 	t_res		res;
 	t_list		*list;
+	mlx_t		*mlx;
 }t_scene;
 
 /* ************************************************************************** */
