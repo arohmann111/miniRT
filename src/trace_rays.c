@@ -18,23 +18,20 @@ int	find_inter(t_scene *scene, t_vec3d dir)
 	if ( dis < 0)
 		return (-1.0);
 	else
-		return (dis);
+		return (-b - sqrt(dis) / (2.0 * a));
 }
 
 int	trace(t_scene *scene, t_vec3d dir)
 {
-	double t;
+	int t;
 	t_vec3d n;
-	// t_vec3d u_dir;
 
 	t = find_inter(scene, dir);
 	if ( t > 0.0)
 	{
-		n = norm_vec3d(sub_vec3d(multi_vec3d(dir, t), mk_v(0, 0, -1)));
-		return (0.5 * col(n.x + 1, n.y + 1, n.z + 1));
+		// n = norm_vec3d(add_vec3d(scene->camera.pos, sub_vec3d(multi_vec3d(dir, t), ((t_object *)(scene->list->content))->pos)));
+		n = norm_vec3d(sub_vec3d(add_vec3d(scene->camera.pos, multi_vec3d(dir, t)), ((t_object *)(scene->list->content))->pos));
+		return (col((n.x - 1.0) / -2.0 * 255.0, (n.y - 1.0) / -2.0 * 255.0, (n.z - 1.0) / -2.0 * 255.0));
 	}
-	// u_dir = norm_vec3d(dir);
-	// t = 0.5 * (u_dir.y + 1.0);
-	// return ((1.0 - t) * col(1, 1, 1) + t * col(0, 1, 1));
 	return (col((dir.x + 1.0) / 2.0 * 255.0, (dir.y + 1.0) / 2.0 * 255.0, (dir.z + 1.0) / 2.0 * 255.0));
 }
