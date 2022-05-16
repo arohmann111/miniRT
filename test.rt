@@ -1,10 +1,34 @@
+#ambient light
+##A ratio,            colors
+A   0.2               255,255,255
 
-A  0.2    255,255,255
-C -2,-3,-1     2,3,1 60
-# L -40,0,30    0.7   255,255,255
 
-# pl 0,0,0    0,1.0,0   255,0,225
-sp 2,3,1    2.0   255,0,0
-# cy 50.0,0.0,20.6    0,0,1.0    14.2 21.42    10,0,255
+#camera
+##C pos,              dir,               fov
+C   0,2,10            0,-2,-10           100
 
-R 1000 1000
+
+#light
+##L  pos,             brightness ratio,  colors
+L  -40,0,30           0.7                255,255,255
+
+
+#plane
+##pl pos              dir                colors
+pl   0,0,0            0,1.0,0            255,0,225
+
+
+#sphere
+##sp pos,             diameter,          colors
+sp   0,1,0            2.0                0,0,255
+sp   0,-50,0          100.0              55,150,200
+
+
+#cylinder
+##cy pos,             dir,               diameter,   height,     colors
+cy   50.0,0.0,20.6    0,0,1.0            14.2        21.42       10,0,255
+
+
+#resolution
+##R  width            height
+R    1000             1000

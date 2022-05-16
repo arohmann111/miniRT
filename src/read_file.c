@@ -6,7 +6,7 @@
 /*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/06 11:23:22 by afrasch           #+#    #+#             */
-/*   Updated: 2022/05/11 16:57:38 by afrasch          ###   ########.fr       */
+/*   Updated: 2022/05/16 14:44:53 by afrasch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,8 @@ int get_camera(t_scene *scene, char **split, int line_cnt)
 	field_of_view = ft_atoi(split[3], &error);
 	if (error == ERROR)
 		return (print_error("Field of view can't be converted", line_cnt));
+	if (field_of_view > 90)
+		printf("\033[0;31mThat much field of view doesn't make sense, bro. Better stay under 60 degree.\033[m\n");
 	if (check_range(1.0, 179.0, (double)field_of_view) == false)
 		return (print_error("Field of view is not in range [1-179]", line_cnt));
 	scene->camera.fov = field_of_view;
