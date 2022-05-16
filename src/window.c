@@ -6,7 +6,7 @@
 /*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 10:43:21 by afrasch           #+#    #+#             */
-/*   Updated: 2022/05/16 16:28:09 by afrasch          ###   ########.fr       */
+/*   Updated: 2022/05/16 16:37:35 by afrasch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int32_t	mlx_stuff(t_scene *scene)
 		y++;
 	}
 	mlx_image_to_window(scene->mlx, g_img, 0, 0);   // Adds an image to the render queue.
-	mlx_loop_hook(scene->mlx, &close_program, (t_scene*)scene);
+	mlx_loop_hook(scene->mlx, &close_program, (t_scene*)scene);//loop hook: determines which function should be called during the loop
 	mlx_loop(scene->mlx);
 	mlx_delete_image(scene->mlx, g_img); // Once the application request an exit, cleanup.
 	mlx_terminate(scene->mlx);
