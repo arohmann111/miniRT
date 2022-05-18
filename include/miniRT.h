@@ -11,6 +11,7 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include <math.h>
+#include <time.h>
 # include <stdbool.h>
 
 
@@ -137,8 +138,12 @@ int	read_file(t_scene * scene, char *file);
 /* window */
 int32_t	mlx_stuff(t_scene *scene);
 t_vec3d	get_corner_pixel(t_scene *scene);
-int	trace(t_scene *scene, t_vec3d dir);
+t_colors	trace(t_scene *scene, t_vec3d dir);
 int	col(int r, int g, int b);
+int	multisample(t_scene	*scene, t_vec3d pix, int x, int y);
+t_colors	mk_c(int r, int g, int b);
+
+int	old_trace(t_scene *scene, t_vec3d dir);
 
 
 
