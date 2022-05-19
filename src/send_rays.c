@@ -19,9 +19,6 @@
 //vector für pixel = (pt-campos) + x*a + y*b -> pt-campos = Koordinaten (0/0) von cam aus
 // vector für pixel normieren
 
-//testen mit farbe abhaengig von x y z
-
-//mit mlx : y-achse umdrehen -> in loop y-Werte runterzählen oder mit (HIGHT - y*a) arbeiten
 
 
 #include "miniRT.h"

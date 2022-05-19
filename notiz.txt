@@ -1,0 +1,59 @@
+which ray goes to which pixel:
+
+// k = height / width (um Wert in range [0,1] zu bekommen) -> Verschiebung auf y-Achse
+
+//cross(camdir, y-achse) = vec-w
+//cross(w, camdir) = vec-q
+//w normieren
+//len(w) = tan(fov / 2) -> wenn w normiert
+// q normieren
+//len(q) = k * len(w)
+
+//pt = pos + dir - w - q -> linke untere Ecke vom Bild
+//a = w / (0.5*width) -> bei width = Anzahl Pixel in Breite
+//b = q / (0.5*height) -> bei height = Anzahl Pixel in Bildschirmhöhe
+
+//pt = Koordinaten (0/0) von origin aus -> campos abziehen um von pos auszugehen
+//vector für pixel = (pt-campos) + x*a + y*b -> pt-campos = Koordinaten (0/0) von cam aus
+// vector für pixel normieren
+
+
+
+
+
+
+
+
+
+find ray intersections with sphere:
+
+v_p(t) = v_r_pos + t * v_r_dir |v_r=ray, t=factor
+
+| einsetzen
+v
+
+(v_p - v_c)^2 = r*r |r=radius, c=centrum vom kreis
+
+| führt zu
+v
+
+(v_r_pos + t * v_r_dir - v_c)^2 = r^2 | mit binomischer Formel (a + b)^2 -> t*v_r_dir=a
+
+| mit u*t^2 + v*t + w = 0 
+v
+
+t^2*v_r_dir^2   +   t*2*v_r_dir(v_r_pos - v_c)   +   (v_r_pos - v_c)^2 - r^2   = 0
+_____________       __________________________       _______________________
+u                   v                                w
+
+|
+v
+
+in Mitternachtsformel einsetzen und schauen ob Diskriminante
+- negativ / ray geht an objekt vorbei / keine Lösung
+- 0 / ray streift objekt an einer Stelle / genau eine Lösung
+- positiv / obj wird zweimal geschnitten / zwei Lösungen für t -> nimm kleinere positive t (Vorderseite des obj)
+
+
+Normale v_n = v_p(t) - v_c -> um Abstrahlwinkel zu berechnen. Normale steht senkrecht auf jeder Fläche
+

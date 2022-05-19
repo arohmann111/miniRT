@@ -55,27 +55,27 @@ t_colors	trace(t_scene *scene, t_vec3d dir)
 	return (ret);
 }
 
-int	old_trace(t_scene *scene, t_vec3d dir)
-{
-	int		ret;
-	double	t;
-	double	hit;
-	t_list	*list;
-	t_vec3d n;
+// int	old_trace(t_scene *scene, t_vec3d dir)
+// {
+// 	int		ret;
+// 	double	t;
+// 	double	hit;
+// 	t_list	*list;
+// 	t_vec3d n;
 
-	hit = 10000000.0;
-	ret = col((dir.x + 1.0) / 2.0 * 255.0, (dir.y + 1.0) / 2.0 * 255.0, (dir.z + 1.0) / 2.0 * 255.0);
-	list = scene->list;
-	while (list)
-	{
-		t = sp_find_t(scene, (t_object *)list->content, dir);
-		if (t > 0.0 && t < hit)//if t == 0 -> ray "streift" obj.
-		{
-			hit = t;
-			n = norm_vec3d(sub_vec3d(add_vec3d(scene->camera.pos, multi_vec3d(dir, t)), ((t_object *)(list->content))->pos));
-			ret = col(((t_object *)(list->content))->colors.r, ((t_object *)(list->content))->colors.g, ((t_object *)(list->content))->colors.b);
-		}
-		list = list->next;
-	}
-	return (ret);
-}
+// 	hit = 10000000.0;
+// 	ret = col((dir.x + 1.0) / 2.0 * 255.0, (dir.y + 1.0) / 2.0 * 255.0, (dir.z + 1.0) / 2.0 * 255.0);
+// 	list = scene->list;
+// 	while (list)
+// 	{
+// 		t = sp_find_t(scene, (t_object *)list->content, dir);
+// 		if (t > 0.0 && t < hit)//if t == 0 -> ray "streift" obj.
+// 		{
+// 			hit = t;
+// 			n = norm_vec3d(sub_vec3d(add_vec3d(scene->camera.pos, multi_vec3d(dir, t)), ((t_object *)(list->content))->pos));
+// 			ret = col(((t_object *)(list->content))->colors.r, ((t_object *)(list->content))->colors.g, ((t_object *)(list->content))->colors.b);
+// 		}
+// 		list = list->next;
+// 	}
+// 	return (ret);
+// }
