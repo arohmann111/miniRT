@@ -9,13 +9,6 @@ double random_d()
 	return (random);
 }
 
-void hex_to_rgb(int color, t_colors *rgb)
-{
-	rgb->r += ((color >> 16) & 0xFF) / 255.0;
-	rgb->g += ((color >> 8) & 0xFF) / 255.0;
-	rgb->b += ((color) & 0xFF) / 255.0;
-}
-
 int	multisample(t_scene	*scene, t_vec3d pix, int x, int y)
 {
 	int i;
