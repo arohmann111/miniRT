@@ -6,7 +6,7 @@
 #    By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/03 09:52:37 by afrasch           #+#    #+#              #
-#    Updated: 2022/05/13 15:35:28 by arohmann         ###   ########.fr        #
+#    Updated: 2022/05/19 11:32:22 by arohmann         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ CFLAGS		= -Wall -Wextra -Werror
 
 CC			= cc
 
-SRC			:= main.c read_file.c vec_math.c window.c send_rays.c trace_rays.c\
+SRC			:= main.c read_file.c vec_math.c window.c send_rays.c trace_rays.c multisample.c\
 
 LDLIBS		:= -lft -lglfw -L "/Users/$(USER)/goinfre/.brew/opt/glfw/lib/" -lMLX42
 
@@ -32,13 +32,11 @@ RM			= rm -rf
 
 all: $(NAME)
 
-prep:
-	mkdir -p $(ODIR)
-
-$(NAME): prep $(OBJS)
+$(NAME): $(OBJS)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LDLIBS)
 
 $(ODIR)/%.o: $(SDIR)/%.c
+	mkdir -p $(ODIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 
