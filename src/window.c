@@ -6,7 +6,7 @@
 /*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 10:43:21 by afrasch           #+#    #+#             */
-/*   Updated: 2022/05/18 15:32:20 by arohmann         ###   ########.fr       */
+/*   Updated: 2022/05/19 10:11:17 by arohmann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int32_t	mlx_stuff(t_scene *scene)
 	int		x;
 	int		y;
 	t_vec3d	pix;
-	t_vec3d	dir;
+	// t_vec3d	dir;
 	
 	y = 0;
 	mlx = mlx_init(scene->res.width, scene->res.height, "MLX42", true);
@@ -40,10 +40,10 @@ int32_t	mlx_stuff(t_scene *scene)
 		x = 0;
 		while (x < scene->res.width)
 		{
-				dir = add_vec3d(pix, add_vec3d(multi_vec3d(scene->px, x + 0.5), multi_vec3d(scene->py, scene->res.height - 1 - y + 0.5)));
-				dir = norm_vec3d(dir);
-				mlx_put_pixel(g_img, x, y, old_trace(scene, dir));
-				// mlx_put_pixel(g_img, x, y, multisample(scene, pix, x, y));
+				// dir = add_vec3d(pix, add_vec3d(multi_vec3d(scene->px, x + 0.5), multi_vec3d(scene->py, scene->res.height - 1 - y + 0.5)));
+				// dir = norm_vec3d(dir);
+				// mlx_put_pixel(g_img, x, y, old_trace(scene, dir));
+				mlx_put_pixel(g_img, x, y, multisample(scene, pix, x, y));
 			x++;
 		}
 		y++;

@@ -27,7 +27,7 @@ double	sp_find_t(t_scene *scene, t_object *sphere, t_vec3d dir)
 	if (dis < 0)
 		return (-1.0);//keine Lösung -> kein Schnittpunkt
 	else
-		return (-b - sqrt(dis) / (2.0 * a));//Mitternachtsformel
+		return (-b - sqrt(dis));//Mitternachtsformel
 }
 
 t_colors	trace(t_scene *scene, t_vec3d dir)
@@ -47,9 +47,7 @@ t_colors	trace(t_scene *scene, t_vec3d dir)
 		if (t > 0.0 && t < hit)
 		{
 			hit = t;
-			// n = norm_vec3d(add_vec3d(scene->camera.pos, sub_vec3d(multi_vec3d(dir, t), ((t_object *)(scene->list->content))->pos)));
 			n = norm_vec3d(sub_vec3d(add_vec3d(scene->camera.pos, multi_vec3d(dir, t)), ((t_object *)(list->content))->pos));
-			//return (0.5 * col((n.x + 1.0) / 2.0 * 255, (n.y + 1.0) / 2.0 * 255, (n.z + 1.0) / 2.0 * 255));
 			ret = mk_c(((t_object *)(list->content))->colors.r, ((t_object *)(list->content))->colors.g, ((t_object *)(list->content))->colors.b);
 		}
 		list = list->next;
@@ -76,7 +74,6 @@ int	old_trace(t_scene *scene, t_vec3d dir)
 			hit = t;
 			// n = norm_vec3d(add_vec3d(scene->camera.pos, sub_vec3d(multi_vec3d(dir, t), ((t_object *)(scene->list->content))->pos)));
 			n = norm_vec3d(sub_vec3d(add_vec3d(scene->camera.pos, multi_vec3d(dir, t)), ((t_object *)(list->content))->pos));
-			//return (0.5 * col((n.x + 1.0) / 2.0 * 255, (n.y + 1.0) / 2.0 * 255, (n.z + 1.0) / 2.0 * 255));
 			ret = col(((t_object *)(list->content))->colors.r, ((t_object *)(list->content))->colors.g, ((t_object *)(list->content))->colors.b);
 		}
 		list = list->next;
