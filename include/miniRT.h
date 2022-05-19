@@ -24,7 +24,7 @@
 # define NEXT_SPACE 2
 # define ORIENTATION 0
 # define COORDINATES 1
-
+# define SAMPLE 20
 
 
 

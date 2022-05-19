@@ -27,7 +27,7 @@ double	sp_find_t(t_scene *scene, t_object *sphere, t_vec3d dir)
 	if (dis < 0)
 		return (-1.0);//keine Lösung -> kein Schnittpunkt
 	else
-		return (-b - sqrt(dis));//Mitternachtsformel
+		return ((-b - sqrt(dis)) / (2.0 * a));//Mitternachtsformel
 }
 
 t_colors	trace(t_scene *scene, t_vec3d dir)
@@ -72,7 +72,6 @@ int	old_trace(t_scene *scene, t_vec3d dir)
 		if (t > 0.0 && t < hit)//if t == 0 -> ray "streift" obj.
 		{
 			hit = t;
-			// n = norm_vec3d(add_vec3d(scene->camera.pos, sub_vec3d(multi_vec3d(dir, t), ((t_object *)(scene->list->content))->pos)));
 			n = norm_vec3d(sub_vec3d(add_vec3d(scene->camera.pos, multi_vec3d(dir, t)), ((t_object *)(list->content))->pos));
 			ret = col(((t_object *)(list->content))->colors.r, ((t_object *)(list->content))->colors.g, ((t_object *)(list->content))->colors.b);
 		}
