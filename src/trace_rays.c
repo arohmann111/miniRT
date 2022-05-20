@@ -30,6 +30,31 @@ double	sp_find_t(t_scene *scene, t_object *sphere, t_vec3d dir)
 		return ((-b - sqrt(dis)) / (2.0 * a));//Mitternachtsformel
 }
 
+double	pl_find_t(t_scene *scene, t_object *plane, t_vec3d dir)
+{
+	double	denom;
+	t_vec3d n;
+
+	n = norm_vec3d(plane->pl.orient);
+	denom = skalar_vec3d(dir, n);
+	if (fabs(denom) < 0.00001)
+		return (-1);
+	else
+		return (skalar_vec3d(sub_vec3d(plane->pos, scene->camera.pos), n) / denom);
+}
+
+double	find_t(t_scene *scene, t_object *obj, t_vec3d dir)
+{
+	double	t;
+
+	t = -2;
+	if (obj->type == SPHERE)
+		t = sp_find_t(scene, obj, dir);
+	else if (obj->type == PLANE)
+		t = pl_find_t(scene, obj, dir);
+	return (t);
+}
+
 t_colors	trace(t_scene *scene, t_vec3d dir)
 {
 	t_colors	ret;
@@ -43,7 +68,7 @@ t_colors	trace(t_scene *scene, t_vec3d dir)
 	list = scene->list;
 	while (list)
 	{
-		t = sp_find_t(scene, (t_object *)list->content, dir);
+		t = find_t(scene, (t_object *)list->content, dir);
 		if (t > 0.0 && t < hit)
 		{
 			hit = t;
