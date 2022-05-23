@@ -6,7 +6,7 @@
 /*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 10:43:21 by afrasch           #+#    #+#             */
-/*   Updated: 2022/05/16 16:37:35 by afrasch          ###   ########.fr       */
+/*   Updated: 2022/05/18 11:48:30 by afrasch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,25 @@ void	close_program(void *data)
 	}
 }
 
+t_vec3d	multisampling(t_vec3d pix, int x, int y, t_scene *scene)
+{
+	double	i;
+	t_vec3d	dir;
+	t_vec3d	temp;
+
+	i = 0.1;
+	temp = add_vec3d(pix, add_vec3d(multi_vec3d(scene->px, x + i), multi_vec3d(scene->py, scene->res.height - 1 - y + i)));
+	while (i < 1.0)
+	{
+		dir = add_vec3d(pix, add_vec3d(multi_vec3d(scene->px, x + i), multi_vec3d(scene->py, scene->res.height - 1 - y + i)));
+		temp.x = dir.x * dir.x / temp.x;
+		temp.y = dir.y * dir.y / temp.y;
+		temp.z = dir.z * dir.z / temp.z;
+		i = i + 0.1;
+	}
+	return (temp);
+}
+
 int32_t	mlx_stuff(t_scene *scene)
 {
 	int		x;
@@ -51,6 +70,7 @@ int32_t	mlx_stuff(t_scene *scene)
 		while (x < scene->res.width)
 		{
 			dir = add_vec3d(pix, add_vec3d(multi_vec3d(scene->px, x + 0.5), multi_vec3d(scene->py, scene->res.height - 1 - y + 0.5)));
+			// dir = multisampling(pix, x, y, scene);
 			dir = norm_vec3d(dir);
 			
 

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+         #
+#    By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/03 09:52:37 by afrasch           #+#    #+#              #
-#    Updated: 2022/05/13 15:35:28 by arohmann         ###   ########.fr        #
+#    Updated: 2022/05/18 11:44:57 by afrasch          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,15 +32,15 @@ RM			= rm -rf
 
 all: $(NAME)
 
-prep:
-	mkdir -p $(ODIR)
+$(NAME): $(ODIR) $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LDLIBS)
 
-$(NAME): prep $(OBJS)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LDLIBS)
+$(ODIR):
+	mkdir -p $@
 
 $(ODIR)/%.o: $(SDIR)/%.c
+#	mkdir -p $(ODIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
-
 
 clean:
 	$(RM) $(ODIR)

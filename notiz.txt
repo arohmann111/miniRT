@@ -1,0 +1,30 @@
+v_p(t) = v_r_pos + t * v_r_dir |v_r=ray, t=factor
+
+| einsetzen
+v
+
+(v_p - v_c)^2 = r*r |r=radius, c=centrumvomkreis
+
+| führt zu
+v
+
+(v_r_pos + t * v_r_dir - v_c)^2 = r^2 | mit binomischer Formel (a + b)^2 -> t*v_r_dir=a
+
+| mit u*t^2 + v*t + w = 0 
+v
+
+t^2*v_r_dir^2   +   t*2*v_r_dir(v_r_pos - v_c)   +   (v_r_pos - v_c)^2 - r^2   = 0
+_____________       __________________________       _______________________
+u                   v                                w
+
+|
+v
+
+in Mitternachtsformel einsetzen und schauen ob Diskriminante
+- negativ / ray geht an objekt vorbei / keine Lösung
+- 0 / ray streift objekt an einer Stelle / genau eine Lösung
+- positiv / obj wird zweimal geschnitten / zwei Lösungen für t -> kleinere positive t vordere
+
+
+
+Normale v_n = v_p(t) - v_c
