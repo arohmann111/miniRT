@@ -1,29 +1,4 @@
 
-
-
-// k = height / width (um Wert in range [0,1] zu bekommen) -> Verschiebung auf y-Achse
-
-
-//cross(camdir, y-achse) = vec-w
-//cross(w, camdir) = vec-q
-//w normieren
-//len(w) = tan(fov / 2) -> wenn w normiert
-// q normieren
-//len(q) = k * len(w)
-
-//pt = pos + dir - w - q -> linke untere Ecke vom Bild
-//a = w / (0.5*width) -> bei width = Anzahl Pixel in Breite
-//b = q / (0.5*height) -> bei height = Anzahl Pixel in Bildschirmhöhe
-
-//pt = Koordinaten (0/0) von origin aus -> campos abziehen um von pos auszugehen
-//vector für pixel = (pt-campos) + x*a + y*b -> pt-campos = Koordinaten (0/0) von cam aus
-// vector für pixel normieren
-
-//testen mit farbe abhaengig von x y z
-
-//mit mlx : y-achse umdrehen -> in loop y-Werte runterzählen oder mit (HIGHT - y*a) arbeiten
-
-
 #include "miniRT.h"
 
 t_vec3d	mk_v(double x, double y, double z)
