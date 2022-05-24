@@ -24,7 +24,7 @@
 # define NEXT_SPACE 2
 # define ORIENTATION 0
 # define COORDINATES 1
-# define SAMPLE 20
+# define SAMPLE 1
 
 
 
@@ -71,6 +71,7 @@ typedef struct s_cylinder
 	t_vec3d		orient;
 	double		diameter;
 	double		height;
+	t_vec3d		pos[2];
 }t_cylinder;
 
 typedef struct s_object

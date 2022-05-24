@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_file.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/06 11:23:22 by afrasch           #+#    #+#             */
-/*   Updated: 2022/05/16 14:44:53 by afrasch          ###   ########.fr       */
+/*   Updated: 2022/05/24 14:30:04 by arohmann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -288,7 +288,7 @@ int	get_cylinder(t_scene *scene, char **split, int line_cnt)
 	height = ft_atod(split[4], &error);
 	if (error == ERROR)
 		return (print_error("Cylinder height can't be converted", line_cnt));
-	((t_object*)new->content)->cy.height = dia;
+	((t_object*)new->content)->cy.height = height;
 	if (get_colors(&((t_object*)new->content)->colors, split[5], line_cnt) == ERROR)
 		return (ERROR);
 	return (0);

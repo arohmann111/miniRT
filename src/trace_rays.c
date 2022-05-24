@@ -43,15 +43,71 @@ double	pl_find_t(t_scene *scene, t_object *plane, t_vec3d dir)
 		return (skalar_vec3d(sub_vec3d(plane->pos, scene->camera.pos), n) / denom);
 }
 
+void	cy_set_pos(t_object *cy)
+{
+	cy->cy.pos[0] = add_vec3d(cy->pos, multi_vec3d(cy->cy.orient, cy->cy.height / 2.0));
+	cy->cy.pos[1] = add_vec3d(cy->pos, multi_vec3d(cy->cy.orient, cy->cy.height / -2.0));
+}
+
+double	circ_find_t(t_scene *scene, t_object *circle, t_vec3d dir, int pos)
+{
+	double	denom;
+	t_vec3d n;
+	double	res;
+	t_vec3d	p;
+
+	n = norm_vec3d(circle->cy.orient);
+	denom = skalar_vec3d(dir, n);
+	if (fabs(denom) < 0.00001)
+		return (-1);
+	else
+	{
+		res = (skalar_vec3d(sub_vec3d(circle->cy.pos[pos], scene->camera.pos), n) / denom);
+		p = add_vec3d(scene->camera.pos, multi_vec3d(dir, res));
+		if ((pow((p.x - circle->cy.pos[pos].x), 2) + pow((p.y - circle->cy.pos[pos].y), 2) + pow((p.z - circle->cy.pos[pos].z), 2)) < pow(circle->cy.diameter / 2, 2))
+			return (res);
+		else
+			return (-1);
+	}
+}
+
 double	find_t(t_scene *scene, t_object *obj, t_vec3d dir)
 {
 	double	t;
+	double	t0;
+	double	t1;
 
 	t = -2;
 	if (obj->type == SPHERE)
 		t = sp_find_t(scene, obj, dir);
 	else if (obj->type == PLANE)
 		t = pl_find_t(scene, obj, dir);
+	else if (obj->type == CYLINDER)
+	{
+		cy_set_pos(obj);
+		t0 = circ_find_t(scene, obj, dir, 0);
+		t1 = circ_find_t(scene, obj, dir, 1);
+		if (t0 == -1.0 && t1 == -1.0)
+			return (-1);
+		else if (t0 < t1 && t0 > 0.0)
+			return (t0);
+		else if (t1 < t0 && t1 > 0.0)
+			return (t1);
+		else if (t0 == -1)
+			return (t1);
+		else if (t1 == -1)
+			return (t0);
+		else
+			return (-1);
+		// t1 = circ_find_t(scene, obj, dir, 1);
+		// printf("%f, %f\n", t0, t1);
+		// if (t0 > -1 && t0 < t1)
+		// 	return (t0);
+		// if (t1 > -1 && t1 < t0)
+		// 	return (t1);
+		// if (s_t < t && s_t > -1 && t > -1)
+		// 	t = s_t;
+	}
 	return (t);
 }
 
