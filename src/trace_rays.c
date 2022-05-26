@@ -23,7 +23,7 @@ double	sp_find_t(t_scene *scene, t_object *sphere, t_vec3d dir)
 	b = 2.0 * skalar_vec3d(sub_vec3d(scene->camera.pos, sphere->pos), dir);
 	c = skalar_vec3d(sub_vec3d(scene->camera.pos, sphere->pos),
 		sub_vec3d(scene->camera.pos, sphere->pos)) - sphere->sp.diameter * sphere->sp.diameter / 4.0;
-	dis = b*b - 4.0*a*c;
+	dis = b * b - 4.0 * a * c;
 	if (dis < 0)
 		return (-1.0);//keine Lösung -> kein Schnittpunkt
 	else
@@ -71,43 +71,66 @@ double	circ_find_t(t_scene *scene, t_object *circle, t_vec3d dir, int pos)
 	}
 }
 
+double	tube_find_t(t_scene *scene, t_object *tube, t_vec3d dir)
+{
+	double	a;
+	double	b;
+	double	c;
+	double	dis;
+	double	cut;
+	
+	t_vec3d	tmp;
+	t_vec3d	tmp1;
+	t_vec3d	wtf;
+	t_vec3d	p;
+
+	tmp = cross_vec3d(dir, tube->cy.orient);
+	tmp1 = cross_vec3d(sub_vec3d(scene->camera.pos, tube->pos), tube->cy.orient);
+	a = skalar_vec3d(tmp, tmp);
+	b = 2.0 * skalar_vec3d(tmp, tmp1);
+	c = skalar_vec3d(tmp1, tmp1) - pow(tube->cy.diameter / 2.0, 2);
+	dis = b * b - 4.0 * a * c;
+	dis = (-b - sqrt(dis)) / (2.0 * a);
+	p = add_vec3d(scene->camera.pos, multi_vec3d(dir, dis));
+	wtf = add_vec3d(tube->pos, multi_vec3d(sub_vec3d(p, tube->pos), dis));
+	cut = skalar_vec3d(tube->cy.orient, wtf);
+	if (dis > 0.0 && cut > (-1.0 * (tube->cy.height / 2)) && cut < (tube->cy.height / 2))
+		return (dis);
+	else
+		return (-1.0);
+}
+
 double	find_t(t_scene *scene, t_object *obj, t_vec3d dir)
 {
 	double	t;
-	double	t0;
-	double	t1;
+	// double	t0;
+	// double	t1;
 
 	t = -2;
 	if (obj->type == SPHERE)
 		t = sp_find_t(scene, obj, dir);
 	else if (obj->type == PLANE)
 		t = pl_find_t(scene, obj, dir);
+	// else if (obj->type == CYLINDER)
+	// {
+	// 	cy_set_pos(obj);
+	// 	t0 = circ_find_t(scene, obj, dir, 0);
+	// 	t1 = circ_find_t(scene, obj, dir, 1);
+	// 	if (t0 == -1.0 && t1 == -1.0)
+	// 		return (-1);
+	// 	else if (t0 < t1 && t0 > 0.0)
+	// 		return (t0);
+	// 	else if (t1 < t0 && t1 > 0.0)
+	// 		return (t1);
+	// 	else if (t0 == -1)
+	// 		return (t1);
+	// 	else if (t1 == -1)
+	// 		return (t0);
+	// 	else
+	// 		return (-1);
+	// }
 	else if (obj->type == CYLINDER)
-	{
-		cy_set_pos(obj);
-		t0 = circ_find_t(scene, obj, dir, 0);
-		t1 = circ_find_t(scene, obj, dir, 1);
-		if (t0 == -1.0 && t1 == -1.0)
-			return (-1);
-		else if (t0 < t1 && t0 > 0.0)
-			return (t0);
-		else if (t1 < t0 && t1 > 0.0)
-			return (t1);
-		else if (t0 == -1)
-			return (t1);
-		else if (t1 == -1)
-			return (t0);
-		else
-			return (-1);
-		// t1 = circ_find_t(scene, obj, dir, 1);
-		// printf("%f, %f\n", t0, t1);
-		// if (t0 > -1 && t0 < t1)
-		// 	return (t0);
-		// if (t1 > -1 && t1 < t0)
-		// 	return (t1);
-		// if (s_t < t && s_t > -1 && t > -1)
-		// 	t = s_t;
-	}
+		t = tube_find_t(scene, obj, dir);
 	return (t);
 }
 
