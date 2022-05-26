@@ -3,16 +3,16 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+         #
+#    By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/03 09:52:37 by afrasch           #+#    #+#              #
-#    Updated: 2022/05/19 11:32:22 by arohmann         ###   ########.fr        #
+#    Updated: 2022/05/23 11:25:23 by afrasch          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		= miniRT
 
-CFLAGS		= -Wall -Wextra -Werror
+CFLAGS		= -Wall -Wextra -Werror -O2
 
 CC			= cc
 
@@ -38,7 +38,6 @@ $(NAME): $(OBJS)
 $(ODIR)/%.o: $(SDIR)/%.c
 	mkdir -p $(ODIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
-
 
 clean:
 	$(RM) $(ODIR)

@@ -25,6 +25,8 @@
 # define ORIENTATION 0
 # define COORDINATES 1
 # define SAMPLE 20
+# define BOUNCES 50
+# define HIT 10000.0
 
 
 
@@ -117,8 +119,16 @@ typedef struct s_res
 	int			height;
 }t_res;
 
+typedef struct s_ray
+{
+	t_vec3d		pos;
+	t_vec3d		dir;
+	t_colors	col;
+}t_ray;
+
 typedef struct s_scene
 {
+	double		hit;
 	t_vec3d		px;
 	t_vec3d		py;
 	t_ambiente	ambiente;
@@ -139,7 +149,9 @@ int	read_file(t_scene * scene, char *file);
 /* window */
 int32_t		mlx_stuff(t_scene *scene);
 t_vec3d		get_corner_pixel(t_scene *scene);
-t_colors	trace(t_scene *scene, t_vec3d dir);
+t_colors	trace(t_scene *scene, t_ray ray, int bounces);
+// t_colors	pre_trace(t_scene *scene, t_ray ray);
+// t_colors	trace(t_scene *scene, t_vec3d dir);
 int			col(int r, int g, int b);
 int			multisample(t_scene	*scene, t_vec3d pix, int x, int y);
 t_colors	mk_c(int r, int g, int b);
