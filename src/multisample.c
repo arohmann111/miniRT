@@ -24,7 +24,7 @@ int	multisample(t_scene	*scene, t_vec3d pix, int x, int y)
 	rgb.r = 0;
 	rgb.g = 0;
 	rgb.b = 0;
-	srand((unsigned int) time(NULL));
+	// srand((unsigned int) time(NULL));
 	while (i < SAMPLE)
 	{
 		arr[i] = random_d();

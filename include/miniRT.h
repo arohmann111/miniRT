@@ -11,7 +11,7 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include <math.h>
-#include <time.h>
+# include <time.h>
 # include <stdbool.h>
 
 
@@ -119,6 +119,12 @@ typedef struct s_res
 	int			height;
 }t_res;
 
+typedef struct s_bg
+{
+	bool		is_set;
+	t_colors	col;
+}t_bg;
+
 typedef struct s_ray
 {
 	t_vec3d		pos;
@@ -135,6 +141,7 @@ typedef struct s_scene
 	t_light		light;
 	t_camera	camera;
 	t_res		res;
+	t_bg		bg;
 	t_list		*list;
 	mlx_t		*mlx;
 }t_scene;
@@ -158,7 +165,7 @@ t_colors	mk_c(int r, int g, int b);
 
 int	old_trace(t_scene *scene, t_vec3d dir);
 
-
+double	ft_rand_double(double min, double max);
 
 /* error handling */
 int	print_error(char *err_msg, int line_cnt);

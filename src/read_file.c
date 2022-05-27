@@ -6,7 +6,7 @@
 /*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/06 11:23:22 by afrasch           #+#    #+#             */
-/*   Updated: 2022/05/16 14:44:53 by afrasch          ###   ########.fr       */
+/*   Updated: 2022/05/27 16:28:53 by afrasch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,10 +201,21 @@ int	get_resolution(t_scene *scene, char **split, int line_cnt)
 	h = ft_atoi(split[2], &error);
 	if (error == ERROR)
 		return (print_error("Height can't be converted", line_cnt));
-	// printf("res w |%d| h |%d|\n", w, h);
 	scene->res.width = w;
 	scene->res.height = h;
 	scene->res.is_set = true;
+	return (0);
+}
+
+int	get_background(t_scene *scene, char **split, int line_cnt)
+{
+	if (scene->bg.is_set == true)
+		return (print_error("Background already exists", line_cnt));
+	if (arrlen(split) != 2)
+		return (print_error("Wrong background input", line_cnt));
+	if (get_colors(&scene->bg.col, split[1], line_cnt) == ERROR)
+		return (ERROR);
+	scene->bg.is_set = true;
 	return (0);
 }
 
@@ -325,6 +336,8 @@ int	parsing(t_scene *scene, char *line, int line_cnt)
 		return (get_light(scene, split, line_cnt));
 	else if (split[0][0] == 'R')
 		return (get_resolution(scene, split, line_cnt));
+	else if (split[0][0] == 'B')
+		return (get_background(scene, split, line_cnt));
 	else
 		return (get_obj(scene, split, line_cnt));
 	return(0);

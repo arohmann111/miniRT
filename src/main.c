@@ -6,7 +6,7 @@
 /*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/03 12:57:53 by arohmann          #+#    #+#             */
-/*   Updated: 2022/05/26 14:00:57 by afrasch          ###   ########.fr       */
+/*   Updated: 2022/05/27 16:32:46 by afrasch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	init_struct(t_scene *scene)
 	scene->list = NULL;
 	scene->mlx = NULL;
 	scene->hit = HIT;
+	scene->bg.col = (t_colors){200,230,250};
 }
 
 int	print_input_instructions(void)
@@ -34,6 +35,7 @@ int	main(int ac, char **av)
 {
 	t_scene	scene;
 
+	srand(time(0));
 	init_struct(&scene);
 	// printf("%d\n", scene.res.is_set);
 	if (ac != 2)
