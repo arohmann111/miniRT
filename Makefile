@@ -23,7 +23,7 @@ RM			= rm -rf
 
 all: $(NAME)
 
-$(NAME): $(ODIR) $(OBJS)
+$(NAME): $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LDLIBS)
 
 $(ODIR)/%.o: $(SDIR)/%.c

@@ -1,22 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   window.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/10 10:43:21 by afrasch           #+#    #+#             */
-/*   Updated: 2022/05/18 11:48:30 by afrasch          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-=======
-
->>>>>>> 4dce5664550634705a8899b3b883a288c477374f
-=======
-
->>>>>>> bouncing
 
 #include "miniRT.h"
 
@@ -39,24 +20,6 @@ void	close_program(void *data)
 	}
 }
 
-t_vec3d	multisampling(t_vec3d pix, int x, int y, t_scene *scene)
-{
-	double	i;
-	t_vec3d	dir;
-	t_vec3d	temp;
-
-	i = 0.1;
-	temp = add_vec3d(pix, add_vec3d(multi_vec3d(scene->px, x + i), multi_vec3d(scene->py, scene->res.height - 1 - y + i)));
-	while (i < 1.0)
-	{
-		dir = add_vec3d(pix, add_vec3d(multi_vec3d(scene->px, x + i), multi_vec3d(scene->py, scene->res.height - 1 - y + i)));
-		temp.x = dir.x * dir.x / temp.x;
-		temp.y = dir.y * dir.y / temp.y;
-		temp.z = dir.z * dir.z / temp.z;
-		i = i + 0.1;
-	}
-	return (temp);
-}
 
 int32_t	mlx_stuff(t_scene *scene)
 {
@@ -77,22 +40,10 @@ int32_t	mlx_stuff(t_scene *scene)
 		x = 0;
 		while (x < scene->res.width)
 		{
-<<<<<<< HEAD
-			dir = add_vec3d(pix, add_vec3d(multi_vec3d(scene->px, x + 0.5), multi_vec3d(scene->py, scene->res.height - 1 - y + 0.5)));
-			// dir = multisampling(pix, x, y, scene);
-			dir = norm_vec3d(dir);
-			
-
-				// mlx_put_pixel(g_img, x, y, col(0.0, 0.0, (dir.z ) * 255.0));
-				// mlx_put_pixel(g_img, x, y, col(0.0, 0.0, (dir.y + 1.0) / 2.0 * 255.0));
-				mlx_put_pixel(g_img, x, y, trace(scene, dir));
-
-=======
 				// dir = add_vec3d(pix, add_vec3d(multi_vec3d(scene->px, x + 0.5), multi_vec3d(scene->py, scene->res.height - 1 - y + 0.5)));
 				// dir = norm_vec3d(dir);
 				// mlx_put_pixel(g_img, x, y, old_trace(scene, dir));
 				mlx_put_pixel(g_img, x, y, multisample(scene, pix, x, y));
->>>>>>> 4dce5664550634705a8899b3b883a288c477374f
 			x++;
 		}
 		y++;

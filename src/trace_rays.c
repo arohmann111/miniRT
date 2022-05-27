@@ -43,17 +43,6 @@ double	pl_find_t(t_scene *scene, t_object *plane, t_ray ray)
 	double	denom;
 	t_vec3d n;
 
-<<<<<<< HEAD
-	hit = 10000000.0;
-<<<<<<< HEAD
-	ret = col((dir.x + 1.0) / 2.0 * 255.0, (dir.y + 1.0) / 2.0 * 255.0, (dir.z + 1.0) / 2.0 * 255.0);
-	ret = 0;
-=======
-	ret = mk_c((dir.x + 1.0) / 2.0 * 255.0, (dir.y + 1.0) / 2.0 * 255.0, (dir.z + 1.0) / 2.0 * 255.0);
->>>>>>> 4dce5664550634705a8899b3b883a288c477374f
-	list = scene->list;
-	while (list)
-=======
 	n = norm_vec3d(plane->pl.orient);
 	denom = skalar_vec3d(ray.dir, n);
 	if (fabs(denom) < 0.00001)
@@ -114,7 +103,6 @@ t_vec3d	in_unit_sphere()
 	t_vec3d	p;
 
 	while (11)
->>>>>>> bouncing
 	{
 		// p = random_v(-1.0, 1.0);
 
@@ -129,16 +117,6 @@ t_vec3d	in_unit_sphere()
 	}
 }
 
-<<<<<<< HEAD
-// int	old_trace(t_scene *scene, t_vec3d dir)
-// {
-// 	int		ret;
-// 	double	t;
-// 	double	hit;
-// 	t_list	*list;
-// 	t_vec3d n;
-
-=======
 t_colors	trace(t_scene *scene, t_ray ray, int bounces)
 {
 	t_object *obj;
@@ -233,7 +211,6 @@ t_colors	trace(t_scene *scene, t_ray ray, int bounces)
 // 	t_list	*list;
 // 	t_vec3d n;
 
->>>>>>> bouncing
 // 	hit = 10000000.0;
 // 	ret = col((dir.x + 1.0) / 2.0 * 255.0, (dir.y + 1.0) / 2.0 * 255.0, (dir.z + 1.0) / 2.0 * 255.0);
 // 	list = scene->list;
