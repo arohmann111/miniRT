@@ -6,7 +6,7 @@
 #    By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/03 09:52:37 by afrasch           #+#    #+#              #
-#    Updated: 2022/05/19 11:32:22 by arohmann         ###   ########.fr        #
+#    Updated: 2022/05/27 10:55:38 by arohmann         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ CC			= cc
 
 SRC			:= main.c read_file.c vec_math.c window.c send_rays.c trace_rays.c multisample.c\
 
-LDLIBS		:= -lft -lglfw -L "/Users/$(USER)/goinfre/.brew/opt/glfw/lib/" -lMLX42
+LDLIBS		:= -lft -lglfw -L "/Users/$(USER)/.brew/opt/glfw/lib/" -lMLX42
 
 LIBDIRS		:= $(wildcard libs/*)
 LDLIBS		:= $(addprefix -L./, $(LIBDIRS)) $(LDLIBS)

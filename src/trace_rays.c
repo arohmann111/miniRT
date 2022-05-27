@@ -18,6 +18,7 @@ double	sp_find_t(t_scene *scene, t_object *sphere, t_vec3d dir)
 	double b;
 	double c;
 	double dis;
+	double t;
 	
 	a = skalar_vec3d(dir, dir);
 	b = 2.0 * skalar_vec3d(sub_vec3d(scene->camera.pos, sphere->pos), dir);
@@ -26,8 +27,13 @@ double	sp_find_t(t_scene *scene, t_object *sphere, t_vec3d dir)
 	dis = b * b - 4.0 * a * c;
 	if (dis < 0)
 		return (-1.0);//keine Lösung -> kein Schnittpunkt
-	else
-		return ((-b - sqrt(dis)) / (2.0 * a));//Mitternachtsformel
+	t = (-b - sqrt(dis)) / (2.0 * a);
+	if (t > 0.0)
+		return (t);
+	t = (-b + sqrt(dis)) / (2.0 * a);
+	if (t > 0.0)
+		return (t);
+	return (-1.0);
 }
 
 double	pl_find_t(t_scene *scene, t_object *plane, t_vec3d dir)
@@ -78,6 +84,7 @@ double	tube_find_t(t_scene *scene, t_object *tube, t_vec3d dir)
 	double	c;
 	double	dis;
 	double	cut;
+	double	t;
 	
 	t_vec3d	tmp;
 	t_vec3d	tmp1;
@@ -90,14 +97,21 @@ double	tube_find_t(t_scene *scene, t_object *tube, t_vec3d dir)
 	b = 2.0 * skalar_vec3d(tmp, tmp1);
 	c = skalar_vec3d(tmp1, tmp1) - pow(tube->cy.diameter / 2.0, 2);
 	dis = b * b - 4.0 * a * c;
-	dis = (-b - sqrt(dis)) / (2.0 * a);
-	p = add_vec3d(scene->camera.pos, multi_vec3d(dir, dis));
-	wtf = add_vec3d(tube->pos, multi_vec3d(sub_vec3d(p, tube->pos), dis));
-	cut = skalar_vec3d(tube->cy.orient, wtf);
-	if (dis > 0.0 && cut > (-1.0 * (tube->cy.height / 2)) && cut < (tube->cy.height / 2))
-		return (dis);
-	else
+	if (dis < 0.0)
 		return (-1.0);
+	t = (-b - sqrt(dis)) / (2.0 * a);
+	p = add_vec3d(scene->camera.pos, multi_vec3d(dir, t));
+	wtf = add_vec3d(tube->pos, sub_vec3d(p, tube->pos));
+	cut = skalar_vec3d(tube->cy.orient, wtf);
+	if (t > 0.0 && fabs(cut) < (tube->cy.height / 2.0))
+		return (t);
+	t = (-b + sqrt(dis)) / (2.0 * a);
+	p = add_vec3d(scene->camera.pos, multi_vec3d(dir, t));
+	wtf = add_vec3d(tube->pos, sub_vec3d(p, tube->pos));
+	cut = skalar_vec3d(tube->cy.orient, wtf);
+	if (t > 0.0 && fabs(cut) < (tube->cy.height / 2.0))
+		return (t);
+	return (-1.0);
 }
 
 double	find_t(t_scene *scene, t_object *obj, t_vec3d dir)
@@ -143,7 +157,8 @@ t_colors	trace(t_scene *scene, t_vec3d dir)
 	t_vec3d n;
 
 	hit = 10000000.0;
-	ret = mk_c((dir.x + 1.0) / 2.0 * 255.0, (dir.y + 1.0) / 2.0 * 255.0, (dir.z + 1.0) / 2.0 * 255.0);
+	// ret = mk_c((dir.x + 1.0) / 2.0 * 255.0, (dir.y + 1.0) / 2.0 * 255.0, (dir.z + 1.0) / 2.0 * 255.0);
+	ret = mk_c(100, 100, 100);
 	list = scene->list;
 	while (list)
 	{
