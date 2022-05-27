@@ -10,6 +10,8 @@ void	init_struct(t_scene *scene)
 	scene->res.is_set = false;
 	scene->list = NULL;
 	scene->mlx = NULL;
+	scene->hit = HIT;
+	scene->bg.col = (t_colors){200,230,250};
 }
 
 int	print_input_instructions(void)
@@ -23,6 +25,7 @@ int	main(int ac, char **av)
 {
 	t_scene	scene;
 
+	srand(time(0));
 	init_struct(&scene);
 	// printf("%d\n", scene.res.is_set);
 	if (ac != 2)
