@@ -16,10 +16,11 @@ void	init_struct(t_scene *scene)
 
 int	print_input_instructions(void)
 {
-	ft_putendl_fd("Wrong number of arguments", STDERR_FILENO);
+	ft_putendl_fd("Error\nWrong number of arguments", STDERR_FILENO);
 	ft_putendl_fd("Try: ./miniRT <file.rt>", STDERR_FILENO);
 	return (ERROR);
 }
+
 
 int	main(int ac, char **av)
 {
@@ -27,9 +28,13 @@ int	main(int ac, char **av)
 
 	srand(time(0));
 	init_struct(&scene);
-	// printf("%d\n", scene.res.is_set);
 	if (ac != 2)
 		return (print_input_instructions());
+	if (ft_strrncmp(av[1], ".rt", 3) != 0)
+	{
+		ft_putendl_fd("Error\nFile must be an .rt file", STDERR_FILENO);
+		return (1);
+	}
 	if (read_file(&scene, av[1]) == ERROR)
 	{
 		ft_lstclear(&scene.list, free);

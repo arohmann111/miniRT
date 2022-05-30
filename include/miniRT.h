@@ -25,7 +25,7 @@
 # define ORIENTATION 0
 # define COORDINATES 1
 # define SAMPLE 20
-# define BOUNCES 50
+# define BOUNCES 10
 # define HIT 10000.0
 
 

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: afrasch <afrasch@student.42.fr>            +#+  +:+       +#+         #
+#    By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/21 16:25:20 by afrasch           #+#    #+#              #
-#    Updated: 2021/12/21 17:00:53 by afrasch          ###   ########.fr        #
+#    Updated: 2022/05/30 16:57:04 by afrasch          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,6 +46,7 @@ ft_strmapi.c \
 ft_strncmp.c \
 ft_strnstr.c \
 ft_strrchr.c \
+ft_strrncmp.c \
 ft_strtrim.c \
 ft_substr.c \
 ft_tolower.c \
