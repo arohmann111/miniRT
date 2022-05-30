@@ -38,6 +38,8 @@ enum e_object
 	NONE,
 	PLANE,
 	SPHERE,
+	TUBE,
+	CIRCLE,
 	CYLINDER
 };
 
@@ -68,12 +70,27 @@ typedef struct s_plane
 	t_vec3d		orient;
 }t_plane;
 
-typedef struct s_cylinder
+typedef struct s_tube
 {
 	t_vec3d		orient;
 	double		diameter;
 	double		height;
-}t_cylinder;
+}t_tube;
+
+typedef struct s_circle
+{
+	double		dia;
+	t_vec3d		orient;
+}t_circle;
+
+// typedef struct s_cylinder
+// {
+// 	t_tube		body;
+// 	t_vec3d		t_pos;
+// 	t_vec3d		b_pos;
+// 	t_circle	top;
+// 	t_circle	bottom;
+// }t_cylinder;
 
 typedef struct s_object
 {
@@ -82,7 +99,8 @@ typedef struct s_object
 	t_colors		colors;
 	union
 	{
-		t_cylinder	cy;
+		t_tube		tb;
+		t_circle	cl;
 		t_sphere	sp;
 		t_plane		pl;
 	};
