@@ -113,7 +113,7 @@ t_colors	trace(t_scene *scene, t_ray ray, int bounces)
 	while (list)
 	{
 		t = find_t(scene, (t_object *)list->content, ray);
-		if (t > 0.0 && t < scene->hit)
+		if (t > 0.0 && t < scene->hit && t > 0.001)
 		{
 			scene->hit = t;
 			obj = (t_object*)(list->content);
