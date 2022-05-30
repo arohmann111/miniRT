@@ -98,13 +98,25 @@ t_vec3d	in_unit_sphere()
 	}
 }
 
+void	intersect_sphere(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
+{
+	t_vec3d		n;
+	t_vec3d		p;
+
+	ray->pos = add_vec3d(ray->pos, multi_vec3d(ray->dir, scene->hit));
+	n = norm_vec3d(sub_vec3d(ray->pos, obj->pos));//sphere
+	ray->dir = n;
+	p = add_vec3d(add_vec3d(ray->pos, n), in_unit_sphere());
+	ray->dir = norm_vec3d(sub_vec3d(p, ray->pos));
+
+	ray->col = multi_colors(obj->colors, trace(scene, *ray, bounces - 1));
+}
+
 t_colors	trace(t_scene *scene, t_ray ray, int bounces)
 {
 	t_object	*obj;
 	t_list		*list;
 	double		t;
-	t_vec3d		n;
-	t_vec3d		p;
 
 	if (bounces == 0)
 		return (mk_c(0,0,0));
@@ -124,16 +136,14 @@ t_colors	trace(t_scene *scene, t_ray ray, int bounces)
 		return (scene->bg.col);
 
 	//if material property == MATTE
+	//if obj == SPHERE
 	
 
+	if (obj->type == SPHERE)
+		intersect_sphere(scene, &ray, obj, bounces);
+	else
+		return (obj->colors);
 
-	ray.pos = add_vec3d(ray.pos, multi_vec3d(ray.dir, scene->hit));
-	n = norm_vec3d(sub_vec3d(ray.pos, obj->pos));//sphere
-	ray.dir = n;
-	p = add_vec3d(add_vec3d(ray.pos, n), in_unit_sphere());
-	ray.dir = norm_vec3d(sub_vec3d(p, ray.pos));
-
-	ray.col = multi_colors(obj->colors, trace(scene, ray, bounces - 1));
 	
 	return (ray.col);
 }
