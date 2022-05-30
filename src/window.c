@@ -34,7 +34,7 @@ int32_t	mlx_stuff(t_scene *scene)
 		exit(ERROR);
 	g_img = mlx_new_image(scene->mlx, scene->res.width, scene->res.height);
 	pix = get_corner_pixel(scene);
-	printf("pix: %f %f %f\n", pix.x, pix.y, pix.z);
+	// printf("pix: %f %f %f\n", pix.x, pix.y, pix.z);
 	while (y < scene->res.height)
 	{
 		x = 0;
