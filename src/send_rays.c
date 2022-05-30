@@ -59,13 +59,11 @@ t_vec3d	get_corner_pixel(t_scene *scene)
 	q = norm_vec3d(q);
 	q = multi_vec3d(q, relation * tan((scene->camera.fov / 2.0) / 180 * M_PI));
 
-printf("tan: %f fov: %d\n", tan((scene->camera.fov / 2.0) / 180 * M_PI), scene->camera.fov);
-	printf("w: %f %f %f \nq: %f %f %f\n", w.x, w.y, w.z, q.x, q.y, q.z);
+// printf("tan: %f fov: %d\n", tan((scene->camera.fov / 2.0) / 180 * M_PI), scene->camera.fov);
+// 	printf("w: %f %f %f \nq: %f %f %f\n", w.x, w.y, w.z, q.x, q.y, q.z);
 
 	p = sub_vec3d(add_vec3d(scene->camera.pos, scene->camera.orient), add_vec3d(w, q));
 	scene->px = div_vec3d(w, (0.5 * scene->res.width));
 	scene->py = div_vec3d(q, (0.5 * scene->res.height));
-//loop?
-
 	return (sub_vec3d(p, scene->camera.pos));
 }
