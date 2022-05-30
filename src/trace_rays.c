@@ -104,11 +104,26 @@ void	intersect_sphere(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
 	t_vec3d		p;
 
 	ray->pos = add_vec3d(ray->pos, multi_vec3d(ray->dir, scene->hit));
-	n = norm_vec3d(sub_vec3d(ray->pos, obj->pos));//sphere
+	n = norm_vec3d(sub_vec3d(ray->pos, obj->pos));
 	ray->dir = n;
 	p = add_vec3d(add_vec3d(ray->pos, n), in_unit_sphere());
 	ray->dir = norm_vec3d(sub_vec3d(p, ray->pos));
+	ray->col = multi_colors(obj->colors, trace(scene, *ray, bounces - 1));
+}
 
+void	intersect_plane(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
+{
+	t_vec3d		n;
+	t_vec3d		p;
+
+	ray->pos = add_vec3d(ray->pos, multi_vec3d(ray->dir, scene->hit));
+	if (skalar_vec3d(ray->dir, obj->pl.orient) <= 0)
+		n = norm_vec3d(obj->pl.orient);
+	else
+		n =  norm_vec3d(multi_vec3d(obj->pl.orient, -1.0));
+	ray->dir = n;
+	p = add_vec3d(add_vec3d(ray->pos, n), in_unit_sphere());
+	ray->dir = norm_vec3d(sub_vec3d(p, ray->pos));
 	ray->col = multi_colors(obj->colors, trace(scene, *ray, bounces - 1));
 }
 
@@ -125,7 +140,7 @@ t_colors	trace(t_scene *scene, t_ray ray, int bounces)
 	while (list)
 	{
 		t = find_t(scene, (t_object *)list->content, ray);
-		if (t > 0.0 && t < scene->hit && t > 0.001)
+		if (t > 0.0 && t < scene->hit && t > 0.00001)
 		{
 			scene->hit = t;
 			obj = (t_object*)(list->content);
@@ -141,6 +156,8 @@ t_colors	trace(t_scene *scene, t_ray ray, int bounces)
 
 	if (obj->type == SPHERE)
 		intersect_sphere(scene, &ray, obj, bounces);
+	else if (obj->type == PLANE)
+		intersect_plane(scene, &ray, obj, bounces);
 	else
 		return (obj->colors);
 
