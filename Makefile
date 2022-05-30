@@ -1,5 +1,4 @@
 
-
 NAME		= miniRT
 
 CFLAGS		= -Wall -Wextra -Werror -O2
@@ -9,7 +8,7 @@ CC			= cc
 SRC			:= main.c read_file.c vec_math.c window.c send_rays.c trace_rays.c \
 				multisample.c\
 
-LDLIBS		:= -lft -lglfw -L "/Users/$(USER)/goinfre/.brew/opt/glfw/lib/" -lMLX42
+LDLIBS		:= -lft -lglfw -L "/Users/$(USER)/.brew/opt/glfw/lib/" -lMLX42
 
 LIBDIRS		:= $(wildcard libs/*)
 LDLIBS		:= $(addprefix -L./, $(LIBDIRS)) $(LDLIBS)
