@@ -139,6 +139,27 @@ t_colors	multi_colors(t_colors one, t_colors two)
 	return (ret);
 }
 
+t_colors	multi_col_factor(t_colors col, double factor)
+{
+	t_colors	ret;
+
+	ret.r = col.r + col.r * factor;
+	ret.g = col.g + col.g * factor;
+	ret.b = col.b + col.b * factor;
+	return (ret);
+}
+
+t_colors	check_col_max(t_colors c)
+{
+	if (c.r > 255)
+		c.r = 255;
+	if (c.g > 255)
+		c.g = 255;
+	if (c.b > 255)
+		c.b = 255;
+	return (c);
+}
+
 t_vec3d	in_unit_sphere()
 {
 	t_vec3d	p;
@@ -245,7 +266,6 @@ t_colors	trace(t_scene *scene, t_ray ray, int bounces)
 		return (scene->bg.col);
 
 	//if material property == MATTE
-	//if obj == SPHERE
 	
 	if (obj->type == SPHERE)
 		intersect_sphere(scene, &ray, obj, bounces);
@@ -255,9 +275,9 @@ t_colors	trace(t_scene *scene, t_ray ray, int bounces)
 		intersect_tube(scene, &ray, obj, bounces);
 	else if (obj->type == CIRCLE)
 		intersect_circle(scene, &ray, obj, bounces);
-	
 	else
 		return (obj->colors);
-	return (ray.col);
+
+	return (check_col_max(multi_col_factor(multi_colors(ray.col, scene->ambiente.colors), scene->ambiente.ratio)));
 }
 

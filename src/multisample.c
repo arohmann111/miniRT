@@ -38,7 +38,6 @@ int	multisample(t_scene	*scene, t_vec3d pix, int x, int y)
 		ray.pos = scene->camera.pos;
 		ray.col = mk_c(0, 0, 0);
 		color = trace(scene, ray, BOUNCES);
-		// color = trace(scene, dir);
 		rgb.r += color.r;
 		rgb.g += color.g;
 		rgb.b += color.b;

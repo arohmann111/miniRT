@@ -55,7 +55,6 @@ int	get_colors(t_colors *c, char *split_str, int line_cnt)
 		return (print_error("Wrong number of colors", line_cnt, colors));
 	while (i < 3)
 	{
-		// printf("color |%s|\n", colors[i]);
 		rgb[i] = ft_atoi(colors[i], &error);
 		if (error == ERROR)
 			return (print_error("Color can't be converted", line_cnt, colors));
@@ -79,7 +78,6 @@ int	get_vector(t_vec3d *v, char *split_str, int type, int line_cnt)
 
 	i = 0;
 	error = 0;
-	printf("%s\n", split_str);
 	vector = ft_split(split_str, ',');
 	if (!vector)
 		return (print_error("Split failed", line_cnt, NULL));
@@ -347,7 +345,6 @@ int	get_cy_circle(t_scene *scene, char **split, int line_cnt, t_vec3d pos)
 	int		error;
 
 	error = 0;
-	printf("bubub%d\n", arrlen(split));
 	if (arrlen(split) != 6)
 		return (print_error("Wrong circle input", line_cnt, split));
 	new = get_new_obj(CIRCLE);
@@ -382,7 +379,6 @@ int	get_cylinder(t_scene *scene, char **split, int line_cnt)
 		return (error_free(ERROR, split));
 	if (get_vector(&vec, split[1], COORDINATES, line_cnt) == ERROR)
 		return (error_free(ERROR, split));
-	printf("%s\n", __func__);
 	if (get_vector(&dir, split[2], ORIENTATION, line_cnt) == ERROR)
 		return (error_free(ERROR, split));
 	height = ft_atod(split[4], &error);
