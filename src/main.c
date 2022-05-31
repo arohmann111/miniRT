@@ -38,6 +38,7 @@ int	main(int ac, char **av)
 	if (read_file(&scene, av[1]) == ERROR)
 	{
 		ft_lstclear(&scene.list, free);
+		system("leaks miniRT");
 		return (ERROR);
 	}
 	mlx_stuff(&scene);
