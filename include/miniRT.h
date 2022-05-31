@@ -184,7 +184,9 @@ int	old_trace(t_scene *scene, t_vec3d dir);
 double	ft_rand_double(double min, double max);
 
 /* error handling */
-int	print_error(char *err_msg, int line_cnt);
+int	print_error(char *err_msg, int line_cnt, char **arr);
+int error_free(int error, char **arr);
+
 
 /* math functions */
 t_vec3d	add_vec3d(t_vec3d one, t_vec3d two);
