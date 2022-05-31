@@ -12,7 +12,7 @@ t_colors	mk_c(int r, int g, int b)
 	return (rgb);
 }
 
-double	sp_find_t(t_scene *scene, t_object *sphere, t_ray ray)
+double	sp_find_t(t_object *sphere, t_ray ray)
 {
 	double a;
 	double b;
@@ -36,7 +36,7 @@ double	sp_find_t(t_scene *scene, t_object *sphere, t_ray ray)
 	return (-1.0);
 }
 
-double	pl_find_t(t_scene *scene, t_object *plane, t_ray ray)
+double	pl_find_t(t_object *plane, t_ray ray)
 {
 	double	denom;
 	t_vec3d n;
@@ -47,17 +47,9 @@ double	pl_find_t(t_scene *scene, t_object *plane, t_ray ray)
 		return (-1.0);
 	else
 		return (skalar_vec3d(sub_vec3d(plane->pos, ray.pos), n) / denom);
-	(void)scene;
 }
 
-
-// void	cy_set_pos(t_object *cy)
-// {
-// 	cy->cy.pos[0] = add_vec3d(cy->pos, multi_vec3d(cy->cy.orient, cy->cy.height / 2.0));
-// 	cy->cy.pos[1] = add_vec3d(cy->pos, multi_vec3d(cy->cy.orient, cy->cy.height / -2.0));
-// }
-
-double	circ_find_t(t_scene *scene, t_object *circle, t_ray ray)
+double	circ_find_t(t_object *circle, t_ray ray)
 {
 	double	denom;
 	t_vec3d n;
@@ -67,19 +59,19 @@ double	circ_find_t(t_scene *scene, t_object *circle, t_ray ray)
 	n = norm_vec3d(circle->cl.orient);
 	denom = skalar_vec3d(ray.dir, n);
 	if (fabs(denom) < 0.00001)
-		return (-1);
+		return (-1.0);
 	else
 	{
 		res = (skalar_vec3d(sub_vec3d(circle->pos, ray.pos), n) / denom);
 		p = add_vec3d(ray.pos, multi_vec3d(ray.dir, res));
-		if ((pow((p.x - circle->pos.x), 2) + pow((p.y - circle->pos.y), 2) + pow((p.z - circle->pos.z), 2)) < pow(circle->cl.dia / 2, 2))
+		if ((pow((p.x - circle->pos.x), 2) + pow((p.y - circle->pos.y), 2) + pow((p.z - circle->pos.z), 2)) < pow((circle->cl.dia / 2), 2))
 			return (res);
 		else
 			return (-1);
 	}
 }
 
-double	tube_find_t(t_scene *scene, t_object *tube, t_ray ray)
+double	tube_find_t(t_object *tube, t_ray ray)
 {
 	double	a;
 	double	b;
@@ -103,32 +95,32 @@ double	tube_find_t(t_scene *scene, t_object *tube, t_ray ray)
 		return (-1.0);
 	t = (-b - sqrt(dis)) / (2.0 * a);
 	p = add_vec3d(ray.pos, multi_vec3d(ray.dir, t));
-	wtf = add_vec3d(tube->pos, sub_vec3d(p, tube->pos));
+	wtf = sub_vec3d(p, tube->pos);
 	cut = skalar_vec3d(tube->tb.orient, wtf);
 	if (t > 0.0 && fabs(cut) < (tube->tb.height / 2.0))
 		return (t);
 	t = (-b + sqrt(dis)) / (2.0 * a);
 	p = add_vec3d(ray.pos, multi_vec3d(ray.dir, t));
-	wtf = add_vec3d(tube->pos, sub_vec3d(p, tube->pos));
+	wtf = sub_vec3d(p, tube->pos);
 	cut = skalar_vec3d(tube->tb.orient, wtf);
 	if (t > 0.0 && fabs(cut) < (tube->tb.height / 2.0))
 		return (t);
 	return (-1.0);
 }
 
-double	find_t(t_scene *scene, t_object *obj, t_ray ray)
+double	find_t(t_object *obj, t_ray ray)
 {
 	double	t;
 
 	t = -2;
 	if (obj->type == SPHERE)
-		t = sp_find_t(scene, obj, ray);
+		t = sp_find_t(obj, ray);
 	else if (obj->type == PLANE)
-		t = pl_find_t(scene, obj, ray);
+		t = pl_find_t(obj, ray);
 	else if (obj->type == CIRCLE)
-		t = circ_find_t(scene, obj, ray);
+		t = circ_find_t(obj, ray);
 	else if (obj->type == TUBE)
-		t = tube_find_t(scene, obj, ray);
+		t = tube_find_t(obj, ray);
 	return (t);
 }
 
@@ -203,7 +195,7 @@ t_colors	trace(t_scene *scene, t_ray ray, int bounces)
 	list = scene->list;
 	while (list)
 	{
-		t = find_t(scene, (t_object *)list->content, ray);
+		t = find_t((t_object *)list->content, ray);
 		if (t > 0.0 && t < scene->hit && t > 0.00001)
 		{
 			scene->hit = t;
