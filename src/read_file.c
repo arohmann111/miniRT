@@ -343,9 +343,8 @@ int	get_cy_circle(t_scene *scene, char **split, int line_cnt, t_vec3d pos)
 	if (error == ERROR)
 		return (print_error("Circle diameter can't be converted", line_cnt));
 	((t_object*)new->content)->cl.dia = dia;
-	// if (get_colors(&((t_object*)new->content)->colors, split[5], line_cnt) == ERROR)
-	// 	return (ERROR);
-	((t_object*)new->content)->colors = mk_c(255, 0, 100);
+	if (get_colors(&((t_object*)new->content)->colors, split[5], line_cnt) == ERROR)
+		return (ERROR);
 	return (0);
 }
 

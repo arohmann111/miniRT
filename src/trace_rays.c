@@ -183,6 +183,44 @@ void	intersect_plane(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
 	ray->col = multi_colors(obj->colors, trace(scene, *ray, bounces - 1));
 }
 
+void	intersect_tube(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
+{
+	t_vec3d		n;
+	t_vec3d		p;
+	t_vec3d		objpos_to_n_intersec;
+	t_vec3d		objpos_to_raypos;
+	double		s;
+
+	ray->pos = add_vec3d(ray->pos, multi_vec3d(ray->dir, scene->hit));
+	objpos_to_raypos = sub_vec3d(ray->pos, obj->pos);
+	s = skalar_vec3d(obj->tb.orient, objpos_to_raypos);
+	objpos_to_n_intersec = multi_vec3d(obj->tb.orient, s);
+	n = sub_vec3d(objpos_to_raypos, objpos_to_n_intersec);
+	if (skalar_vec3d(ray->dir, n) <= 0)
+		n = norm_vec3d(n);
+	else
+		n = norm_vec3d(multi_vec3d(n, -1.0));
+	p = add_vec3d(add_vec3d(ray->pos, n), in_unit_sphere());
+	ray->dir = norm_vec3d(sub_vec3d(p, ray->pos));
+	ray->col = multi_colors(obj->colors, trace(scene, *ray, bounces - 1));
+}
+
+void	intersect_circle(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
+{
+	t_vec3d		n;
+	t_vec3d		p;
+
+	ray->pos = add_vec3d(ray->pos, multi_vec3d(ray->dir, scene->hit));
+	if (skalar_vec3d(ray->dir, obj->cl.orient) <= 0)
+		n = norm_vec3d(obj->cl.orient);
+	else
+		n =  norm_vec3d(multi_vec3d(obj->cl.orient, -1.0));
+	ray->dir = n;
+	p = add_vec3d(add_vec3d(ray->pos, n), in_unit_sphere());
+	ray->dir = norm_vec3d(sub_vec3d(p, ray->pos));
+	ray->col = multi_colors(obj->colors, trace(scene, *ray, bounces - 1));
+}
+
 t_colors	trace(t_scene *scene, t_ray ray, int bounces)
 {
 	t_object	*obj;
@@ -213,6 +251,11 @@ t_colors	trace(t_scene *scene, t_ray ray, int bounces)
 		intersect_sphere(scene, &ray, obj, bounces);
 	else if (obj->type == PLANE)
 		intersect_plane(scene, &ray, obj, bounces);
+	else if (obj->type == TUBE)
+		intersect_tube(scene, &ray, obj, bounces);
+	else if (obj->type == CIRCLE)
+		intersect_circle(scene, &ray, obj, bounces);
+	
 	else
 		return (obj->colors);
 	return (ray.col);
