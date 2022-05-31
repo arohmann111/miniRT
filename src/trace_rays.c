@@ -59,12 +59,12 @@ double	circ_find_t(t_object *circle, t_ray ray)
 	n = norm_vec3d(circle->cl.orient);
 	denom = skalar_vec3d(ray.dir, n);
 	if (fabs(denom) < 0.00001)
-		return (-1);
+		return (-1.0);
 	else
 	{
 		res = (skalar_vec3d(sub_vec3d(circle->pos, ray.pos), n) / denom);
 		p = add_vec3d(ray.pos, multi_vec3d(ray.dir, res));
-		if ((pow((p.x - circle->pos.x), 2) + pow((p.y - circle->pos.y), 2) + pow((p.z - circle->pos.z), 2)) < pow(circle->cl.dia / 2, 2))
+		if ((pow((p.x - circle->pos.x), 2) + pow((p.y - circle->pos.y), 2) + pow((p.z - circle->pos.z), 2)) < pow((circle->cl.dia / 2), 2))
 			return (res);
 		else
 			return (-1);
@@ -95,13 +95,13 @@ double	tube_find_t(t_object *tube, t_ray ray)
 		return (-1.0);
 	t = (-b - sqrt(dis)) / (2.0 * a);
 	p = add_vec3d(ray.pos, multi_vec3d(ray.dir, t));
-	wtf = add_vec3d(tube->pos, sub_vec3d(p, tube->pos));
+	wtf = sub_vec3d(p, tube->pos);
 	cut = skalar_vec3d(tube->tb.orient, wtf);
 	if (t > 0.0 && fabs(cut) < (tube->tb.height / 2.0))
 		return (t);
 	t = (-b + sqrt(dis)) / (2.0 * a);
 	p = add_vec3d(ray.pos, multi_vec3d(ray.dir, t));
-	wtf = add_vec3d(tube->pos, sub_vec3d(p, tube->pos));
+	wtf = sub_vec3d(p, tube->pos);
 	cut = skalar_vec3d(tube->tb.orient, wtf);
 	if (t > 0.0 && fabs(cut) < (tube->tb.height / 2.0))
 		return (t);
