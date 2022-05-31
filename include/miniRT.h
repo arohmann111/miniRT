@@ -39,8 +39,7 @@ enum e_object
 	PLANE,
 	SPHERE,
 	TUBE,
-	CIRCLE,
-	CYLINDER
+	CIRCLE
 };
 
 /* ************************************************************************** */

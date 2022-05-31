@@ -361,9 +361,8 @@ int	get_cy_circle(t_scene *scene, char **split, int line_cnt, t_vec3d pos)
 	if (error == ERROR)
 		return (print_error("Circle diameter can't be converted", line_cnt, split));
 	((t_object*)new->content)->cl.dia = dia;
-	// if (get_colors(&((t_object*)new->content)->colors, split[5], line_cnt) == ERROR)
-		// return (error_free(ERROR, split));
-	((t_object*)new->content)->colors = mk_c(255, 0, 100);
+	if (get_colors(&((t_object*)new->content)->colors, split[5], line_cnt) == ERROR)
+		return (error_free(ERROR, split));
 	ft_free_array(split);
 	return (0);
 }
@@ -385,12 +384,9 @@ int	get_cylinder(t_scene *scene, char **split, int line_cnt)
 	height = ft_atod(split[4], &error);
 	if (error == ERROR)
 		return(print_error("Cylinder height can't be converted", line_cnt, split));
-	// vec = sub_vec3d(vec, scene->camera.pos);
 	pos = add_vec3d(vec, multi_vec3d(dir, height / 2.0));
-	printf("pos: %f, %f, %f\n", pos.x, pos.y, pos.z);
 	get_cy_circle(scene, split, line_cnt, pos);
 	pos = add_vec3d(vec, multi_vec3d(dir, height / -2.0));
-	printf("-pos: %f, %f, %f\n", pos.x, pos.y, pos.z);
 	get_cy_circle(scene, split, line_cnt, pos);
 	ft_free_array(split);
 	return (0);
