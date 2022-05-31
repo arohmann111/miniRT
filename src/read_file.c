@@ -366,12 +366,9 @@ int	get_cylinder(t_scene *scene, char **split, int line_cnt)
 	height = ft_atod(split[4], &error);
 	if (error == ERROR)
 		return(print_error("Cylinder height can't be converted", line_cnt));
-	// vec = sub_vec3d(vec, scene->camera.pos);
 	pos = add_vec3d(vec, multi_vec3d(dir, height / 2.0));
-	printf("pos: %f, %f, %f\n", pos.x, pos.y, pos.z);
 	get_cy_circle(scene, split, line_cnt, pos);
 	pos = add_vec3d(vec, multi_vec3d(dir, height / -2.0));
-	printf("-pos: %f, %f, %f\n", pos.x, pos.y, pos.z);
 	get_cy_circle(scene, split, line_cnt, pos);
 	return (0);
 }
