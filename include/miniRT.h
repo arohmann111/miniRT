@@ -54,9 +54,9 @@ typedef struct s_vec3d
 
 typedef struct s_colors
 {
-	int	r;
-	int	g;
-	int	b;
+	double	r;
+	double	g;
+	double	b;
 }t_colors;
 
 typedef struct s_sphere
@@ -177,6 +177,7 @@ t_colors	trace(t_scene *scene, t_ray ray, int bounces);
 int			col(int r, int g, int b);
 int			multisample(t_scene	*scene, t_vec3d pix, int x, int y);
 t_colors	mk_c(int r, int g, int b);
+
 
 int	old_trace(t_scene *scene, t_vec3d dir);
 

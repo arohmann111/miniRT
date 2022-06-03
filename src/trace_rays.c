@@ -1,6 +1,7 @@
 
 
 #include "miniRT.h"
+double	intersect_light(t_scene *scene, t_ray ray);
 
 t_colors	mk_c(int r, int g, int b)
 {
@@ -25,7 +26,7 @@ double	sp_find_t(t_object *sphere, t_ray ray)
 	c = skalar_vec3d(sub_vec3d(ray.pos, sphere->pos),
 		sub_vec3d(ray.pos, sphere->pos)) - sphere->sp.diameter * sphere->sp.diameter / 4.0;
 	dis = b * b - 4.0 * a * c;
-	if (dis < 0)
+	if (dis < 0.0)
 		return (-1.0);//keine Lösung -> kein Schnittpunkt
 	t = (-b - sqrt(dis)) / (2.0 * a);
 	if (t > 0.0)
@@ -112,8 +113,9 @@ double	find_t(t_object *obj, t_ray ray)
 {
 	double	t;
 
-	t = -2;
+	t = -2.0;
 	if (obj->type == SPHERE)
+	// printf("check\n");
 		t = sp_find_t(obj, ray);
 	else if (obj->type == PLANE)
 		t = pl_find_t(obj, ray);
@@ -185,7 +187,11 @@ void	intersect_sphere(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
 	ray->dir = n;
 	p = add_vec3d(add_vec3d(ray->pos, n), in_unit_sphere());
 	ray->dir = norm_vec3d(sub_vec3d(p, ray->pos));
-	ray->col = multi_colors(obj->colors, trace(scene, *ray, bounces - 1));
+double x = 1 + (intersect_light(scene, *ray) / 100.0);
+// printf("%f\n", x);
+
+	ray->col = multi_col_factor(multi_colors(obj->colors, trace(scene, *ray, bounces - 1)), x);
+	// ray->col = multi_colors(obj->colors, trace(scene, *ray, bounces - 1));
 }
 
 void	intersect_plane(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
@@ -242,6 +248,42 @@ void	intersect_circle(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
 	ray->col = multi_colors(obj->colors, trace(scene, *ray, bounces - 1));
 }
 
+bool	same_vec3d(t_vec3d one, t_vec3d two)
+{
+	if (one.x == two.x && one.y == two.y && one.z == two.z)	
+		return (true);
+	return (false);
+}
+
+double	intersect_light(t_scene *scene, t_ray ray)
+{
+	t_vec3d	ray_to_light;
+	t_list	*list;
+	double	t;
+
+	list = scene->list;
+	t = 0.0;
+	ray_to_light = sub_vec3d(scene->light.pos, ray.pos);
+	while (list)
+	{
+		t = find_t((t_object *)list->content, ray);
+		if (t > 0.0)
+		{
+			t_vec3d ray_to_obj = add_vec3d(ray.pos, multi_vec3d(((t_object *)list->content)->pos, t));
+			t_vec3d multiple = multi_vec3d(norm_vec3d(ray_to_obj), len_vec3d(ray_to_light));
+				// printf("check\n");
+			if (same_vec3d(multiple, ray_to_light) == true)
+			{
+		// printf("bla %f\n", len_vec3d(ray_to_light));
+				if (len_vec3d(ray_to_light) < len_vec3d(ray_to_obj))
+					return (len_vec3d(ray_to_light));
+			}
+		}
+		list = list->next;
+	}
+	return (0.0);
+}
+
 t_colors	trace(t_scene *scene, t_ray ray, int bounces)
 {
 	t_object	*obj;
@@ -266,7 +308,8 @@ t_colors	trace(t_scene *scene, t_ray ray, int bounces)
 		return (scene->bg.col);
 
 	//if material property == MATTE
-	
+
+// printf("light distance: %f\n", distance_to_light);
 	if (obj->type == SPHERE)
 		intersect_sphere(scene, &ray, obj, bounces);
 	else if (obj->type == PLANE)
@@ -277,7 +320,10 @@ t_colors	trace(t_scene *scene, t_ray ray, int bounces)
 		intersect_circle(scene, &ray, obj, bounces);
 	else
 		return (obj->colors);
+	ray.col = multi_col_factor(multi_colors(ray.col, scene->ambiente.colors), scene->ambiente.ratio);
 
-	return (check_col_max(multi_col_factor(multi_colors(ray.col, scene->ambiente.colors), scene->ambiente.ratio)));
+	// if (distance_to_light != 0.0)
+	// 	multi_col_factor(ray.col, )
+	return (check_col_max(ray.col));
 }
 

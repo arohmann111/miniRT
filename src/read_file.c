@@ -161,10 +161,10 @@ int get_camera(t_scene *scene, char **split, int line_cnt)
 
 int	get_light(t_scene *scene, char **split, int line_cnt)
 {
-	int	brightness_ratio;
+	double	brightness_ratio;
 	int	error;
 
-	brightness_ratio = 0;
+	brightness_ratio = 0.0;
 	error = 0;
 	if (scene->light.is_set == true)
 		return (print_error("Light already exists", line_cnt, split));
@@ -175,7 +175,7 @@ int	get_light(t_scene *scene, char **split, int line_cnt)
 	brightness_ratio = ft_atod(split[2], &error);
 	if (error == ERROR)
 		return (print_error("Brightness ratio can't be converted", line_cnt, split));
-	if (check_range(0.0, 1.0, (double)brightness_ratio) == false)
+	if (check_range(0.0, 1.0, brightness_ratio) == false)
 		return (print_error("Brightness ratio is not in range [0.0,1.0]", line_cnt, split));
 	scene->light.bright = brightness_ratio;
 	if (get_colors(&scene->light.colors, split[3], line_cnt) == ERROR)
