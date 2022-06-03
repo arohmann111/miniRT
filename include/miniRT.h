@@ -26,7 +26,7 @@
 # define COORDINATES 1
 # define SAMPLE 20
 # define BOUNCES 10
-# define HIT 10000.0
+# define HIT 1000.0
 
 
 
