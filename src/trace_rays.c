@@ -220,17 +220,25 @@ void	intersect_sphere(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
 	light = scene->light;
 	ray->pos = add_vec3d(ray->pos, multi_vec3d(ray->dir, scene->hit));
 	n = norm_vec3d(sub_vec3d(ray->pos, obj->pos));
-	ray->dir = n;
+	ray->side = OUTSIDE;
+	if (skalar_vec3d(n, ray->dir) > 0)
+	{
+		ray->side = INSIDE;
+		n = multi_vec3d(n, -1.0);
+	}
+
 	p = add_vec3d(add_vec3d(ray->pos, n), in_unit_sphere());
+	
 	ray->dir = norm_vec3d(sub_vec3d(p, ray->pos));
 
 	l = sub_vec3d(light.pos, ray->pos);
 	n_l = skalar_vec3d(n, l);
 	double x = intersect_light(scene, *ray);
-// double x = (x * (scene->light.bright * n_l /(len_vec3d(n) * len_vec3d(l)))) * 100;
-// double x = (1 / pow(intersect_light(scene, *ray), 2)) * (scene->light.bright * n_l /(len_vec3d(n) * len_vec3d(l))) * 100;
-// printf("%f\n", (1 / pow(intersect_light(scene, *ray), 2)));
+	if (x == -2)
+		ray->col = multi_colors(mk_c(0,0,0), trace(scene, *ray, bounces - 1));
+
 	if (n_l <= 0 || x < 0)
+		// ray->col = simple_multi_col(multi_colors(multi_colors(obj->colors, trace(scene, *ray, bounces - 1)), scene->ambiente.colors), scene->ambiente.ratio + scene->ambiente.ratio * 0.24);//??? only use ambient light if no light is met
 		ray->col = multi_colors(obj->colors, trace(scene, *ray, bounces - 1));
 	else
 		ray->col = multi_col_factor(multi_colors(obj->colors, trace(scene, *ray, bounces - 1)), (1 / pow(x, 2)) * (scene->light.bright * n_l /(len_vec3d(n) * len_vec3d(l))) * 100);
@@ -257,8 +265,9 @@ void	intersect_plane(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
 	l = sub_vec3d(light.pos, ray->pos);
 	n_l = skalar_vec3d(n, l);
 	double x = intersect_light(scene, *ray);
-	// double x = ((light.bright * n_l /(len_vec3d(n) * len_vec3d(l))) * intersect_light(scene, *ray)) / 50;
+
 	if (n_l <= 0 || x < 0)
+		// ray->col = simple_multi_col(multi_colors(multi_colors(obj->colors, trace(scene, *ray, bounces - 1)), scene->ambiente.colors), scene->ambiente.ratio + scene->ambiente.ratio * 0.24);//???
 		ray->col = multi_colors(obj->colors, trace(scene, *ray, bounces - 1));
 	else
 		ray->col = multi_col_factor(multi_colors(obj->colors, trace(scene, *ray, bounces - 1)), (1 / pow(x, 2)) * (scene->light.bright * n_l /(len_vec3d(n) * len_vec3d(l))) * 80);
@@ -276,11 +285,13 @@ void	intersect_tube(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
 	objpos_to_raypos = sub_vec3d(ray->pos, obj->pos);
 	s = skalar_vec3d(obj->tb.orient, objpos_to_raypos);
 	objpos_to_n_intersec = multi_vec3d(obj->tb.orient, s);
-	n = sub_vec3d(objpos_to_raypos, objpos_to_n_intersec);
-	if (skalar_vec3d(ray->dir, n) <= 0)
-		n = norm_vec3d(n);
-	else
-		n = norm_vec3d(multi_vec3d(n, -1.0));
+	n = norm_vec3d(sub_vec3d(objpos_to_raypos, objpos_to_n_intersec));
+	ray->side = OUTSIDE;
+	if (skalar_vec3d(n, ray->dir) > 0)
+	{
+		ray->side = INSIDE;
+		n = multi_vec3d(n, -1.0);
+	}
 	p = add_vec3d(add_vec3d(ray->pos, n), in_unit_sphere());
 	ray->dir = norm_vec3d(sub_vec3d(p, ray->pos));
 	ray->col = multi_col_factor(multi_colors(obj->colors, trace(scene, *ray, bounces - 1)), intersect_light(scene, *ray) * (scene->light.bright / 100));
@@ -292,22 +303,18 @@ void	intersect_circle(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
 	t_vec3d		p;
 
 	ray->pos = add_vec3d(ray->pos, multi_vec3d(ray->dir, scene->hit));
-	if (skalar_vec3d(ray->dir, obj->cl.orient) <= 0)
-		n = norm_vec3d(obj->cl.orient);
-	else
-		n =  norm_vec3d(multi_vec3d(obj->cl.orient, -1.0));
-	ray->dir = n;
+	n = norm_vec3d(obj->cl.orient);
+	ray->side = OUTSIDE;
+	if (skalar_vec3d(n, ray->dir) > 0)
+	{
+		ray->side = INSIDE;
+		n = multi_vec3d(n, -1.0);
+	}
 	p = add_vec3d(add_vec3d(ray->pos, n), in_unit_sphere());
 	ray->dir = norm_vec3d(sub_vec3d(p, ray->pos));
 	ray->col = multi_col_factor(multi_colors(obj->colors, trace(scene, *ray, bounces - 1)), intersect_light(scene, *ray) * (scene->light.bright / 100));
 }
 
-// bool	same_vec3d(t_vec3d one, t_vec3d two)
-// {
-// 	if (one.x == two.x && one.y == two.y && one.z == two.z)	
-// 		return (true);
-// 	return (false);
-// }
 
 double	intersect_light(t_scene *scene, t_ray ray)
 {
@@ -319,10 +326,13 @@ double	intersect_light(t_scene *scene, t_ray ray)
 	t = 0.0;
 	light = ray;
 	light.dir = sub_vec3d(scene->light.pos, light.pos);
+	if (skalar_vec3d(light.dir, ray.dir) < 0)
+		// multi_vec3d(light.dir, -1.0);//??? abfangen wenn livht auf innenseite von objekt trifft
+		return (-2.0);
 	while (list)
 	{
 		t = find_t((t_object *)list->content, light);
-		if (t > 0.00001)
+		if (t > 0.0001 && t < scene->hit)
 		{
 			t_vec3d ray_to_obj = add_vec3d(light.pos, multi_vec3d(light.dir, t));
 			if (len_vec3d(ray_to_obj) < len_vec3d(light.dir))
@@ -355,6 +365,7 @@ t_colors	trace(t_scene *scene, t_ray ray, int bounces)
 	}
 	if (scene->hit == HIT)
 		return (scene->bg.col);
+		// return (simple_multi_col(multi_colors(scene->bg.col, scene->ambiente.colors), scene->ambiente.ratio + scene->ambiente.ratio * 0.24));//ambient light eingerechnet
 
 	//if material property == MATTE
 
@@ -369,7 +380,7 @@ t_colors	trace(t_scene *scene, t_ray ray, int bounces)
 	else
 		return (obj->colors);
 
-	ray.col = multi_col_factor(multi_colors(ray.col, scene->ambiente.colors), scene->ambiente.ratio);
+	// ray.col = simple_multi_col(multi_colors(ray.col, scene->ambiente.colors), scene->ambiente.ratio + scene->ambiente.ratio * 0.24);//ambient light eingerechnet
 	return (scale_color(ray.col));
 }
 

@@ -436,6 +436,17 @@ int	parsing(t_scene *scene, char *line, int line_cnt)
 	return(0);
 }
 
+int check_must_haves(t_scene *scene)
+{
+	if (scene->camera.is_set == false || scene->res.is_set == false)
+	// if (scene->ambiente.is_set == false || scene->light.is_set == false || scene->camera.is_set == false || scene->res.is_set == false)
+	{
+		ft_putendl_fd("Error: Mandatory scene file item is missing", STDERR_FILENO);
+		return (ERROR);
+	}
+	return (0);
+}
+
 int	read_file(t_scene *scene, char *file)
 {
 	char	*line;
@@ -466,5 +477,6 @@ int	read_file(t_scene *scene, char *file)
 		}
 	}
 	free(line);
-	return (0);
+	return(check_must_haves(scene));
+	// return (0);
 }
