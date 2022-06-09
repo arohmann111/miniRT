@@ -96,6 +96,8 @@ typedef struct s_circle
 typedef struct s_object
 {
 	enum e_object	type;
+	double			matte;
+	double			spec;
 	t_vec3d			pos;
 	t_colors		colors;
 	union
@@ -182,6 +184,7 @@ int			multisample(t_scene	*scene, t_vec3d pix, int x, int y);
 t_colors	mk_c(int r, int g, int b);
 t_colors	simple_multi_col(t_colors col, double factor);
 t_colors	multi_colors(t_colors one, t_colors two);
+t_colors	scale_color(t_colors c);
 
 int	old_trace(t_scene *scene, t_vec3d dir);
 
