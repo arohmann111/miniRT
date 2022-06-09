@@ -50,7 +50,7 @@ int	get_colors(t_colors *c, char *split_str, int line_cnt)
 	error = 0;
 	colors = ft_split(split_str, ',');
 	if (!colors)
-		return (print_error("Split failed", line_cnt, NULL));
+		return (print_error("Split failed", line_cnt, colors));
 	if (arrlen(colors) != 3)
 		return (print_error("Wrong number of colors", line_cnt, colors));
 	while (i < 3)
@@ -107,7 +107,7 @@ int	get_vector(t_vec3d *v, char *split_str, int type, int line_cnt)
 	error = 0;
 	vector = ft_split(split_str, ',');
 	if (!vector)
-		return (print_error("Split failed", line_cnt, NULL));
+		return (print_error("Split failed", line_cnt, vector));
 	if (arrlen(vector) != 3)
 		return (print_error("Wrong number of vector coordinates", line_cnt, vector));
 	while (i < 3)
@@ -326,19 +326,19 @@ int	get_tube(t_scene *scene, char **split, int line_cnt)
 		return (print_error("Wrong tube input", line_cnt, split));
 	new = get_new_obj(TUBE);
 	if (!new)
-		return (print_error("Tube object can't be allocated", line_cnt, split));
+		return (print_error("Tube object can't be allocated", line_cnt, NULL));
 	ft_lstadd_back(&scene->list, new);
 	if (get_vector(&((t_object*)new->content)->pos, split[1], COORDINATES, line_cnt) == ERROR)
-		return (error_free(ERROR, split));
+		return (error_free(ERROR, NULL));
 	if (get_vector(&((t_object*)new->content)->tb.orient, split[2], ORIENTATION, line_cnt) == ERROR)
-		return (error_free(ERROR, split));
+		return (error_free(ERROR, NULL));
 	dia = ft_atod(split[3], &error);
 	if (error == ERROR)
-		return (print_error("Tube diameter can't be converted", line_cnt, split));
+		return (print_error("Tube diameter can't be converted", line_cnt, NULL));
 	((t_object*)new->content)->tb.diameter = dia;
 	height = ft_atod(split[4], &error);
 	if (error == ERROR)
-		return (print_error("Tube height can't be converted", line_cnt, split));
+		return (print_error("Tube height can't be converted", line_cnt, NULL));
 	((t_object*)new->content)->tb.height = height;
 	if (get_colors(&((t_object*)new->content)->colors, split[5], line_cnt) == ERROR)
 		return (error_free(ERROR, split));
@@ -387,16 +387,16 @@ int	get_cy_circle(t_scene *scene, char **split, int line_cnt, t_vec3d pos)
 		return (print_error("Wrong circle input", line_cnt, split));
 	new = get_new_obj(CIRCLE);
 	if (!new)
-		return (print_error("Circle object can't be allocated", line_cnt, split));
+		return (print_error("Circle object can't be allocated", line_cnt, NULL));
 	ft_lstadd_back(&scene->list, new);
 	if (check_range(-500.0, 500.0, pos.x) == false || check_range(-500.0, 500.0, pos.y) == false || check_range(-500.0, 500.0, pos.z) == false)
-			return(print_error("Coordinate vector is not in range [-500.0,500.0]", line_cnt, split));
+			return(print_error("Coordinate vector is not in range [-500.0,500.0]", line_cnt, NULL));
 	((t_object*)new->content)->pos = pos;
 	if (get_vector(&((t_object*)new->content)->cl.orient, split[2], ORIENTATION, line_cnt) == ERROR)
-		return (error_free(ERROR, split));
+		return (ERROR);
 	dia = ft_atod(split[3], &error);
 	if (error == ERROR)
-		return (print_error("Circle diameter can't be converted", line_cnt, split));
+		return (print_error("Circle diameter can't be converted", line_cnt, NULL));
 	((t_object*)new->content)->cl.dia = dia;
 	if (get_colors(&((t_object*)new->content)->colors, split[5], line_cnt) == ERROR)
 		return (error_free(ERROR, split));
@@ -415,20 +415,20 @@ int	get_cylinder(t_scene *scene, char **split, int line_cnt)
 
 	error = 0;
 	if (get_tube(scene, split, line_cnt) == ERROR)
-		return (error_free(ERROR, split));
+		return (ERROR);
 	if (get_vector(&vec, split[1], COORDINATES, line_cnt) == ERROR)
-		return (error_free(ERROR, split));
+		return ((ERROR));
 	if (get_vector(&dir, split[2], ORIENTATION, line_cnt) == ERROR)
-		return (error_free(ERROR, split));
+		return (ERROR);
 	height = ft_atod(split[4], &error);
 	if (error == ERROR)
-		return(print_error("Cylinder height can't be converted", line_cnt, split));
+		return(print_error("Cylinder height can't be converted", line_cnt,  NULL));
 	pos = add_vec3d(vec, multi_vec3d(dir, height / 2.0));
 	if (get_cy_circle(scene, split, line_cnt, pos) == ERROR)
-		return (error_free(ERROR, split));
+		return (ERROR);
 	pos = add_vec3d(vec, multi_vec3d(dir, height / -2.0));
 	if (get_cy_circle(scene, split, line_cnt, pos) == ERROR)
-		return (error_free(ERROR, split));
+		return (ERROR);
 	ft_free_array(split);
 	return (0);
 }
@@ -440,9 +440,17 @@ int	get_obj(t_scene *scene, char **split, int line_cnt)
 	if (split[0][0] == 's' && split[0][1] == 'p')
 		return (get_sphere(scene, split, line_cnt));
 	if (split[0][0] == 'c' && split[0][1] == 'y')
-		return (get_cylinder(scene, split, line_cnt));
+	{
+		if (get_cylinder(scene, split, line_cnt) == ERROR)
+			return (error_free(ERROR, split));
+		return (0);
+	}
 	if (split[0][0] == 't' && split[0][1] == 'b')
-		return (get_tube(scene, split, line_cnt));
+	{
+		if (get_tube(scene, split, line_cnt) == ERROR)
+			return (error_free(ERROR, split));
+		return (0);
+	}
 	if (split[0][0] == 'c' && split[0][1] == 'l')
 		return (get_circle(scene, split, line_cnt));
 	else
