@@ -234,14 +234,16 @@ void	intersect_sphere(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
 	l = sub_vec3d(light.pos, ray->pos);
 	n_l = skalar_vec3d(n, l);
 	double x = intersect_light(scene, *ray);
-	if (x == -2)
-		ray->col = multi_colors(mk_c(0,0,0), trace(scene, *ray, bounces - 1));
-
+	// if (x == -2)
+	// 	ray->col = multi_colors(mk_c(0,0,0), trace(scene, *ray, bounces - 1));
 	if (n_l <= 0 || x < 0)
 		// ray->col = simple_multi_col(multi_colors(multi_colors(obj->colors, trace(scene, *ray, bounces - 1)), scene->ambiente.colors), scene->ambiente.ratio + scene->ambiente.ratio * 0.24);//??? only use ambient light if no light is met
 		ray->col = multi_colors(obj->colors, trace(scene, *ray, bounces - 1));
 	else
+	{
+		// ray->col = multi_colors(ray->col, simple_multi_col(scene->ambiente.colors, 1 / (scene->ambiente.ratio) + 0.5));
 		ray->col = multi_col_factor(multi_colors(obj->colors, trace(scene, *ray, bounces - 1)), (1 / pow(x, 2)) * (scene->light.bright * n_l /(len_vec3d(n) * len_vec3d(l))) * 100);
+	}
 }
 
 void	intersect_plane(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
@@ -327,12 +329,12 @@ double	intersect_light(t_scene *scene, t_ray ray)
 	light = ray;
 	light.dir = sub_vec3d(scene->light.pos, light.pos);
 	if (skalar_vec3d(light.dir, ray.dir) < 0)
-		// multi_vec3d(light.dir, -1.0);//??? abfangen wenn livht auf innenseite von objekt trifft
 		return (-2.0);
+		// multi_vec3d(light.dir, -1.0);//??? abfangen wenn livht auf innenseite von objekt trifft
 	while (list)
 	{
 		t = find_t((t_object *)list->content, light);
-		if (t > 0.0001 && t < scene->hit)
+		if (t > 0.0001)
 		{
 			t_vec3d ray_to_obj = add_vec3d(light.pos, multi_vec3d(light.dir, t));
 			if (len_vec3d(ray_to_obj) < len_vec3d(light.dir))
@@ -348,11 +350,14 @@ t_colors	trace(t_scene *scene, t_ray ray, int bounces)
 	t_object	*obj;
 	t_list		*list;
 	double		t;
+	t_colors	ambient;
 
 	if (bounces == 0)
 		return (mk_c(0,0,0));
 	scene->hit = HIT;
 	list = scene->list;
+	ambient = simple_multi_col(scene->ambiente.colors, scene->ambiente.ratio + 0.5);
+	// ray.col = multi_colors(ray.col, ambient);
 	while (list)
 	{
 		t = find_t((t_object *)list->content, ray);
@@ -364,7 +369,7 @@ t_colors	trace(t_scene *scene, t_ray ray, int bounces)
 		list = list->next;
 	}
 	if (scene->hit == HIT)
-		return (scene->bg.col);
+		return (multi_colors(scene->bg.col, ambient));
 		// return (simple_multi_col(multi_colors(scene->bg.col, scene->ambiente.colors), scene->ambiente.ratio + scene->ambiente.ratio * 0.24));//ambient light eingerechnet
 
 	//if material property == MATTE
@@ -381,6 +386,7 @@ t_colors	trace(t_scene *scene, t_ray ray, int bounces)
 		return (obj->colors);
 
 	// ray.col = simple_multi_col(multi_colors(ray.col, scene->ambiente.colors), scene->ambiente.ratio + scene->ambiente.ratio * 0.24);//ambient light eingerechnet
-	return (scale_color(ray.col));
+	// ray.col = ;
+	return (scale_color(multi_colors(ray.col, ambient)));
 }
 
