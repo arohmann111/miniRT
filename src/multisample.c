@@ -36,7 +36,7 @@ int	multisample(t_scene	*scene, t_vec3d pix, int x, int y)
 		ray.dir = add_vec3d(pix, add_vec3d(multi_vec3d(scene->px, x + arr[i]), multi_vec3d(scene->py, scene->res.height - 1 - y + arr[i])));
 		ray.dir = norm_vec3d(ray.dir);
 		ray.pos = scene->camera.pos;
-		ray.col = mk_c(0, 0, 0);
+		ray.col = mk_c(255, 255, 255);
 		color = trace(scene, ray, BOUNCES);
 		rgb.r += color.r;
 		rgb.g += color.g;

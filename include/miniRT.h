@@ -26,7 +26,9 @@
 # define COORDINATES 1
 # define SAMPLE 20
 # define BOUNCES 10
-# define HIT 10000.0
+# define HIT 1000.0
+# define INSIDE 0
+# define OUTSIDE 1
 
 
 
@@ -147,6 +149,7 @@ typedef struct s_ray
 	t_vec3d		pos;
 	t_vec3d		dir;
 	t_colors	col;
+	bool		side;
 }t_ray;
 
 typedef struct s_scene
@@ -177,6 +180,8 @@ t_colors	trace(t_scene *scene, t_ray ray, int bounces);
 int			col(int r, int g, int b);
 int			multisample(t_scene	*scene, t_vec3d pix, int x, int y);
 t_colors	mk_c(int r, int g, int b);
+t_colors	simple_multi_col(t_colors col, double factor);
+t_colors	multi_colors(t_colors one, t_colors two);
 
 int	old_trace(t_scene *scene, t_vec3d dir);
 
