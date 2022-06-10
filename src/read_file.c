@@ -159,31 +159,6 @@ int get_camera(t_scene *scene, char **split, int line_cnt)
 	return (0);
 }
 
-int	get_light(t_scene *scene, char **split, int line_cnt)
-{
-	double	brightness_ratio;
-	int	error;
-
-	brightness_ratio = 0.0;
-	error = 0;
-	if (scene->light.is_set == true)
-		return (print_error("Light already exists", line_cnt, split));
-	if (arrlen(split) != 4)
-		return (print_error("Wrong light input", line_cnt, split));
-	if (get_vector(&scene->light.pos, split[1], COORDINATES, line_cnt) == ERROR)
-		return (error_free(ERROR, split));
-	brightness_ratio = ft_atod(split[2], &error);
-	if (error == ERROR)
-		return (print_error("Brightness ratio can't be converted", line_cnt, split));
-	if (check_range(0.0, 1.0, brightness_ratio) == false)
-		return (print_error("Brightness ratio is not in range [0.0,1.0]", line_cnt, split));
-	scene->light.bright = brightness_ratio;
-	if (get_colors(&scene->light.colors, split[3], line_cnt) == ERROR)
-		return (error_free(ERROR, split));
-	scene->light.is_set = true;
-	ft_free_array(split);
-	return (0);
-}
 
 int	get_resolution(t_scene *scene, char **split, int line_cnt)
 {
@@ -231,6 +206,46 @@ t_list	*get_new_obj(int type)
 		return (NULL);
 	obj->type = type;
 	return (ft_lstnew(obj));
+}
+
+t_list	*get_new_l(void)
+{
+	t_light	*l;
+
+	l = (t_light *)malloc(sizeof(t_light) * 1);
+	if (!l)
+		return (NULL);
+	return (ft_lstnew(l));
+}
+
+
+int	get_light(t_scene *scene, char **split, int line_cnt)
+{
+	t_list		*new_elem;
+	double	brightness_ratio;
+	int	error;
+
+	brightness_ratio = 0.0;
+	error = 0;
+	if (arrlen(split) != 4)
+		return (print_error("Wrong light input", line_cnt, split));
+	new_elem = get_new_l();
+	if (!new_elem)
+		return (print_error("Light can't be allocated", line_cnt, split));
+	ft_lstadd_back(&scene->lights, new_elem);
+	if (get_vector(&((t_light *)new_elem->content)->pos, split[1], COORDINATES, line_cnt) == ERROR)
+		return (error_free(ERROR, split));
+	brightness_ratio = ft_atod(split[2], &error);
+	if (error == ERROR)
+		return (print_error("Brightness ratio can't be converted", line_cnt, split));
+	if (check_range(0.0, 1.0, brightness_ratio) == false)
+		return (print_error("Brightness ratio is not in range [0.0,1.0]", line_cnt, split));
+	((t_light *)new_elem->content)->bright = brightness_ratio;
+	if (get_colors(&((t_light *)new_elem->content)->colors, split[3], line_cnt) == ERROR)
+		return (error_free(ERROR, split));
+	((t_light *)new_elem->content)->is_set = true;
+	ft_free_array(split);
+	return (0);
 }
 
 int get_plane(t_scene *scene, char **split, int line_cnt)

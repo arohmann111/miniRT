@@ -41,7 +41,7 @@ enum e_object
 	PLANE,
 	SPHERE,
 	TUBE,
-	CIRCLE
+	CIRCLE,
 };
 
 /* ************************************************************************** */
@@ -158,7 +158,7 @@ typedef struct s_scene
 	t_vec3d		px;
 	t_vec3d		py;
 	t_ambiente	ambiente;
-	t_light		light;
+	t_list		*lights;
 	t_camera	camera;
 	t_res		res;
 	t_bg		bg;
