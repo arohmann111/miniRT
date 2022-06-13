@@ -26,7 +26,10 @@ t_vec3d	get_corner_pixel(t_scene *scene)
 	t_vec3d	p;
 
 	relation = (double)scene->res.height / (double)scene->res.width;
-	w = cross_vec3d(scene->camera.orient, mk_v(0.0, 1.0, 0.0));
+	if (fabs(scene->camera.orient.y) > 0.9)
+		w = cross_vec3d(scene->camera.orient, mk_v(0.0, 0.0, 1.0));
+	else
+		w = cross_vec3d(scene->camera.orient, mk_v(0.0, 1.0, 0.0));
 	q = cross_vec3d(w, scene->camera.orient);
 
 	w = norm_vec3d(w);
