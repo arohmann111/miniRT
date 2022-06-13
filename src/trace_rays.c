@@ -214,11 +214,7 @@ void	intersect_sphere(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
 {
 	t_vec3d		n;
 	t_vec3d		p;
-	// t_vec3d		l;
-	// double		n_l;
-	// t_light		*light;
 
-	// light = (t_light *)scene->lights.content;
 	ray->pos = add_vec3d(ray->pos, multi_vec3d(ray->dir, scene->hit));
 	n = norm_vec3d(sub_vec3d(ray->pos, obj->pos));
 	ray->side = OUTSIDE;
@@ -232,8 +228,6 @@ void	intersect_sphere(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
 	// l = sub_vec3d(light->pos, ray->pos);
 	// n_l = skalar_vec3d(n, l);
 	double x = get_multi_l(scene, *ray, n);
-	// if (x == -2)
-	// 	ray->col = multi_colors(mk_c(0,0,0), trace(scene, *ray, bounces - 1));
 	if (x == 1)
 		// ray->col = simple_multi_col(multi_colors(multi_colors(obj->colors, trace(scene, *ray, bounces - 1)), scene->ambiente.colors), scene->ambiente.ratio + scene->ambiente.ratio * 0.24);//??? only use ambient light if no light is met
 		ray->col = multi_colors(obj->colors, trace(scene, *ray, bounces - 1));
@@ -244,76 +238,74 @@ void	intersect_sphere(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
 	}
 }
 
-// void	intersect_plane(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
-// {
-// 	t_vec3d		n;
-// 	t_vec3d		p;
-// 	t_vec3d		l;
-// 	t_light		*light;
-// 	double		n_l;
+void	intersect_plane(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
+{
+	t_vec3d		n;
+	t_vec3d		p;
+	// t_vec3d		l;
+	// double		n_l;
 
-// 	light = (t_light *)scene->lights.content;
-// 	ray->pos = add_vec3d(ray->pos, multi_vec3d(ray->dir, scene->hit));
-// 	if (skalar_vec3d(ray->dir, obj->pl.orient) <= 0)
-// 		n = norm_vec3d(obj->pl.orient);
-// 	else
-// 		n =  norm_vec3d(multi_vec3d(obj->pl.orient, -1.0));
-// 	ray->dir = n;
-// 	p = add_vec3d(add_vec3d(ray->pos, n), in_unit_sphere());
-// 	ray->dir = norm_vec3d(sub_vec3d(p, ray->pos));
+	ray->pos = add_vec3d(ray->pos, multi_vec3d(ray->dir, scene->hit));
+	if (skalar_vec3d(ray->dir, obj->pl.orient) <= 0)
+		n = norm_vec3d(obj->pl.orient);
+	else
+		n =  norm_vec3d(multi_vec3d(obj->pl.orient, -1.0));
+	ray->dir = n;
+	p = add_vec3d(add_vec3d(ray->pos, n), in_unit_sphere());
+	ray->dir = norm_vec3d(sub_vec3d(p, ray->pos));
 
-// 	l = sub_vec3d(light->pos, ray->pos);
-// 	n_l = skalar_vec3d(n, l);
-// 	double x = intersect_light(scene, *ray);
+	// l = sub_vec3d(light->pos, ray->pos);
+	// n_l = skalar_vec3d(n, l);
+	double x = get_multi_l(scene, *ray, n);
 
-// 	if (n_l <= 0 || x < 0)
-// 		// ray->col = simple_multi_col(multi_colors(multi_colors(obj->colors, trace(scene, *ray, bounces - 1)), scene->ambiente.colors), scene->ambiente.ratio + scene->ambiente.ratio * 0.24);//???
-// 		ray->col = multi_colors(obj->colors, trace(scene, *ray, bounces - 1));
-// 	else
-// 		ray->col = multi_col_factor(multi_colors(obj->colors, trace(scene, *ray, bounces - 1)), (1 / pow(x, 2)) * (light->bright * n_l /(len_vec3d(n) * len_vec3d(l))) * 80);
-// }
+	if (x < 0)
+		// ray->col = simple_multi_col(multi_colors(multi_colors(obj->colors, trace(scene, *ray, bounces - 1)), scene->ambiente.colors), scene->ambiente.ratio + scene->ambiente.ratio * 0.24);//???
+		ray->col = multi_colors(obj->colors, trace(scene, *ray, bounces - 1));
+	else
+		ray->col = multi_col_factor(multi_colors(obj->colors, trace(scene, *ray, bounces - 1)), x * 0.1);
+}
 
-// void	intersect_tube(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
-// {
-// 	t_vec3d		n;
-// 	t_vec3d		p;
-// 	t_vec3d		objpos_to_n_intersec;
-// 	t_vec3d		objpos_to_raypos;
-// 	double		s;
+void	intersect_tube(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
+{
+	t_vec3d		n;
+	t_vec3d		p;
+	t_vec3d		objpos_to_n_intersec;
+	t_vec3d		objpos_to_raypos;
+	double		s;
 
-// 	ray->pos = add_vec3d(ray->pos, multi_vec3d(ray->dir, scene->hit));
-// 	objpos_to_raypos = sub_vec3d(ray->pos, obj->pos);
-// 	s = skalar_vec3d(obj->tb.orient, objpos_to_raypos);
-// 	objpos_to_n_intersec = multi_vec3d(obj->tb.orient, s);
-// 	n = norm_vec3d(sub_vec3d(objpos_to_raypos, objpos_to_n_intersec));
-// 	ray->side = OUTSIDE;
-// 	if (skalar_vec3d(n, ray->dir) > 0)
-// 	{
-// 		ray->side = INSIDE;
-// 		n = multi_vec3d(n, -1.0);
-// 	}
-// 	p = add_vec3d(add_vec3d(ray->pos, n), in_unit_sphere());
-// 	ray->dir = norm_vec3d(sub_vec3d(p, ray->pos));
-// 	ray->col = multi_col_factor(multi_colors(obj->colors, trace(scene, *ray, bounces - 1)), intersect_light(scene, *ray) * (((t_light *)scene->lights.content)->bright / 100));
-// }
+	ray->pos = add_vec3d(ray->pos, multi_vec3d(ray->dir, scene->hit));
+	objpos_to_raypos = sub_vec3d(ray->pos, obj->pos);
+	s = skalar_vec3d(obj->tb.orient, objpos_to_raypos);
+	objpos_to_n_intersec = multi_vec3d(obj->tb.orient, s);
+	n = norm_vec3d(sub_vec3d(objpos_to_raypos, objpos_to_n_intersec));
+	ray->side = OUTSIDE;
+	if (skalar_vec3d(n, ray->dir) > 0)
+	{
+		ray->side = INSIDE;
+		n = multi_vec3d(n, -1.0);
+	}
+	p = add_vec3d(add_vec3d(ray->pos, n), in_unit_sphere());
+	ray->dir = norm_vec3d(sub_vec3d(p, ray->pos));
+	ray->col = multi_col_factor(multi_colors(obj->colors, trace(scene, *ray, bounces - 1)), get_multi_l(scene, *ray, n) * 0.1);
+}
 
-// void	intersect_circle(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
-// {
-// 	t_vec3d		n;
-// 	t_vec3d		p;
+void	intersect_circle(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
+{
+	t_vec3d		n;
+	t_vec3d		p;
 
-// 	ray->pos = add_vec3d(ray->pos, multi_vec3d(ray->dir, scene->hit));
-// 	n = norm_vec3d(obj->cl.orient);
-// 	ray->side = OUTSIDE;
-// 	if (skalar_vec3d(n, ray->dir) > 0)
-// 	{
-// 		ray->side = INSIDE;
-// 		n = multi_vec3d(n, -1.0);
-// 	}
-// 	p = add_vec3d(add_vec3d(ray->pos, n), in_unit_sphere());
-// 	ray->dir = norm_vec3d(sub_vec3d(p, ray->pos));
-// 	ray->col = multi_col_factor(multi_colors(obj->colors, trace(scene, *ray, bounces - 1)), intersect_light(scene, *ray) * (((t_light *)scene->lights.content)->bright / 100));
-// }
+	ray->pos = add_vec3d(ray->pos, multi_vec3d(ray->dir, scene->hit));
+	n = norm_vec3d(obj->cl.orient);
+	ray->side = OUTSIDE;
+	if (skalar_vec3d(n, ray->dir) > 0)
+	{
+		ray->side = INSIDE;
+		n = multi_vec3d(n, -1.0);
+	}
+	p = add_vec3d(add_vec3d(ray->pos, n), in_unit_sphere());
+	ray->dir = norm_vec3d(sub_vec3d(p, ray->pos));
+	ray->col = multi_col_factor(multi_colors(obj->colors, trace(scene, *ray, bounces - 1)), get_multi_l(scene, *ray, n) * 0.1);
+}
 
 double	get_multi_l(t_scene *scene, t_ray ray, t_vec3d n)
 {
@@ -328,7 +320,7 @@ double	get_multi_l(t_scene *scene, t_ray ray, t_vec3d n)
 	while (lights)
 	{
 		uva = intersect_light(scene, ray, (t_light*)(lights->content), n);
-		if (uva != -1 && uva != -2)
+		if (uva != -1 && uva != 1)
 		{
 			// l = sub_vec3d(((t_light*)lights->content)->pos, ray.pos);
 			// n_l = skalar_vec3d(n, l);
@@ -352,16 +344,15 @@ double	intersect_light(t_scene *scene, t_ray ray, t_light *light, t_vec3d n)
 	t = 0.0;
 	cp_r = ray;
 	cp_r.dir = sub_vec3d(light->pos, cp_r.pos);
-	if (skalar_vec3d(cp_r.dir, ray.dir) < 0)
-		return (-2.0);
+	len = len_vec3d(cp_r.dir);
+	norm_vec3d(cp_r.dir);
 		// multi_vec3d(light.dir, -1.0);//??? abfangen wenn livht auf innenseite von objekt trifft
 	while (list)
 	{
 		t = find_t((t_object *)list->content, cp_r);
 		if (t > 0.0001)
 		{
-			t_vec3d ray_to_obj = add_vec3d(cp_r.pos, multi_vec3d(cp_r.dir, t));
-			if (len_vec3d(ray_to_obj) < len_vec3d(cp_r.dir))
+			if (t < len)
 				return (-1.0);
 		}
 		list = list->next;
@@ -371,7 +362,7 @@ double	intersect_light(t_scene *scene, t_ray ray, t_light *light, t_vec3d n)
 	if (n_l < 0)
 		return (1);
 	// len = (1 / pow(len_vec3d(cp_r.dir), 2)) * (light->bright * n_l /(len_vec3d(n) * len_vec3d(cp_r.dir)) * 100);
-	len = len_vec3d(cp_r.dir);
+	// len = len_vec3d(cp_r.dir);
 	return (len);
 }
 
