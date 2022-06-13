@@ -209,6 +209,14 @@ t_vec3d	in_unit_sphere()
 	}
 }
 
+t_vec3d	reflection_vec(t_vec3d n, t_ray ray)
+{
+	t_vec3d	reflection;
+
+	reflection = sub_vec3d(ray.dir, multi_vec3d(n, 2 * skalar_vec3d(ray.dir, n)));
+	return (reflection);
+}
+
 void	intersect_sphere(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
 {
 	t_vec3d		n;
@@ -227,7 +235,11 @@ void	intersect_sphere(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
 		n = multi_vec3d(n, -1.0);
 	}
 
-	p = add_vec3d(add_vec3d(ray->pos, n), in_unit_sphere());//if lighting is diffuse
+	double rand = ft_rand_double(0.0, 1.0);
+	if (rand <= obj->matte)//if lighting is diffuse
+		p = add_vec3d(add_vec3d(ray->pos, n), in_unit_sphere());
+	else// if lighting is specular
+		p = add_vec3d(add_vec3d(ray->pos, n), reflection_vec(n, *ray));
 	
 	ray->dir = norm_vec3d(sub_vec3d(p, ray->pos));
 
@@ -259,7 +271,14 @@ void	intersect_plane(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
 	else
 		n =  norm_vec3d(multi_vec3d(obj->pl.orient, -1.0));
 
-	p = add_vec3d(add_vec3d(ray->pos, n), in_unit_sphere());
+
+	double rand = ft_rand_double(0.0, 1.0);
+	if (rand <= obj->matte)//if lighting is diffuse
+		p = add_vec3d(add_vec3d(ray->pos, n), in_unit_sphere());
+	else// if lighting is specular
+		p = add_vec3d(add_vec3d(ray->pos, n), reflection_vec(n, *ray));
+
+
 	ray->dir = norm_vec3d(sub_vec3d(p, ray->pos));
 
 	l = sub_vec3d(light.pos, ray->pos);
@@ -291,7 +310,11 @@ void	intersect_tube(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
 		ray->side = INSIDE;
 		n = multi_vec3d(n, -1.0);
 	}
-	p = add_vec3d(add_vec3d(ray->pos, n), in_unit_sphere());
+	double rand = ft_rand_double(0.0, 1.0);
+	if (rand <= obj->matte)//if lighting is diffuse
+		p = add_vec3d(add_vec3d(ray->pos, n), in_unit_sphere());
+	else// if lighting is specular
+		p = add_vec3d(add_vec3d(ray->pos, n), reflection_vec(n, *ray));
 	ray->dir = norm_vec3d(sub_vec3d(p, ray->pos));
 	ray->col = multi_col_factor(multi_colors(obj->colors, trace(scene, *ray, bounces - 1)), intersect_light(scene, *ray) * (scene->light.bright / 100));
 }
@@ -309,11 +332,14 @@ void	intersect_circle(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
 		ray->side = INSIDE;
 		n = multi_vec3d(n, -1.0);
 	}
-	p = add_vec3d(add_vec3d(ray->pos, n), in_unit_sphere());
+	double rand = ft_rand_double(0.0, 1.0);
+	if (rand <= obj->matte)//if lighting is diffuse
+		p = add_vec3d(add_vec3d(ray->pos, n), in_unit_sphere());
+	else// if lighting is specular
+		p = add_vec3d(add_vec3d(ray->pos, n), reflection_vec(n, *ray));
 	ray->dir = norm_vec3d(sub_vec3d(p, ray->pos));
 	ray->col = multi_col_factor(multi_colors(obj->colors, trace(scene, *ray, bounces - 1)), intersect_light(scene, *ray) * (scene->light.bright / 100));
 }
-
 
 double	intersect_light(t_scene *scene, t_ray ray)
 {
