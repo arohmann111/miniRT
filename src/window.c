@@ -29,7 +29,7 @@ int32_t	mlx_stuff(t_scene *scene)
 	// t_vec3d	dir;
 	
 	y = 0;
-	scene->mlx = mlx_init(scene->res.width, scene->res.height, "MLX42", true);
+	scene->mlx = mlx_init(scene->res.width, scene->res.height, "MLX42", false);
 	if (!scene->mlx)
 		exit(ERROR);
 	g_img = mlx_new_image(scene->mlx, scene->res.width, scene->res.height);

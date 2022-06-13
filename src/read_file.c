@@ -69,6 +69,33 @@ int	get_colors(t_colors *c, char *split_str, int line_cnt)
 	return (0);
 }
 
+int	get_material(t_object *obj, char *split_str, int line_cnt)
+{
+	char	**material;
+	int		error;
+
+	error = 0;
+	material = ft_split(split_str, ',');
+	if (!material)
+		return (print_error("Split failed", line_cnt, NULL));
+	if (arrlen(material) != 2)
+		return (print_error("Wrong number of material factors", line_cnt, material));
+	obj->matte = ft_atod(material[0], &error);
+	if (error == ERROR)
+		return (print_error("Matte material factor can't be converted", line_cnt, material));
+	if (check_range(0.0, 1.0, obj->matte) == false)
+		return(print_error("Material factor is not in range [0.0-1.0]", line_cnt, material));
+	obj->spec = ft_atod(material[1], &error);
+	if (error == ERROR)
+		return (print_error("Specular material factor can't be converted", line_cnt, material));
+	if (check_range(0.0, 1.0, obj->spec) == false)
+		return(print_error("Material factor is not in range [0.0-1.0]", line_cnt, material));
+	if (obj->matte + obj->spec != 1)
+		return(print_error("Material factors must sum up to one", line_cnt, material));
+	ft_free_array(material);
+	return (0);
+}
+
 int	get_vector(t_vec3d *v, char *split_str, int type, int line_cnt)
 {
 	char	**vector;
@@ -126,6 +153,10 @@ int get_ambiente(t_scene *scene, char **split, int line_cnt)
 	scene->ambiente.ratio = ratio;
 	if (get_colors(&scene->ambiente.colors, split[2], line_cnt) == ERROR)
 		return (error_free(ERROR, split));
+	scene->ambiente.colors.r = scene->ambiente.colors.r + 100;
+	scene->ambiente.colors.g = scene->ambiente.colors.g + 100;
+	scene->ambiente.colors.b = scene->ambiente.colors.b + 100;
+	scale_color(scene->ambiente.colors);
 	scene->ambiente.is_set = true;
 	ft_free_array(split);
 	return (0);
@@ -252,7 +283,7 @@ int get_plane(t_scene *scene, char **split, int line_cnt)
 {
 	t_list		*new_elem;
 
-	if (arrlen(split) != 4)
+	if (arrlen(split) != 5)
 		return (print_error("Wrong plane input", line_cnt, split));
 	new_elem = get_new_obj(PLANE);
 	if (!new_elem)
@@ -263,6 +294,8 @@ int get_plane(t_scene *scene, char **split, int line_cnt)
 	if (get_vector(&((t_object*)new_elem->content)->pl.orient, split[2], ORIENTATION, line_cnt) == ERROR)
 		return (error_free(ERROR, split));
 	if (get_colors(&((t_object*)new_elem->content)->colors, split[3], line_cnt) == ERROR)
+		return (error_free(ERROR, split));
+	if (get_material((t_object*)new_elem->content, split[4], line_cnt) == ERROR)
 		return (error_free(ERROR, split));
 	ft_free_array(split);
 	return (0);
@@ -275,7 +308,7 @@ int get_sphere(t_scene *scene, char **split, int line_cnt)
 	int		error;
 
 	error = 0;
-	if (arrlen(split) != 4)
+	if (arrlen(split) != 5)
 		return (print_error("Wrong sphere input", line_cnt, split));
 	new = get_new_obj(SPHERE);
 	if (!new)
@@ -288,6 +321,8 @@ int get_sphere(t_scene *scene, char **split, int line_cnt)
 		return (print_error("Sphere diameter can't be converted", line_cnt, split));
 	((t_object*)new->content)->sp.diameter = dia;
 	if (get_colors(&((t_object*)new->content)->colors, split[3], line_cnt) == ERROR)
+		return (error_free(ERROR, split));
+	if (get_material((t_object*)new->content, split[4], line_cnt) == ERROR)
 		return (error_free(ERROR, split));
 	ft_free_array(split);
 	return (0);
@@ -302,8 +337,8 @@ int	get_tube(t_scene *scene, char **split, int line_cnt)
 	int		error;
 
 	error = 0;
-	if (arrlen(split) != 6)
-		return (print_error("Wrong tube input", line_cnt, NULL));
+	if (arrlen(split) != 7)
+		return (print_error("Wrong tube input", line_cnt, split));
 	new = get_new_obj(TUBE);
 	if (!new)
 		return (print_error("Tube object can't be allocated", line_cnt, NULL));
@@ -321,7 +356,9 @@ int	get_tube(t_scene *scene, char **split, int line_cnt)
 		return (print_error("Tube height can't be converted", line_cnt, NULL));
 	((t_object*)new->content)->tb.height = height;
 	if (get_colors(&((t_object*)new->content)->colors, split[5], line_cnt) == ERROR)
-		return (error_free(ERROR, NULL));
+		return (error_free(ERROR, split));
+	if (get_material((t_object*)new->content, split[6], line_cnt) == ERROR)
+		return (error_free(ERROR, split));
 	return (0);
 }
 
@@ -332,7 +369,7 @@ int	get_circle(t_scene *scene, char **split, int line_cnt)
 	int		error;
 
 	error = 0;
-	if (arrlen(split) != 5)
+	if (arrlen(split) != 6)
 		return (print_error("Wrong circle input", line_cnt, split));
 	new = get_new_obj(CIRCLE);
 	if (!new)
@@ -348,6 +385,8 @@ int	get_circle(t_scene *scene, char **split, int line_cnt)
 	((t_object*)new->content)->cl.dia = dia;
 	if (get_colors(&((t_object*)new->content)->colors, split[4], line_cnt) == ERROR)
 		return (error_free(ERROR, split));
+	if (get_material((t_object*)new->content, split[5], line_cnt) == ERROR)
+		return (error_free(ERROR, split));
 	ft_free_array(split);
 	return (0);
 }
@@ -359,8 +398,8 @@ int	get_cy_circle(t_scene *scene, char **split, int line_cnt, t_vec3d pos)
 	int		error;
 
 	error = 0;
-	if (arrlen(split) != 6)
-		return (print_error("Wrong circle input", line_cnt, NULL));
+	if (arrlen(split) != 7)
+		return (print_error("Wrong circle input", line_cnt, split));
 	new = get_new_obj(CIRCLE);
 	if (!new)
 		return (print_error("Circle object can't be allocated", line_cnt, NULL));
@@ -375,7 +414,9 @@ int	get_cy_circle(t_scene *scene, char **split, int line_cnt, t_vec3d pos)
 		return (print_error("Circle diameter can't be converted", line_cnt, NULL));
 	((t_object*)new->content)->cl.dia = dia;
 	if (get_colors(&((t_object*)new->content)->colors, split[5], line_cnt) == ERROR)
-		return (ERROR);
+		return (error_free(ERROR, split));
+	if (get_material((t_object*)new->content, split[6], line_cnt) == ERROR)
+		return (error_free(ERROR, split));
 	return (0);
 }
 
