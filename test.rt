@@ -1,6 +1,6 @@
 #ambient light
 ##A ratio,            colors
-A   0.5                 255,255,255
+A   0.1                 255,255,255
 
 
 
@@ -10,25 +10,26 @@ C   0,25,80            0,-0.5,-1.0            60
 
 #light
 ##L  pos,             brightness ratio,  colors
-L  -8,15,34            1                255,255,255
-L  20,12,25            1                255,255,255
+L  -8,15,34            0.3                0,0,255
+L  20,12,25             0.3                255,0,0
+L  0,15,25            0.3                0,255,0
 
 
 #plane
 ##pl pos              dir                colors                 matte/ specular factor
-pl   0,-5,0            0,1.0,0            55,125,230           1.0,0.0
+pl   0,-5,0            0,1.0,0            255,255,255         1.0,0.0
 
 
 #sphere
 ##sp pos,             diameter,          colors                 matte/ specular factor
-sp   0,0,30            10.0               55,125,70           1.0,0.0
+sp   0,0,30            10.0                  255,255,255        1.0,0.0
 # sp   20,11,15            10.0               155,125,70           1.0,0.0
 # sp   0,-200,30            400.0               55,125,170           0.5,0.5
 
 
 #cylinder
 ##cy pos,             dir,               diameter,   height,     colors                 matte/ specular factor
-cy   20.0,0.0,30     2,0.0,1             10.0         10      105,140,195                1.0,0.0
+cy   20.0,0.0,30     2,0.0,1             10.0         10      255,255,255                1.0,0.0
 
 
 #tube
