@@ -6,14 +6,13 @@ A   0.1                 255,255,255
 
 #camera
 ##C pos,              dir,               fov
-C   0,25,80            0,-0.5,-1.0            60
+C   0,2,10             0,0,-1.0            60
 
 #light
-##L  pos,             brightness ratio,  colors
+##L  pos,             brightness ratio,  color
 L  -8,15,34            0.3                0,0,255
 L  20,12,25             0.3                255,0,0
-L  0,15,25            0.3                0,255,0
-
+L  0,15,25            0.3                0,255,
 
 #plane
 ##pl pos              dir                colors                 matte/ specular factor
@@ -43,7 +42,7 @@ cy   20.0,0.0,30     2,0.0,1             10.0         10      255,255,255       
 
 #resolution
 ##R  width            height
-R    800             800
+R    400             400
 
 #background
 ##B  colors

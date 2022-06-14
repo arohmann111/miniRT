@@ -392,7 +392,7 @@ t_colors	trace(t_scene *scene, t_ray ray, int bounces)
 		return (mk_c(255,255,255));
 	scene->hit = HIT;
 	list = scene->list;
-	ambient = simple_multi_col(scene->ambiente.colors, pow(scene->ambiente.ratio, 0.2));
+	ambient = simple_multi_col(scene->ambiente.colors, pow(scene->ambiente.ratio, 0.5));
 	// ray.col = multi_colors(ray.col, ambient);
 	while (list)
 	{
