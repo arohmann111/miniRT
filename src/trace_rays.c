@@ -21,7 +21,11 @@ double	sp_find_t(t_object *sphere, t_ray ray)
 	double c;
 	double dis;
 	double t;
+	t_vec3d	v;//dir
+	double	w;
 	
+	w = -cos(170.0 * M_PI / 180);
+	v = norm_vec3d(mk_v(1,-1,1));
 	a = skalar_vec3d(ray.dir, ray.dir);
 	b = 2.0 * skalar_vec3d(sub_vec3d(ray.pos, sphere->pos), ray.dir);
 	c = skalar_vec3d(sub_vec3d(ray.pos, sphere->pos),
@@ -30,32 +34,59 @@ double	sp_find_t(t_object *sphere, t_ray ray)
 	if (dis < 0.0)
 		return (-1.0);//keine Lösung -> kein Schnittpunkt
 	t = (-b - sqrt(dis)) / (2.0 * a);
-	if (t > 0.0)
+	t_vec3d sphere_hit = norm_vec3d(sub_vec3d(add_vec3d(ray.pos, multi_vec3d(ray.dir, t)), sphere->pos));
+	if (t > 0.0001 && skalar_vec3d(v, sphere_hit) < w)
 		return (t);
 	t = (-b + sqrt(dis)) / (2.0 * a);
-	if (t > 0.0)
+	sphere_hit = norm_vec3d(sub_vec3d(add_vec3d(ray.pos, multi_vec3d(ray.dir, t)), sphere->pos));
+	if (t > 0.0001 && skalar_vec3d(v, sphere_hit) < w)
 		return (t);
 	return (-1.0);
 }
+// double	sp_find_t(t_object *sphere, t_ray ray)
+// {
+// 	double a;
+// 	double b;
+// 	double c;
+// 	double dis;
+// 	double t;
+	
+// 	a = skalar_vec3d(ray.dir, ray.dir);
+// 	b = 2.0 * skalar_vec3d(sub_vec3d(ray.pos, sphere->pos), ray.dir);
+// 	c = skalar_vec3d(sub_vec3d(ray.pos, sphere->pos),
+// 		sub_vec3d(ray.pos, sphere->pos)) - sphere->sp.diameter * sphere->sp.diameter / 4.0;
+// 	dis = b * b - 4.0 * a * c;
+// 	if (dis < 0.0)
+// 		return (-1.0);//keine Lösung -> kein Schnittpunkt
+// 	t = (-b - sqrt(dis)) / (2.0 * a);
+// 	if (t > 0.0001)
+// 		return (t);
+// 	t = (-b + sqrt(dis)) / (2.0 * a);
+// 	if (t > 0.0001)
+// 		return (t);
+// 	return (-1.0);
+// }
 
 double	pl_find_t(t_object *plane, t_ray ray)
 {
 	double	denom;
 	t_vec3d n;
+	double	t;
 
 	n = norm_vec3d(plane->pl.orient);
 	denom = skalar_vec3d(ray.dir, n);
-	if (fabs(denom) < 0.00001)
+	t = skalar_vec3d(sub_vec3d(plane->pos, ray.pos), n) / denom;
+	if (t < 0.0001 || fabs(denom) < 0.00001)
 		return (-1.0);
 	else
-		return (skalar_vec3d(sub_vec3d(plane->pos, ray.pos), n) / denom);
+		return (t);
 }
 
 double	circ_find_t(t_object *circle, t_ray ray)
 {
 	double	denom;
 	t_vec3d n;
-	double	res;
+	double	t;
 	t_vec3d	p;
 
 	n = norm_vec3d(circle->cl.orient);
@@ -64,10 +95,10 @@ double	circ_find_t(t_object *circle, t_ray ray)
 		return (-1.0);
 	else
 	{
-		res = (skalar_vec3d(sub_vec3d(circle->pos, ray.pos), n) / denom);
-		p = add_vec3d(ray.pos, multi_vec3d(ray.dir, res));
-		if ((pow((p.x - circle->pos.x), 2) + pow((p.y - circle->pos.y), 2) + pow((p.z - circle->pos.z), 2)) < pow((circle->cl.dia / 2), 2))
-			return (res);
+		t = (skalar_vec3d(sub_vec3d(circle->pos, ray.pos), n) / denom);
+		p = add_vec3d(ray.pos, multi_vec3d(ray.dir, t));
+		if (t > 0.0001 && (pow((p.x - circle->pos.x), 2) + pow((p.y - circle->pos.y), 2) + pow((p.z - circle->pos.z), 2)) < pow((circle->cl.dia / 2), 2))
+			return (t);
 		else
 			return (-1);
 	}
@@ -99,13 +130,13 @@ double	tube_find_t(t_object *tube, t_ray ray)
 	p = add_vec3d(ray.pos, multi_vec3d(ray.dir, t));
 	wtf = sub_vec3d(p, tube->pos);
 	cut = skalar_vec3d(tube->tb.orient, wtf);
-	if (t > 0.0 && fabs(cut) < (tube->tb.height / 2.0))
+	if (t > 0.0001 && fabs(cut) < (tube->tb.height / 2.0))
 		return (t);
 	t = (-b + sqrt(dis)) / (2.0 * a);
 	p = add_vec3d(ray.pos, multi_vec3d(ray.dir, t));
 	wtf = sub_vec3d(p, tube->pos);
 	cut = skalar_vec3d(tube->tb.orient, wtf);
-	if (t > 0.0 && fabs(cut) < (tube->tb.height / 2.0))
+	if (t > 0.0001 && fabs(cut) < (tube->tb.height / 2.0))
 		return (t);
 	return (-1.0);
 }
@@ -367,11 +398,8 @@ double	intersect_light(t_scene *scene, t_ray ray, t_light *light, t_vec3d n)
 	while (list)
 	{
 		t = find_t((t_object *)list->content, l_ray);
-		if (t > 0.0001)
-		{
-			if (t < len)
-				return (-1.0);
-		}
+		if (t > 0.0001 && t < len)
+			return (-1.0);
 		list = list->next;
 	}
 	n_l = skalar_vec3d(n, l_ray.dir);
@@ -397,7 +425,7 @@ t_colors	trace(t_scene *scene, t_ray ray, int bounces)
 	while (list)
 	{
 		t = find_t((t_object *)list->content, ray);
-		if (t > 0.00001 && t < scene->hit)
+		if (t > 0.0001 && t < scene->hit)
 		{
 			scene->hit = t;
 			obj = (t_object*)(list->content);
