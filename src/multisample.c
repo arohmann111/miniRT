@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   multisample.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/15 15:39:21 by arohmann          #+#    #+#             */
+/*   Updated: 2022/06/15 15:41:57 by arohmann         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "miniRT.h"
 
 // must be called once before "srand((unsigned int) time(NULL));"
-double random_d()
+double	random_d(void)
 {
-	double random;
+	double	random;
 
 	random = ((double)rand()) / RAND_MAX;
 	return (random);
@@ -16,15 +28,11 @@ int	multisample(t_scene	*scene, t_vec3d pix, int x, int y)
 	t_colors	rgb;
 	t_ray		ray;
 	double		arr[SAMPLE];
-	t_list *list;
+	t_list		*list;
 
 	list = scene->list;
-
 	i = 0;
-	rgb.r = 0;
-	rgb.g = 0;
-	rgb.b = 0;
-	// srand((unsigned int) time(NULL));
+	rgb = mk_c(0, 0, 0);
 	while (i < SAMPLE)
 	{
 		arr[i] = random_d();
@@ -43,5 +51,5 @@ int	multisample(t_scene	*scene, t_vec3d pix, int x, int y)
 		rgb.b += color.b;
 		i++;
 	}
-	return (col(rgb.r/SAMPLE, rgb.g/SAMPLE, rgb.b/SAMPLE));
+	return (col(rgb.r / SAMPLE, rgb.g / SAMPLE, rgb.b / SAMPLE));
 }
