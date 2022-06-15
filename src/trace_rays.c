@@ -38,29 +38,29 @@ double	sp_find_t(t_object *sphere, t_ray ray)
 	return (-1.0);
 }
 
-double	bo_find_t(t_object *bowle, t_ray ray)
+double	bo_find_t(t_object *bowl, t_ray ray)
 {
 	double a;
 	double b;
 	double c;
 	double dis;
 	double t;
-	t_vec3d	bowle_hit;
+	t_vec3d	bowl_hit;
 	
 	a = skalar_vec3d(ray.dir, ray.dir);
-	b = 2.0 * skalar_vec3d(sub_vec3d(ray.pos, bowle->pos), ray.dir);
-	c = skalar_vec3d(sub_vec3d(ray.pos, bowle->pos),
-		sub_vec3d(ray.pos, bowle->pos)) - bowle->bo.diameter * bowle->bo.diameter / 4.0;
+	b = 2.0 * skalar_vec3d(sub_vec3d(ray.pos, bowl->pos), ray.dir);
+	c = skalar_vec3d(sub_vec3d(ray.pos, bowl->pos),
+		sub_vec3d(ray.pos, bowl->pos)) - bowl->bo.diameter * bowl->bo.diameter / 4.0;
 	dis = b * b - 4.0 * a * c;
 	if (dis < 0.0)
 		return (-1.0);//keine Lösung -> kein Schnittpunkt
 	t = (-b - sqrt(dis)) / (2.0 * a);
-	bowle_hit = norm_vec3d(sub_vec3d(add_vec3d(ray.pos, multi_vec3d(ray.dir, t)), bowle->pos));
-	if (t > 0.0001 && skalar_vec3d(bowle->bo.orient, bowle_hit) < (-cos(bowle->bo.angle * M_PI / 180)))
+	bowl_hit = norm_vec3d(sub_vec3d(add_vec3d(ray.pos, multi_vec3d(ray.dir, t)), bowl->pos));
+	if (t > 0.0001 && skalar_vec3d(bowl->bo.orient, bowl_hit) < (cos(bowl->bo.angle * M_PI / 180)))
 		return (t);
 	t = (-b + sqrt(dis)) / (2.0 * a);
-	bowle_hit = norm_vec3d(sub_vec3d(add_vec3d(ray.pos, multi_vec3d(ray.dir, t)), bowle->pos));
-	if (t > 0.0001 && skalar_vec3d(bowle->bo.orient, bowle_hit) < (-cos(bowle->bo.angle * M_PI / 180)))
+	bowl_hit = norm_vec3d(sub_vec3d(add_vec3d(ray.pos, multi_vec3d(ray.dir, t)), bowl->pos));
+	if (t > 0.0001 && skalar_vec3d(bowl->bo.orient, bowl_hit) < (cos(bowl->bo.angle * M_PI / 180)))
 		return (t);
 	return (-1.0);
 }
@@ -146,7 +146,7 @@ double	find_t(t_object *obj, t_ray ray)
 	t = -2.0;
 	if (obj->type == SPHERE)
 		t = sp_find_t(obj, ray);
-	else if (obj->type == BOWLE)
+	else if (obj->type == BOWL)
 		t = bo_find_t(obj, ray);
 	else if (obj->type == PLANE)
 		t = pl_find_t(obj, ray);
@@ -449,7 +449,7 @@ t_colors	trace(t_scene *scene, t_ray ray, int bounces)
 
 	if (obj->type == SPHERE)
 		intersect_sphere(scene, &ray, obj, bounces);
-	else if (obj->type == BOWLE)
+	else if (obj->type == BOWL)
 		intersect_sphere(scene, &ray, obj, bounces);
 	else if (obj->type == PLANE)
 		intersect_plane(scene, &ray, obj, bounces);
@@ -461,8 +461,8 @@ t_colors	trace(t_scene *scene, t_ray ray, int bounces)
 		return (obj->colors);
 
 	// return (scale_color(ray.col));
-	return (scale_color(multi_colors(ray.col, ambient)));
-	// return (col_cut(multi_colors(ray.col, ambient)));
+	// return (scale_color(multi_colors(ray.col, ambient)));
+	return (col_cut(multi_colors(ray.col, ambient)));
 }
 
 //ambient light darf schwarz werden

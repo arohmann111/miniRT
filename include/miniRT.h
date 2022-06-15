@@ -40,7 +40,7 @@ enum e_object
 	NONE,
 	PLANE,
 	SPHERE,
-	BOWLE,
+	BOWL,
 	TUBE,
 	CIRCLE
 };
@@ -67,12 +67,12 @@ typedef struct s_sphere
 	double		diameter;
 }t_sphere;
 
-typedef struct s_bowle
+typedef struct s_bowl
 {
 	t_vec3d		orient;
 	double		diameter;
 	double		angle;
-}t_bowle;
+}t_bowl;
 
 typedef struct s_plane
 {
@@ -113,7 +113,7 @@ typedef struct s_object
 		t_tube		tb;
 		t_circle	cl;
 		t_sphere	sp;
-		t_bowle		bo;
+		t_bowl		bo;
 		t_plane		pl;
 	};
 	

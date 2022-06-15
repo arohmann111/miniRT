@@ -327,7 +327,7 @@ int get_sphere(t_scene *scene, char **split, int line_cnt)
 	return (0);
 }
 
-int get_bowle(t_scene *scene, char **split, int line_cnt)
+int get_bowl(t_scene *scene, char **split, int line_cnt)
 {
 	t_list	*new;
 	int		error;
@@ -335,9 +335,9 @@ int get_bowle(t_scene *scene, char **split, int line_cnt)
 	error = 0;
 	if (arrlen(split) != 7)
 		return (print_error("Wrong sphere input", line_cnt, split));
-	new = get_new_obj(BOWLE);
+	new = get_new_obj(BOWL);
 	if (!new)
-		return (print_error("Bowle object can't be allocated", line_cnt, split));
+		return (print_error("Bowl object can't be allocated", line_cnt, split));
 	ft_lstadd_back(&scene->list, new);
 	if (get_vector(&((t_object*)new->content)->pos, split[1], COORDINATES, line_cnt) == ERROR)
 		return (error_free(ERROR, split));
@@ -345,11 +345,13 @@ int get_bowle(t_scene *scene, char **split, int line_cnt)
 		return (error_free(ERROR, split));
 	((t_object*)new->content)->bo.angle = ft_atod(split[3], &error);
 	if (error == ERROR)
-		return (print_error("Bowle angle can't be converted", line_cnt, split));
+		return (print_error("Bowl angle can't be converted", line_cnt, split));
+	if (check_range(0.0, 180.0, ((t_object*)new->content)->bo.angle) == false)
+		return (print_error("Bowl angle is not in range [0.0,180.0]", line_cnt, split));
 	error = 0;
 	((t_object*)new->content)->bo.diameter = ft_atod(split[4], &error);
 	if (error == ERROR)
-		return (print_error("Bowle diameter can't be converted", line_cnt, split));
+		return (print_error("Bowl diameter can't be converted", line_cnt, split));
 	if (get_colors(&((t_object*)new->content)->colors, split[5], line_cnt) == ERROR)
 		return (error_free(ERROR, split));
 	if (get_material((t_object*)new->content, split[6], line_cnt) == ERROR)
@@ -484,7 +486,7 @@ int	get_obj(t_scene *scene, char **split, int line_cnt)
 	if (split[0][0] == 's' && split[0][1] == 'p')
 		return (get_sphere(scene, split, line_cnt));
 	if (split[0][0] == 'b' && split[0][1] == 'o')
-		return (get_bowle(scene, split, line_cnt));
+		return (get_bowl(scene, split, line_cnt));
 	if (split[0][0] == 'c' && split[0][1] == 'y')
 	{
 		if (get_cylinder(scene, split, line_cnt) == ERROR)
