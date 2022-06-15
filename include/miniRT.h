@@ -24,8 +24,8 @@
 # define NEXT_SPACE 2
 # define ORIENTATION 0
 # define COORDINATES 1
-# define SAMPLE 10
-# define BOUNCES 10
+# define SAMPLE 20
+# define BOUNCES 15
 # define HIT 1000.0
 # define INSIDE 0
 # define OUTSIDE 1
@@ -40,8 +40,9 @@ enum e_object
 	NONE,
 	PLANE,
 	SPHERE,
+	BOWLE,
 	TUBE,
-	CIRCLE,
+	CIRCLE
 };
 
 /* ************************************************************************** */
@@ -65,6 +66,13 @@ typedef struct s_sphere
 {
 	double		diameter;
 }t_sphere;
+
+typedef struct s_bowle
+{
+	t_vec3d		orient;
+	double		diameter;
+	double		angle;
+}t_bowle;
 
 typedef struct s_plane
 {
@@ -105,6 +113,7 @@ typedef struct s_object
 		t_tube		tb;
 		t_circle	cl;
 		t_sphere	sp;
+		t_bowle		bo;
 		t_plane		pl;
 	};
 	
@@ -127,7 +136,6 @@ typedef struct s_camera
 
 typedef struct s_light
 {
-	bool		is_set;
 	t_vec3d		pos;
 	double		bright;
 	t_colors	colors;
