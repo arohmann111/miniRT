@@ -6,7 +6,7 @@
 /*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/15 15:39:21 by arohmann          #+#    #+#             */
-/*   Updated: 2022/06/15 15:41:57 by arohmann         ###   ########.fr       */
+/*   Updated: 2022/06/15 15:52:43 by arohmann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,23 @@ int	multisample(t_scene	*scene, t_vec3d pix, int x, int y)
 		i++;
 	}
 	return (col(rgb.r / SAMPLE, rgb.g / SAMPLE, rgb.b / SAMPLE));
+}
+
+int	print_error(char *err_msg, int line_cnt, char **arr)
+{
+	ft_putstr_fd("Error in line ", STDERR_FILENO);
+	ft_putnbr_fd(line_cnt, STDERR_FILENO);
+	write(STDERR_FILENO, ":\n", 2);
+	ft_putendl_fd(err_msg, STDERR_FILENO);
+	return (error_free(ERROR, arr));
+}
+
+int	error_free(int error, char **arr)
+{
+	if (arr != NULL)
+	{
+		ft_free_array(arr);
+		arr = NULL;
+	}
+	return (error);
 }
