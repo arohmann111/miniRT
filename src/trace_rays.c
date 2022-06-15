@@ -21,11 +21,7 @@ double	sp_find_t(t_object *sphere, t_ray ray)
 	double c;
 	double dis;
 	double t;
-	t_vec3d	v;//dir
-	double	w;
 	
-	w = -cos(170.0 * M_PI / 180);
-	v = norm_vec3d(mk_v(1,-1,1));
 	a = skalar_vec3d(ray.dir, ray.dir);
 	b = 2.0 * skalar_vec3d(sub_vec3d(ray.pos, sphere->pos), ray.dir);
 	c = skalar_vec3d(sub_vec3d(ray.pos, sphere->pos),
@@ -34,38 +30,40 @@ double	sp_find_t(t_object *sphere, t_ray ray)
 	if (dis < 0.0)
 		return (-1.0);//keine Lösung -> kein Schnittpunkt
 	t = (-b - sqrt(dis)) / (2.0 * a);
-	t_vec3d sphere_hit = norm_vec3d(sub_vec3d(add_vec3d(ray.pos, multi_vec3d(ray.dir, t)), sphere->pos));
-	if (t > 0.0001 && skalar_vec3d(v, sphere_hit) < w)
+	if (t > 0.0001)
 		return (t);
 	t = (-b + sqrt(dis)) / (2.0 * a);
-	sphere_hit = norm_vec3d(sub_vec3d(add_vec3d(ray.pos, multi_vec3d(ray.dir, t)), sphere->pos));
-	if (t > 0.0001 && skalar_vec3d(v, sphere_hit) < w)
+	if (t > 0.0001)
 		return (t);
 	return (-1.0);
 }
-// double	sp_find_t(t_object *sphere, t_ray ray)
-// {
-// 	double a;
-// 	double b;
-// 	double c;
-// 	double dis;
-// 	double t;
+
+double	bo_find_t(t_object *bowle, t_ray ray)
+{
+	double a;
+	double b;
+	double c;
+	double dis;
+	double t;
+	t_vec3d	bowle_hit;
 	
-// 	a = skalar_vec3d(ray.dir, ray.dir);
-// 	b = 2.0 * skalar_vec3d(sub_vec3d(ray.pos, sphere->pos), ray.dir);
-// 	c = skalar_vec3d(sub_vec3d(ray.pos, sphere->pos),
-// 		sub_vec3d(ray.pos, sphere->pos)) - sphere->sp.diameter * sphere->sp.diameter / 4.0;
-// 	dis = b * b - 4.0 * a * c;
-// 	if (dis < 0.0)
-// 		return (-1.0);//keine Lösung -> kein Schnittpunkt
-// 	t = (-b - sqrt(dis)) / (2.0 * a);
-// 	if (t > 0.0001)
-// 		return (t);
-// 	t = (-b + sqrt(dis)) / (2.0 * a);
-// 	if (t > 0.0001)
-// 		return (t);
-// 	return (-1.0);
-// }
+	a = skalar_vec3d(ray.dir, ray.dir);
+	b = 2.0 * skalar_vec3d(sub_vec3d(ray.pos, bowle->pos), ray.dir);
+	c = skalar_vec3d(sub_vec3d(ray.pos, bowle->pos),
+		sub_vec3d(ray.pos, bowle->pos)) - bowle->bo.diameter * bowle->bo.diameter / 4.0;
+	dis = b * b - 4.0 * a * c;
+	if (dis < 0.0)
+		return (-1.0);//keine Lösung -> kein Schnittpunkt
+	t = (-b - sqrt(dis)) / (2.0 * a);
+	bowle_hit = norm_vec3d(sub_vec3d(add_vec3d(ray.pos, multi_vec3d(ray.dir, t)), bowle->pos));
+	if (t > 0.0001 && skalar_vec3d(bowle->bo.orient, bowle_hit) < (-cos(bowle->bo.angle * M_PI / 180)))
+		return (t);
+	t = (-b + sqrt(dis)) / (2.0 * a);
+	bowle_hit = norm_vec3d(sub_vec3d(add_vec3d(ray.pos, multi_vec3d(ray.dir, t)), bowle->pos));
+	if (t > 0.0001 && skalar_vec3d(bowle->bo.orient, bowle_hit) < (-cos(bowle->bo.angle * M_PI / 180)))
+		return (t);
+	return (-1.0);
+}
 
 double	pl_find_t(t_object *plane, t_ray ray)
 {
@@ -148,6 +146,8 @@ double	find_t(t_object *obj, t_ray ray)
 	t = -2.0;
 	if (obj->type == SPHERE)
 		t = sp_find_t(obj, ray);
+	else if (obj->type == BOWLE)
+		t = bo_find_t(obj, ray);
 	else if (obj->type == PLANE)
 		t = pl_find_t(obj, ray);
 	else if (obj->type == CIRCLE)
@@ -233,6 +233,17 @@ t_colors	scale_color(t_colors c)
 	max = (double)highest_col(c);
 	percent = 255.0 / max;
 	return(simple_multi_col(c, percent));
+}
+
+t_colors	col_cut(t_colors c)
+{
+	if (c.r > 255)
+		c.r = 255;
+	if (c.g > 255)
+		c.g = 255;
+	if (c.b > 255)
+		c.b = 255;
+	return (c);
 }
 
 t_vec3d	in_unit_sphere()
@@ -377,7 +388,6 @@ t_colors	get_multi_l(t_scene *scene, t_ray ray, t_vec3d n)
 		}
 		lights = lights->next;
 	}
-	
 	return (uv);
 }
 
@@ -439,6 +449,8 @@ t_colors	trace(t_scene *scene, t_ray ray, int bounces)
 
 	if (obj->type == SPHERE)
 		intersect_sphere(scene, &ray, obj, bounces);
+	else if (obj->type == BOWLE)
+		intersect_sphere(scene, &ray, obj, bounces);
 	else if (obj->type == PLANE)
 		intersect_plane(scene, &ray, obj, bounces);
 	else if (obj->type == TUBE)
@@ -450,6 +462,7 @@ t_colors	trace(t_scene *scene, t_ray ray, int bounces)
 
 	// return (scale_color(ray.col));
 	return (scale_color(multi_colors(ray.col, ambient)));
+	// return (col_cut(multi_colors(ray.col, ambient)));
 }
 
 //ambient light darf schwarz werden

@@ -253,8 +253,8 @@ t_list	*get_new_l(void)
 int	get_light(t_scene *scene, char **split, int line_cnt)
 {
 	t_list		*new_elem;
-	double	brightness_ratio;
-	int	error;
+	double		brightness_ratio;
+	int			error;
 
 	brightness_ratio = 0.0;
 	error = 0;
@@ -274,7 +274,6 @@ int	get_light(t_scene *scene, char **split, int line_cnt)
 	((t_light *)new_elem->content)->bright = brightness_ratio;
 	if (get_colors(&((t_light *)new_elem->content)->colors, split[3], line_cnt) == ERROR)
 		return (error_free(ERROR, split));
-	((t_light *)new_elem->content)->is_set = true;
 	ft_free_array(split);
 	return (0);
 }
@@ -328,6 +327,36 @@ int get_sphere(t_scene *scene, char **split, int line_cnt)
 	return (0);
 }
 
+int get_bowle(t_scene *scene, char **split, int line_cnt)
+{
+	t_list	*new;
+	int		error;
+
+	error = 0;
+	if (arrlen(split) != 7)
+		return (print_error("Wrong sphere input", line_cnt, split));
+	new = get_new_obj(BOWLE);
+	if (!new)
+		return (print_error("Bowle object can't be allocated", line_cnt, split));
+	ft_lstadd_back(&scene->list, new);
+	if (get_vector(&((t_object*)new->content)->pos, split[1], COORDINATES, line_cnt) == ERROR)
+		return (error_free(ERROR, split));
+	if (get_vector(&((t_object*)new->content)->bo.orient, split[2], ORIENTATION, line_cnt) == ERROR)
+		return (error_free(ERROR, split));
+	((t_object*)new->content)->bo.angle = ft_atod(split[3], &error);
+	if (error == ERROR)
+		return (print_error("Bowle angle can't be converted", line_cnt, split));
+	error = 0;
+	((t_object*)new->content)->bo.diameter = ft_atod(split[4], &error);
+	if (error == ERROR)
+		return (print_error("Bowle diameter can't be converted", line_cnt, split));
+	if (get_colors(&((t_object*)new->content)->colors, split[5], line_cnt) == ERROR)
+		return (error_free(ERROR, split));
+	if (get_material((t_object*)new->content, split[6], line_cnt) == ERROR)
+		return (error_free(ERROR, split));
+	ft_free_array(split);
+	return (0);
+}
 
 int	get_tube(t_scene *scene, char **split, int line_cnt)
 {
@@ -454,6 +483,8 @@ int	get_obj(t_scene *scene, char **split, int line_cnt)
 		return (get_plane(scene, split, line_cnt));
 	if (split[0][0] == 's' && split[0][1] == 'p')
 		return (get_sphere(scene, split, line_cnt));
+	if (split[0][0] == 'b' && split[0][1] == 'o')
+		return (get_bowle(scene, split, line_cnt));
 	if (split[0][0] == 'c' && split[0][1] == 'y')
 	{
 		if (get_cylinder(scene, split, line_cnt) == ERROR)
@@ -500,8 +531,8 @@ int	parsing(t_scene *scene, char *line, int line_cnt)
 
 int check_must_haves(t_scene *scene)
 {
-	if (scene->camera.is_set == false || scene->res.is_set == false)
-	// if (scene->ambiente.is_set == false || scene->light.is_set == false || scene->camera.is_set == false || scene->res.is_set == false)
+	// if (scene->camera.is_set == false || scene->res.is_set == false)
+	if (scene->ambiente.is_set == false || scene->camera.is_set == false || scene->res.is_set == false)
 	{
 		ft_putendl_fd("Error: Mandatory scene file item is missing", STDERR_FILENO);
 		return (ERROR);
