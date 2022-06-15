@@ -1,6 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   miniRT.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/15 15:23:28 by arohmann          #+#    #+#             */
+/*   Updated: 2022/06/15 15:26:45 by arohmann         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINIRT_H
 # define MINIRT_H
-
 /* ************************************************************************** */
 /*                                  includes                                  */
 /* ************************************************************************** */
@@ -13,8 +24,6 @@
 # include <math.h>
 # include <time.h>
 # include <stdbool.h>
-
-
 /* ************************************************************************** */
 /*                                   macros                                   */
 /* ************************************************************************** */
@@ -29,9 +38,6 @@
 # define HIT 1000.0
 # define INSIDE 0
 # define OUTSIDE 1
-
-
-
 /* ************************************************************************** */
 /*                                    enums                                   */
 /* ************************************************************************** */
@@ -44,7 +50,6 @@ enum e_object
 	TUBE,
 	CIRCLE
 };
-
 /* ************************************************************************** */
 /*                                   structs                                  */
 /* ************************************************************************** */
@@ -92,15 +97,6 @@ typedef struct s_circle
 	t_vec3d		orient;
 }t_circle;
 
-// typedef struct s_cylinder
-// {
-// 	t_tube		body;
-// 	t_vec3d		t_pos;
-// 	t_vec3d		b_pos;
-// 	t_circle	top;
-// 	t_circle	bottom;
-// }t_cylinder;
-
 typedef struct s_object
 {
 	enum e_object	type;
@@ -116,7 +112,6 @@ typedef struct s_object
 		t_bowl		bo;
 		t_plane		pl;
 	};
-	
 }t_object;
 
 typedef struct s_ambiente
@@ -180,9 +175,7 @@ typedef struct s_scene
 /*                                  prototypes                                */
 /* ************************************************************************** */
 /* parsing */
-int	read_file(t_scene * scene, char *file);
-
-
+int			read_file(t_scene *scene, char *file);
 /* window */
 int32_t		mlx_stuff(t_scene *scene);
 t_vec3d		get_corner_pixel(t_scene *scene);
@@ -193,26 +186,20 @@ t_colors	mk_c(int r, int g, int b);
 t_colors	simple_multi_col(t_colors col, double factor);
 t_colors	multi_colors(t_colors one, t_colors two);
 t_colors	scale_color(t_colors c);
-
-int	old_trace(t_scene *scene, t_vec3d dir);
-
-double	ft_rand_double(double min, double max);
-
+double		ft_rand_double(double min, double max);
 /* error handling */
-int	print_error(char *err_msg, int line_cnt, char **arr);
-int error_free(int error, char **arr);
-
+int			print_error(char *err_msg, int line_cnt, char **arr);
+int			error_free(int error, char **arr);
 
 /* math functions */
-t_vec3d	add_vec3d(t_vec3d one, t_vec3d two);
-t_vec3d	sub_vec3d(t_vec3d one, t_vec3d two);
-t_vec3d	multi_vec3d(t_vec3d vec, double t);
-double	skalar_vec3d(t_vec3d one, t_vec3d two);
-double	len_vec3d(t_vec3d vec);
-t_vec3d	div_vec3d(t_vec3d vec, double t);
-t_vec3d	norm_vec3d(t_vec3d vec);
-t_vec3d	cross_vec3d(t_vec3d one, t_vec3d two);
-t_vec3d	mk_v(double x, double y, double z);
-
+t_vec3d		add_vec3d(t_vec3d one, t_vec3d two);
+t_vec3d		sub_vec3d(t_vec3d one, t_vec3d two);
+t_vec3d		multi_vec3d(t_vec3d vec, double t);
+double		skalar_vec3d(t_vec3d one, t_vec3d two);
+double		len_vec3d(t_vec3d vec);
+t_vec3d		div_vec3d(t_vec3d vec, double t);
+t_vec3d		norm_vec3d(t_vec3d vec);
+t_vec3d		cross_vec3d(t_vec3d one, t_vec3d two);
+t_vec3d		mk_v(double x, double y, double z);
 
 #endif
