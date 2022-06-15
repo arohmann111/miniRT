@@ -23,17 +23,23 @@ RM			= rm -rf
 all: $(NAME)
 
 $(NAME): $(OBJS)
+	@make -C ./libs/libft/
+	@make -C ./libs/MLX42/
 	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LDLIBS)
 
 $(ODIR)/%.o: $(SDIR)/%.c
-	mkdir -p $(ODIR)
+	@mkdir -p $(ODIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
+	@make clean -C ./libs/libft/
+	@make clean -C ./libs/MLX42/
 	$(RM) $(ODIR)
 	$(RM) -r *.dSYM $(SDIR)/*.dSYM $(SDIR)/$(NAME)
 
 fclean: clean
+	@make fclean -C ./libs/libft/
+	@make fclean -C ./libs/MLX42/
 	$(RM) $(NAME)
 
 re: fclean $(NAME)
