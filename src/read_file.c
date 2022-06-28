@@ -507,10 +507,8 @@ int	get_obj(t_scene *scene, char **split, int line_cnt)
 
 int	parsing(t_scene *scene, char *line, int line_cnt)
 {
-	int i;
 	char **split;
 
-	i = 0;
 	if (line[0] == '\n')
 		return (0);
 	split = ft_split(line, ' ');

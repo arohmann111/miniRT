@@ -25,7 +25,6 @@
 # define ORIENTATION 0
 # define COORDINATES 1
 # define SAMPLE 20
-# define BOUNCES 15
 # define HIT 1000.0
 # define INSIDE 0
 # define OUTSIDE 1
@@ -165,6 +164,7 @@ typedef struct s_ray
 typedef struct s_scene
 {
 	double		hit;
+	t_colors	light_c;
 	t_vec3d		px;
 	t_vec3d		py;
 	t_ambiente	ambiente;
@@ -186,7 +186,7 @@ int	read_file(t_scene * scene, char *file);
 /* window */
 int32_t		mlx_stuff(t_scene *scene);
 t_vec3d		get_corner_pixel(t_scene *scene);
-t_colors	trace(t_scene *scene, t_ray ray, int bounces);
+t_colors	trace(t_scene *scene, t_ray ray);
 int			col(int r, int g, int b);
 int			multisample(t_scene	*scene, t_vec3d pix, int x, int y);
 t_colors	mk_c(int r, int g, int b);

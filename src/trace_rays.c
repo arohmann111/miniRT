@@ -269,11 +269,10 @@ t_vec3d	reflection_vec(t_vec3d n, t_ray ray)
 	return (reflection);
 }
 
-void	intersect_sphere(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
+void	intersect_sphere(t_scene *scene, t_ray *ray, t_object *obj)
 {
 	t_vec3d		n;
 	t_vec3d		p;
-	t_colors	x;
 
 	ray->pos = add_vec3d(ray->pos, multi_vec3d(ray->dir, scene->hit));
 	n = norm_vec3d(sub_vec3d(ray->pos, obj->pos));
@@ -291,11 +290,11 @@ void	intersect_sphere(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
 	
 	ray->dir = norm_vec3d(sub_vec3d(p, ray->pos));
 
-	x = get_multi_l(scene, *ray, n);
-	ray->col = add_col(multi_colors(obj->colors, trace(scene, *ray, bounces - 1)), x);
+	scene->light_c = multi_colors(obj->colors, get_multi_l(scene, *ray, n));
+	ray->col = obj->colors;
 }
 
-void	intersect_plane(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
+void	intersect_plane(t_scene *scene, t_ray *ray, t_object *obj)
 {
 	t_vec3d		n;
 	t_vec3d		p;
@@ -315,11 +314,11 @@ void	intersect_plane(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
 
 
 	ray->dir = norm_vec3d(sub_vec3d(p, ray->pos));
-	t_colors x = get_multi_l(scene, *ray, n);
-	ray->col = add_col(multi_colors(obj->colors, trace(scene, *ray, bounces - 1)), x);
+	scene->light_c = multi_colors(obj->colors, get_multi_l(scene, *ray, n));
+	ray->col = obj->colors;
 }
 
-void	intersect_tube(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
+void	intersect_tube(t_scene *scene, t_ray *ray, t_object *obj)
 {
 	t_vec3d		n;
 	t_vec3d		p;
@@ -344,10 +343,11 @@ void	intersect_tube(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
 	else// if lighting is specular
 		p = add_vec3d(add_vec3d(ray->pos, n), reflection_vec(n, *ray));
 	ray->dir = norm_vec3d(sub_vec3d(p, ray->pos));
-	ray->col = add_col(multi_colors(obj->colors, trace(scene, *ray, bounces - 1)), get_multi_l(scene, *ray, n));
+	scene->light_c = multi_colors(obj->colors, get_multi_l(scene, *ray, n));
+	ray->col = obj->colors;
 }
 
-void	intersect_circle(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
+void	intersect_circle(t_scene *scene, t_ray *ray, t_object *obj)
 {
 	t_vec3d		n;
 	t_vec3d		p;
@@ -366,7 +366,8 @@ void	intersect_circle(t_scene *scene, t_ray *ray, t_object *obj, int bounces)
 	else// if lighting is specular
 		p = add_vec3d(add_vec3d(ray->pos, n), reflection_vec(n, *ray));
 	ray->dir = norm_vec3d(sub_vec3d(p, ray->pos));
-	ray->col = add_col(multi_colors(obj->colors, trace(scene, *ray, bounces - 1)), get_multi_l(scene, *ray, n));
+	scene->light_c = multi_colors(obj->colors, get_multi_l(scene, *ray, n));
+	ray->col = obj->colors;
 }
 
 t_colors	get_multi_l(t_scene *scene, t_ray ray, t_vec3d n)
@@ -418,20 +419,16 @@ double	intersect_light(t_scene *scene, t_ray ray, t_light *light, t_vec3d n)
 	return (1 / pow(len, 2) * light->bright * 500);
 }
 
-t_colors	trace(t_scene *scene, t_ray ray, int bounces)
+t_colors	trace(t_scene *scene, t_ray ray)
 {
 	t_object	*obj;
 	t_list		*list;
 	double		t;
 	t_colors	ambient;
 
-	if (bounces == 0)
-		// return (scene->bg.col);
-		return (mk_c(255,255,255));
 	scene->hit = HIT;
 	list = scene->list;
-	ambient = simple_multi_col(scene->ambiente.colors, pow(scene->ambiente.ratio, 0.5));
-	// ray.col = multi_colors(ray.col, ambient);
+	ambient = simple_multi_col(scene->ambiente.colors, scene->ambiente.ratio);
 	while (list)
 	{
 		t = find_t((t_object *)list->content, ray);
@@ -443,26 +440,21 @@ t_colors	trace(t_scene *scene, t_ray ray, int bounces)
 		list = list->next;
 	}
 	if (scene->hit == HIT)
-		// return (scale_color(scene->bg.col));
 		return (scale_color(multi_colors(scene->bg.col, ambient)));
-
-
 	if (obj->type == SPHERE)
-		intersect_sphere(scene, &ray, obj, bounces);
+		intersect_sphere(scene, &ray, obj);
 	else if (obj->type == BOWL)
-		intersect_sphere(scene, &ray, obj, bounces);
+		intersect_sphere(scene, &ray, obj);
 	else if (obj->type == PLANE)
-		intersect_plane(scene, &ray, obj, bounces);
+		intersect_plane(scene, &ray, obj);
 	else if (obj->type == TUBE)
-		intersect_tube(scene, &ray, obj, bounces);
+		intersect_tube(scene, &ray, obj);
 	else if (obj->type == CIRCLE)
-		intersect_circle(scene, &ray, obj, bounces);
+		intersect_circle(scene, &ray, obj);
 	else
 		return (obj->colors);
-
-	// return (scale_color(ray.col));
-	// return (scale_color(multi_colors(ray.col, ambient)));
-	return (col_cut(multi_colors(ray.col, ambient)));
+	ray.col = multi_colors(ray.col, ambient);
+	return (col_cut(add_col(ray.col, scene->light_c)));
 }
 
 //ambient light darf schwarz werden

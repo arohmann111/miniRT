@@ -6,14 +6,14 @@ void	init_struct(t_scene *scene)
 {
 	scene->ambiente.is_set = false;
 	scene->camera.is_set = false;
-	// lights->content->is_set = false;
 	scene->res.is_set = false;
 	scene->bg.is_set = false;
 	scene->list = NULL;
 	scene->lights = NULL;
 	scene->mlx = NULL;
 	scene->hit = HIT;
-	scene->bg.col = (t_colors){200.0,230.0,250.0};
+	scene->light_c = (t_colors){0.0,0.0,0.0};
+	scene->bg.col = (t_colors){0.0,0.0,0.0};
 }
 
 int	print_input_instructions(void)
