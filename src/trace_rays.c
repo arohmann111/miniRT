@@ -1,4 +1,4 @@
-
+ 
 
 #include "miniRT.h"
 double	intersect_light(t_scene *scene, t_ray ray, t_light *light, t_vec3d n);
@@ -292,7 +292,10 @@ void	intersect_sphere(t_scene *scene, t_ray *ray, t_object *obj)
 	ray->dir = norm_vec3d(sub_vec3d(p, ray->pos));
 
 	x = get_multi_l(scene, *ray, n);
-	ray->col = add_col(add_col(obj->colors, ray->col), x);
+	if (x.r == 0.0 && x.g == 0.0 && x.b == 0.0)
+		ray->col = simple_multi_col(obj->colors, scene->ambiente.ratio);
+	else
+		ray->col = add_col(add_col(obj->colors, ray->col), x);
 }
 
 void	intersect_plane(t_scene *scene, t_ray *ray, t_object *obj)
@@ -305,18 +308,17 @@ void	intersect_plane(t_scene *scene, t_ray *ray, t_object *obj)
 		n = norm_vec3d(obj->pl.orient);
 	else
 		n =  norm_vec3d(multi_vec3d(obj->pl.orient, -1.0));
-
-
 	double rand = ft_rand_double(0.0, 1.0);
-	if (rand <= obj->matte)//if lighting is diffuse
+	if (rand <= obj->matte)
 		p = add_vec3d(add_vec3d(ray->pos, n), in_unit_sphere());
-	else// if lighting is specular
+	else
 		p = add_vec3d(add_vec3d(ray->pos, n), reflection_vec(n, *ray));
-
-
 	ray->dir = norm_vec3d(sub_vec3d(p, ray->pos));
 	t_colors x = get_multi_l(scene, *ray, n);
-	ray->col = add_col(add_col(obj->colors, ray->col), x);
+	if (x.r == 0.0 && x.g == 0.0 && x.b == 0.0)
+		ray->col = simple_multi_col(obj->colors, scene->ambiente.ratio);
+	else
+		ray->col = add_col(add_col(obj->colors, ray->col), x);
 }
 
 void	intersect_tube(t_scene *scene, t_ray *ray, t_object *obj)
@@ -339,12 +341,16 @@ void	intersect_tube(t_scene *scene, t_ray *ray, t_object *obj)
 		n = multi_vec3d(n, -1.0);
 	}
 	double rand = ft_rand_double(0.0, 1.0);
-	if (rand <= obj->matte)//if lighting is diffuse
+	if (rand <= obj->matte)
 		p = add_vec3d(add_vec3d(ray->pos, n), in_unit_sphere());
-	else// if lighting is specular
+	else
 		p = add_vec3d(add_vec3d(ray->pos, n), reflection_vec(n, *ray));
 	ray->dir = norm_vec3d(sub_vec3d(p, ray->pos));
-	ray->col = add_col(add_col(obj->colors, ray->col), get_multi_l(scene, *ray, n));
+	t_colors x = get_multi_l(scene, *ray, n);
+	if (x.r == 0.0 && x.g == 0.0 && x.b == 0.0)
+		ray->col = simple_multi_col(obj->colors, scene->ambiente.ratio);
+	else
+		ray->col = add_col(add_col(obj->colors, ray->col), x);
 }
 
 void	intersect_circle(t_scene *scene, t_ray *ray, t_object *obj)
@@ -366,7 +372,11 @@ void	intersect_circle(t_scene *scene, t_ray *ray, t_object *obj)
 	else// if lighting is specular
 		p = add_vec3d(add_vec3d(ray->pos, n), reflection_vec(n, *ray));
 	ray->dir = norm_vec3d(sub_vec3d(p, ray->pos));
-	ray->col = add_col(add_col(obj->colors, ray->col), get_multi_l(scene, *ray, n));
+	t_colors x = get_multi_l(scene, *ray, n);
+	if (x.r == 0.0 && x.g == 0.0 && x.b == 0.0)
+		ray->col = simple_multi_col(obj->colors, scene->ambiente.ratio);
+	else
+		ray->col = add_col(add_col(obj->colors, ray->col), x);
 }
 
 t_colors	get_multi_l(t_scene *scene, t_ray ray, t_vec3d n)
@@ -437,7 +447,7 @@ t_colors	trace(t_scene *scene, t_ray ray)
 		list = list->next;
 	}
 	if (scene->hit == HIT)
-		return (scale_color(add_col(scene->bg.col, simple_multi_col(scene->ambiente.colors, scene->ambiente.ratio))));
+		return (scale_color(multi_colors(scene->bg.col, simple_multi_col(scene->ambiente.colors, scene->ambiente.ratio))));
 		// return (scene->bg.col);
 		// return (add_col(scene->bg.col, multi_col_factor(scene->ambiente.colors, scene->ambiente.ratio)));
 	// return (scale_color(multi_col_factor(scene->bg.col, scene->ambiente.ratio)));

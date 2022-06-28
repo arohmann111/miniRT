@@ -6,7 +6,7 @@
 /*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/15 15:39:21 by arohmann          #+#    #+#             */
-/*   Updated: 2022/06/28 17:45:32 by arohmann         ###   ########.fr       */
+/*   Updated: 2022/06/28 21:01:36 by arohmann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,7 @@ int	multisample(t_scene	*scene, t_vec3d pix, int x, int y)
 	t_colors	rgb;
 	t_ray		ray;
 	double		arr[SAMPLE];
-	t_list		*list;
 
-	list = scene->list;
 	i = 0;
 	rgb = mk_c(0, 0, 0);
 	while (i < SAMPLE)

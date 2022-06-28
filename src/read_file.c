@@ -6,7 +6,7 @@
 /*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/15 15:45:15 by arohmann          #+#    #+#             */
-/*   Updated: 2022/06/28 15:42:17 by arohmann         ###   ########.fr       */
+/*   Updated: 2022/06/28 20:03:32 by arohmann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -272,10 +272,10 @@ int	get_light(t_scene *scene, char **split, int line_cnt)
 
 int	parsing(t_scene *scene, char *line, int line_cnt)
 {
-	int i;
+	//int i;
 	char **split;
 
-	i = 0;
+	//i = 0;
 	if (line[0] == '\n')
 		return (0);
 	split = ft_split(line, ' ');
