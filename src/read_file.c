@@ -6,7 +6,7 @@
 /*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/15 15:45:15 by arohmann          #+#    #+#             */
-/*   Updated: 2022/06/15 15:51:53 by arohmann         ###   ########.fr       */
+/*   Updated: 2022/06/28 15:42:17 by arohmann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -298,7 +298,6 @@ int	parsing(t_scene *scene, char *line, int line_cnt)
 
 int check_must_haves(t_scene *scene)
 {
-	// if (scene->camera.is_set == false || scene->res.is_set == false)
 	if (scene->ambiente.is_set == false || scene->camera.is_set == false || scene->res.is_set == false)
 	{
 		ft_putendl_fd("Error: Mandatory scene file item is missing", STDERR_FILENO);
@@ -338,5 +337,4 @@ int	read_file(t_scene *scene, char *file)
 	}
 	free(line);
 	return(check_must_haves(scene));
-	// return (0);
 }

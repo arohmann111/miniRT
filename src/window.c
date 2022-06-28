@@ -26,7 +26,6 @@ int32_t	mlx_stuff(t_scene *scene)
 	int		x;
 	int		y;
 	t_vec3d	pix;
-	// t_vec3d	dir;
 	
 	y = 0;
 	scene->mlx = mlx_init(scene->res.width, scene->res.height, "MLX42", false);
@@ -34,15 +33,11 @@ int32_t	mlx_stuff(t_scene *scene)
 		exit(ERROR);
 	g_img = mlx_new_image(scene->mlx, scene->res.width, scene->res.height);
 	pix = get_corner_pixel(scene);
-	// printf("pix: %f %f %f\n", pix.x, pix.y, pix.z);
 	while (y < scene->res.height)
 	{
 		x = 0;
 		while (x < scene->res.width)
 		{
-				// dir = add_vec3d(pix, add_vec3d(multi_vec3d(scene->px, x + 0.5), multi_vec3d(scene->py, scene->res.height - 1 - y + 0.5)));
-				// dir = norm_vec3d(dir);
-				// mlx_put_pixel(g_img, x, y, old_trace(scene, dir));
 				mlx_put_pixel(g_img, x, y, multisample(scene, pix, x, y));
 			x++;
 		}
@@ -55,5 +50,3 @@ int32_t	mlx_stuff(t_scene *scene)
 	mlx_terminate(scene->mlx);
 	return (0);
 }
-
-			// printf("dir %f %f %f\n", dir.x, dir.y, dir.z);

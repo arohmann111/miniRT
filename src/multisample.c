@@ -6,7 +6,7 @@
 /*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/15 15:39:21 by arohmann          #+#    #+#             */
-/*   Updated: 2022/06/15 15:52:43 by arohmann         ###   ########.fr       */
+/*   Updated: 2022/06/28 17:45:32 by arohmann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,16 @@ int	multisample(t_scene	*scene, t_vec3d pix, int x, int y)
 		ray.dir = add_vec3d(pix, add_vec3d(multi_vec3d(scene->px, x + arr[i]), multi_vec3d(scene->py, scene->res.height - 1 - y + arr[i])));
 		ray.dir = norm_vec3d(ray.dir);
 		ray.pos = scene->camera.pos;
-		ray.col = mk_c(255, 255, 255);
-		color = trace(scene, ray, BOUNCES);
+		ray.col = mk_c(0, 0, 0);
+		color = trace(scene, ray);
 		rgb.r += color.r;
 		rgb.g += color.g;
 		rgb.b += color.b;
 		i++;
 	}
+	// rgb = simple_multi_col(rgb, (double)1 / (double)SAMPLE);
+	// rgb = add_col(simple_multi_col(scene->ambiente.colors, scene->ambiente.ratio), rgb);
+	// scale_color(rgb);
 	return (col(rgb.r / SAMPLE, rgb.g / SAMPLE, rgb.b / SAMPLE));
 }
 

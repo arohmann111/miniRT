@@ -6,7 +6,7 @@
 /*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/15 15:23:28 by arohmann          #+#    #+#             */
-/*   Updated: 2022/06/15 15:26:45 by arohmann         ###   ########.fr       */
+/*   Updated: 2022/06/28 16:57:10 by arohmann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@
 # define ORIENTATION 0
 # define COORDINATES 1
 # define SAMPLE 20
-# define BOUNCES 15
 # define HIT 1000.0
 # define INSIDE 0
 # define OUTSIDE 1
@@ -176,10 +175,27 @@ typedef struct s_scene
 /* ************************************************************************** */
 /* parsing */
 int			read_file(t_scene *scene, char *file);
+int			get_obj(t_scene *scene, char **split, int line_cnt);
+int	get_colors(t_colors *c, char *split_str, int line_cnt);
+int	get_material(t_object *obj, char *split_str, int line_cnt);
+int	get_vector(t_vec3d *v, char *split_str, int type, int line_cnt);
+int	get_ambiente(t_scene *scene, char **split, int line_cnt);
+t_list	*get_new_obj(int type);
+bool	check_range(double range_start, double range_end, double val);
+int	get_cylinder(t_scene *scene, char **split, int line_cnt);
+int	get_cy_circle(t_scene *scene, char **split, int line_cnt, t_vec3d pos);
+int	get_circle(t_scene *scene, char **split, int line_cnt);
+int	get_tube(t_scene *scene, char **split, int line_cnt);
+
+
+int	arrlen(char **arr);
+t_colors	add_col(t_colors col, t_colors color);
+
+
 /* window */
 int32_t		mlx_stuff(t_scene *scene);
 t_vec3d		get_corner_pixel(t_scene *scene);
-t_colors	trace(t_scene *scene, t_ray ray, int bounces);
+t_colors	trace(t_scene *scene, t_ray ray);
 int			col(int r, int g, int b);
 int			multisample(t_scene	*scene, t_vec3d pix, int x, int y);
 t_colors	mk_c(int r, int g, int b);
