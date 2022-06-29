@@ -6,7 +6,7 @@
 /*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:18:59 by arohmann          #+#    #+#             */
-/*   Updated: 2022/06/29 11:20:33 by arohmann         ###   ########.fr       */
+/*   Updated: 2022/06/29 14:35:02 by arohmann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,15 +100,6 @@ typedef struct s_circle
 	t_vec3d		orient;
 }t_circle;
 
-// typedef struct s_cylinder
-// {
-// 	t_tube		body;
-// 	t_vec3d		t_pos;
-// 	t_vec3d		b_pos;
-// 	t_circle	top;
-// 	t_circle	bottom;
-// }t_cylinder;
-
 typedef struct s_object
 {
 	enum e_object	type;
@@ -189,17 +180,54 @@ typedef struct s_scene
 /* ************************************************************************** */
 /* parsing */
 int			read_file(t_scene *scene, char *file);
+int			get_ambiente(t_scene *scene, char **split, int line_cnt);
+int			get_camera(t_scene *scene, char **split, int line_cnt);
+int			get_resolution(t_scene *scene, char **split, int line_cnt);
+int			get_background(t_scene *scene, char **split, int line_cnt);
+int			get_light(t_scene *scene, char **split, int line_cnt);
+int			get_obj(t_scene *scene, char **split, int line_cnt);
+int			get_tube(t_scene *scene, char **split, int line_cnt);
+int			get_circle(t_scene *scene, char **split, int line_cnt);
+int			get_cylinder(t_scene *scene, char **split, int line_cnt);
+
+/* utils */
+int			arrlen(char **arr);
+bool		check_range(double range_start, double range_end, double val);
+int			check_must_haves(t_scene *scene);
+int			get_vector(t_vec3d *v, char *split_str, int type, int line_cnt);
+int			get_material(t_object *obj, char *split_str, int line_cnt);
+int			get_colors(t_colors *c, char *split_str, int line_cnt);
+t_list		*get_new_l(void);
+t_list		*get_new_obj(int type);
+
+/* intersect */
+double		find_t(t_object *obj, t_ray ray);
+double		tube_find_t(t_object *tube, t_ray ray);
+void		intersect_sphere(t_scene *scene, t_ray *ray, t_object *obj);
+void		intersect_plane(t_scene *scene, t_ray *ray, t_object *obj);
+void		intersect_tube(t_scene *scene, t_ray *ray, t_object *obj);
+void		intersect_circle(t_scene *scene, t_ray *ray, t_object *obj);
+
+/* light */
+t_colors	get_multi_l(t_scene *scene, t_ray ray, t_vec3d n);
+double		intersect_light(t_scene *scene, t_ray ray, t_light *light, t_vec3d n);
+t_vec3d		reflection_vec(t_vec3d n, t_ray ray);
+t_vec3d		in_unit_sphere(void);
+
+/* colors */
+int			col(int r, int g, int b);
+t_colors	mk_c(int r, int g, int b);
+t_colors	simple_multi_col(t_colors col, double factor);
+t_colors	multi_colors(t_colors one, t_colors two);
+t_colors	scale_color(t_colors c);
+t_colors	col_cut(t_colors c);
+t_colors	add_col(t_colors col, t_colors color);
 
 /* window */
 int32_t		mlx_stuff(t_scene *scene);
 t_vec3d		get_corner_pixel(t_scene *scene);
 t_colors	trace(t_scene *scene, t_ray ray);
-int			col(int r, int g, int b);
 int			multisample(t_scene	*scene, t_vec3d pix, int x, int y);
-t_colors	mk_c(int r, int g, int b);
-t_colors	simple_multi_col(t_colors col, double factor);
-t_colors	multi_colors(t_colors one, t_colors two);
-t_colors	scale_color(t_colors c);
 double		ft_rand_double(double min, double max);
 
 /* error handling */

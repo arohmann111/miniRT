@@ -1,7 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   window.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/29 13:39:18 by arohmann          #+#    #+#             */
+/*   Updated: 2022/06/29 15:09:35 by arohmann         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "miniRT.h"
 
-static mlx_image_t *g_img;
+static mlx_image_t	*g_img;
 
 int	col(int r, int g, int b)
 {
@@ -10,7 +21,7 @@ int	col(int r, int g, int b)
 
 void	close_program(void *data)
 {
-	t_scene *scene;
+	t_scene	*scene;
 
 	scene = data;
 	if (mlx_is_key_down(scene->mlx, MLX_KEY_ESCAPE))
@@ -20,40 +31,32 @@ void	close_program(void *data)
 	}
 }
 
-
 int32_t	mlx_stuff(t_scene *scene)
 {
 	int		x;
 	int		y;
 	t_vec3d	pix;
-	// t_vec3d	dir;
-	
+
 	y = 0;
 	scene->mlx = mlx_init(scene->res.width, scene->res.height, "MLX42", false);
 	if (!scene->mlx)
 		exit(ERROR);
 	g_img = mlx_new_image(scene->mlx, scene->res.width, scene->res.height);
 	pix = get_corner_pixel(scene);
-	// printf("pix: %f %f %f\n", pix.x, pix.y, pix.z);
 	while (y < scene->res.height)
 	{
 		x = 0;
 		while (x < scene->res.width)
 		{
-				// dir = add_vec3d(pix, add_vec3d(multi_vec3d(scene->px, x + 0.5), multi_vec3d(scene->py, scene->res.height - 1 - y + 0.5)));
-				// dir = norm_vec3d(dir);
-				// mlx_put_pixel(g_img, x, y, old_trace(scene, dir));
-				mlx_put_pixel(g_img, x, y, multisample(scene, pix, x, y));
+			mlx_put_pixel(g_img, x, y, multisample(scene, pix, x, y));
 			x++;
 		}
 		y++;
 	}
-	mlx_image_to_window(scene->mlx, g_img, 0, 0);   // Adds an image to the render queue.
-	mlx_loop_hook(scene->mlx, &close_program, (t_scene*)scene);//loop hook: determines which function should be called during the loop
+	mlx_image_to_window(scene->mlx, g_img, 0, 0);
+	mlx_loop_hook(scene->mlx, &close_program, (t_scene *)scene);
 	mlx_loop(scene->mlx);
-	mlx_delete_image(scene->mlx, g_img); // Once the application request an exit, cleanup.
+	mlx_delete_image(scene->mlx, g_img);
 	mlx_terminate(scene->mlx);
 	return (0);
 }
-
-			// printf("dir %f %f %f\n", dir.x, dir.y, dir.z);

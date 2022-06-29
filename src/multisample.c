@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   multisample.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/29 11:25:11 by arohmann          #+#    #+#             */
+/*   Updated: 2022/06/29 11:46:36 by arohmann         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "miniRT.h"
 
 // must be called once before "srand((unsigned int) time(NULL));"
-double random_d()
+double	random_d(void)
 {
-	double random;
+	double	random;
 
 	random = ((double)rand()) / RAND_MAX;
 	return (random);
@@ -29,7 +41,9 @@ int	multisample(t_scene	*scene, t_vec3d pix, int x, int y)
 	i = 0;
 	while (i < SAMPLE)
 	{
-		ray.dir = add_vec3d(pix, add_vec3d(multi_vec3d(scene->px, x + arr[i]), multi_vec3d(scene->py, scene->res.height - 1 - y + arr[i])));
+		ray.dir = add_vec3d(pix, add_vec3d(multi_vec3d(scene->px, x + arr[i]),
+					multi_vec3d(scene->py,
+						scene->res.height - 1 - y + arr[i])));
 		ray.dir = norm_vec3d(ray.dir);
 		ray.pos = scene->camera.pos;
 		ray.col = mk_c(0, 0, 0);
@@ -39,5 +53,5 @@ int	multisample(t_scene	*scene, t_vec3d pix, int x, int y)
 		rgb.b += color.b;
 		i++;
 	}
-	return (col(rgb.r/SAMPLE, rgb.g/SAMPLE, rgb.b/SAMPLE));
+	return (col(rgb.r / SAMPLE, rgb.g / SAMPLE, rgb.b / SAMPLE));
 }
