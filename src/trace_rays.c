@@ -290,7 +290,7 @@ void	intersect_sphere(t_scene *scene, t_ray *ray, t_object *obj)
 	
 	ray->dir = norm_vec3d(sub_vec3d(p, ray->pos));
 
-	scene->light_c = multi_colors(obj->colors, get_multi_l(scene, *ray, n));
+	scene->light_c = get_multi_l(scene, *ray, n);
 	ray->col = obj->colors;
 }
 
@@ -314,7 +314,7 @@ void	intersect_plane(t_scene *scene, t_ray *ray, t_object *obj)
 
 
 	ray->dir = norm_vec3d(sub_vec3d(p, ray->pos));
-	scene->light_c = multi_colors(obj->colors, get_multi_l(scene, *ray, n));
+	scene->light_c = get_multi_l(scene, *ray, n);
 	ray->col = obj->colors;
 }
 
@@ -343,7 +343,7 @@ void	intersect_tube(t_scene *scene, t_ray *ray, t_object *obj)
 	else// if lighting is specular
 		p = add_vec3d(add_vec3d(ray->pos, n), reflection_vec(n, *ray));
 	ray->dir = norm_vec3d(sub_vec3d(p, ray->pos));
-	scene->light_c = multi_colors(obj->colors, get_multi_l(scene, *ray, n));
+	scene->light_c = get_multi_l(scene, *ray, n);
 	ray->col = obj->colors;
 }
 
@@ -366,7 +366,7 @@ void	intersect_circle(t_scene *scene, t_ray *ray, t_object *obj)
 	else// if lighting is specular
 		p = add_vec3d(add_vec3d(ray->pos, n), reflection_vec(n, *ray));
 	ray->dir = norm_vec3d(sub_vec3d(p, ray->pos));
-	scene->light_c = multi_colors(obj->colors, get_multi_l(scene, *ray, n));
+	scene->light_c = get_multi_l(scene, *ray, n);
 	ray->col = obj->colors;
 }
 
