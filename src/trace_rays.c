@@ -6,7 +6,7 @@
 /*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 13:52:02 by arohmann          #+#    #+#             */
-/*   Updated: 2022/06/29 14:34:35 by arohmann         ###   ########.fr       */
+/*   Updated: 2022/06/29 15:36:41 by arohmann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@ double	ft_rand_double(double min, double max)
 {
 	return (min + (rand() / ((RAND_MAX + 1.0) / (max - min))));
 }
-
-
 
 t_colors	trace(t_scene *scene, t_ray ray)
 {
@@ -54,9 +52,5 @@ t_colors	trace(t_scene *scene, t_ray ray)
 	else
 		return (obj->colors);
 	ray.col = multi_colors(ray.col, ambient);
-	return (col_cut(add_col(ray.col, scene->light_c)));
+	return (scale_color(add_col(ray.col, scene->light_c)));
 }
-
-//ambient light darf schwarz werden
-//bei bounce limit background oder ray.col returnen
-//wenn inside object, keine normale umdrehen
