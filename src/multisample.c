@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   multisample.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
+/*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:25:11 by arohmann          #+#    #+#             */
-/*   Updated: 2022/06/29 11:46:36 by arohmann         ###   ########.fr       */
+/*   Updated: 2022/06/29 19:00:48 by afrasch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
 
-// must be called once before "srand((unsigned int) time(NULL));"
 double	random_d(void)
 {
 	double	random;
@@ -24,15 +23,12 @@ double	random_d(void)
 int	multisample(t_scene	*scene, t_vec3d pix, int x, int y)
 {
 	int			i;
-	t_colors	color;
 	t_colors	rgb;
 	t_ray		ray;
 	double		arr[SAMPLE];
 
 	i = 0;
-	rgb.r = 0;
-	rgb.g = 0;
-	rgb.b = 0;
+	rgb = mk_c(0, 0, 0);
 	while (i < SAMPLE)
 	{
 		arr[i] = random_d();
@@ -47,10 +43,7 @@ int	multisample(t_scene	*scene, t_vec3d pix, int x, int y)
 		ray.dir = norm_vec3d(ray.dir);
 		ray.pos = scene->camera.pos;
 		ray.col = mk_c(0, 0, 0);
-		color = trace(scene, ray);
-		rgb.r += color.r;
-		rgb.g += color.g;
-		rgb.b += color.b;
+		rgb = add_col(rgb, trace(scene, ray));
 		i++;
 	}
 	return (col(rgb.r / SAMPLE, rgb.g / SAMPLE, rgb.b / SAMPLE));

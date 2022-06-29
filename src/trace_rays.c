@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   trace_rays.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
+/*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 13:52:02 by arohmann          #+#    #+#             */
-/*   Updated: 2022/06/29 15:36:41 by arohmann         ###   ########.fr       */
+/*   Updated: 2022/06/29 18:54:51 by afrasch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,20 @@
 double	ft_rand_double(double min, double max)
 {
 	return (min + (rand() / ((RAND_MAX + 1.0) / (max - min))));
+}
+
+static void	call_intersection(t_scene *scene, t_ray *ray, t_object *obj)
+{
+	if (obj->type == SPHERE)
+		intersect_sphere(scene, ray, obj);
+	else if (obj->type == BOWL)
+		intersect_sphere(scene, ray, obj);
+	else if (obj->type == PLANE)
+		intersect_plane(scene, ray, obj);
+	else if (obj->type == TUBE)
+		intersect_tube(scene, ray, obj);
+	else if (obj->type == CIRCLE)
+		intersect_circle(scene, ray, obj);
 }
 
 t_colors	trace(t_scene *scene, t_ray ray)
@@ -39,18 +53,7 @@ t_colors	trace(t_scene *scene, t_ray ray)
 	}
 	if (scene->hit == HIT)
 		return (scale_color(multi_colors(scene->bg.col, ambient)));
-	if (obj->type == SPHERE)
-		intersect_sphere(scene, &ray, obj);
-	else if (obj->type == BOWL)
-		intersect_sphere(scene, &ray, obj);
-	else if (obj->type == PLANE)
-		intersect_plane(scene, &ray, obj);
-	else if (obj->type == TUBE)
-		intersect_tube(scene, &ray, obj);
-	else if (obj->type == CIRCLE)
-		intersect_circle(scene, &ray, obj);
-	else
-		return (obj->colors);
+	call_intersection(scene, &ray, obj);
 	ray.col = multi_colors(ray.col, ambient);
 	return (scale_color(add_col(ray.col, scene->light_c)));
 }

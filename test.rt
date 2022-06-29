@@ -1,6 +1,6 @@
 #ambient light
 ##A ratio,            colors
-A   0.3                 255,255,255
+A   0.5                 255,255,255
 
 
 
@@ -15,32 +15,32 @@ L  0,0,0              0.08               200,100,55
 # L  0,15,25            0.3                0,255,
 
 #plane
-##pl pos              dir                colors                 matte/ specular factor
-pl   0,-5,0            0,1.0,0            0,0,155               0.0,1.0
+##pl pos              dir                colors
+pl   0,-5,0            0,1.0,0            0,0,155
 
 
 #sphere
-##sp pos,             diameter,          colors                 matte/ specular factor
-# sp   0,0,0           10.0                255,200,100                 0.8,0.2
-sp   5,-3,8           4.0                255,100,200                 0.8,0.2
-# sp   20,11,15            10.0               155,125,70           1.0,0.0
-# sp   0,-200,30            400.0               55,125,170           0.5,0.5
+##sp pos,             diameter,          colors
+# sp   0,0,0           10.0                255,200,100
+sp   5,-3,8           4.0                255,100,200
+# sp   20,11,15            10.0               155,125,70
+# sp   0,-200,30            400.0               55,125,170
 
 #bowl
-##bo pos,             dir,               angle,             diameter,          colors                 matte/ specular factor
-bo   0,0,0          1,-1,1             70                10.0               155,250,100            0.8,0.2
+##bo pos,             dir,               angle,             diameter,          colors
+bo   0,0,0          1,-1,1             70                10.0               155,250,100
 
 #cylinder
-##cy pos,             dir,               diameter,   height,     colors                 matte/ specular factor
-# cy   20.0,0.0,30     2,0.0,1             10.0         10      255,255,255                1.0,0.0
+##cy pos,             dir,               diameter,   height,     colors
+# cy   20.0,0.0,30     2,0.0,1             10.0         10      255,255,255
 
 
 #tube
-##tb pos,               dir,              diameter,     height,    colors                 matte/ specular factor
+##tb pos,               dir,              diameter,     height,    colors       
 # tb   -15.0,0.0,30     1.0,0.0,1.0             10.0         10      80,150,150
 
 #circle
-##c    pos               dir              diameter      colors                 matte/ specular factor
+##c    pos               dir              diameter      colors       
 # cl    0.0,0.0,0.0    0.0,0.0,1.0             10.0         0,0,255
 
 

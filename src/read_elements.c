@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   read_basics.c                                      :+:      :+:    :+:   */
+/*   read_elements.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
+/*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:39:33 by arohmann          #+#    #+#             */
-/*   Updated: 2022/06/29 11:45:39 by arohmann         ###   ########.fr       */
+/*   Updated: 2022/06/29 18:52:42 by afrasch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,8 @@ int	get_ambiente(t_scene *scene, char **split, int line_cnt)
 
 int	get_camera(t_scene *scene, char **split, int line_cnt)
 {
-	int	field_of_view;
 	int	error;
 
-	field_of_view = 0;
 	error = 0;
 	if (scene->camera.is_set == true)
 		return (print_error("Camera already exists", line_cnt, split));
@@ -57,14 +55,13 @@ int	get_camera(t_scene *scene, char **split, int line_cnt)
 	if (get_vector(&scene->camera.orient, split[2], ORIENTATION,
 			line_cnt) == ERROR)
 		return (error_free(ERROR, split));
-	field_of_view = ft_atoi(split[3], &error);
+	scene->camera.fov = ft_atoi(split[3], &error);
 	if (error == ERROR)
 		return (print_error("Field of view can't be converted",
 				line_cnt, split));
-	if (check_range(1.0, 179.0, (double)field_of_view) == false)
+	if (check_range(1.0, 179.0, (double)scene->camera.fov) == false)
 		return (print_error("Field of view is not in range [1-179]",
 				line_cnt, split));
-	scene->camera.fov = field_of_view;
 	scene->camera.is_set = true;
 	ft_free_array(split);
 	return (0);
@@ -110,10 +107,8 @@ int	get_background(t_scene *scene, char **split, int line_cnt)
 int	get_light(t_scene *scene, char **split, int line_cnt)
 {
 	t_list		*new_elem;
-	double		brightness_ratio;
 	int			error;
 
-	brightness_ratio = 0.0;
 	error = 0;
 	if (arrlen(split) != 4)
 		return (print_error("Wrong light input", line_cnt, split));
@@ -124,14 +119,13 @@ int	get_light(t_scene *scene, char **split, int line_cnt)
 	if (get_vector(&((t_light *)new_elem->content)->pos,
 			split[1], COORDINATES, line_cnt) == ERROR)
 		return (error_free(ERROR, split));
-	brightness_ratio = ft_atod(split[2], &error);
+	((t_light *)new_elem->content)->bright = ft_atod(split[2], &error);
 	if (error == ERROR)
 		return (print_error("Brightness ratio can't be converted",
 				line_cnt, split));
-	if (check_range(0.0, 1.0, brightness_ratio) == false)
+	if (check_range(0.0, 1.0, ((t_light *)new_elem->content)->bright) == false)
 		return (print_error("Brightness ratio is not in range [0.0,1.0]",
 				line_cnt, split));
-	((t_light *)new_elem->content)->bright = brightness_ratio;
 	if (get_colors(&((t_light *)new_elem->content)->colors, split[3],
 			line_cnt) == ERROR)
 		return (error_free(ERROR, split));

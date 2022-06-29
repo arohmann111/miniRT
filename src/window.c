@@ -3,21 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   window.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
+/*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 13:39:18 by arohmann          #+#    #+#             */
-/*   Updated: 2022/06/29 15:09:35 by arohmann         ###   ########.fr       */
+/*   Updated: 2022/06/29 16:04:24 by afrasch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
-
-static mlx_image_t	*g_img;
-
-int	col(int r, int g, int b)
-{
-	return ((int)r << 24 | (int)g << 16 | (int)b << 8 | (int)(0xFF));
-}
 
 void	close_program(void *data)
 {
@@ -31,17 +24,13 @@ void	close_program(void *data)
 	}
 }
 
-int32_t	mlx_stuff(t_scene *scene)
+static void	mlx_looping(t_scene *scene, mlx_image_t *g_img)
 {
-	int		x;
-	int		y;
-	t_vec3d	pix;
+	int			x;
+	int			y;
+	t_vec3d		pix;
 
 	y = 0;
-	scene->mlx = mlx_init(scene->res.width, scene->res.height, "MLX42", false);
-	if (!scene->mlx)
-		exit(ERROR);
-	g_img = mlx_new_image(scene->mlx, scene->res.width, scene->res.height);
 	pix = get_corner_pixel(scene);
 	while (y < scene->res.height)
 	{
@@ -53,10 +42,20 @@ int32_t	mlx_stuff(t_scene *scene)
 		}
 		y++;
 	}
+}
+
+void	mlx_stuff(t_scene *scene)
+{
+	mlx_image_t	*g_img;
+
+	scene->mlx = mlx_init(scene->res.width, scene->res.height, "MLX42", false);
+	if (!scene->mlx)
+		exit(ERROR);
+	g_img = mlx_new_image(scene->mlx, scene->res.width, scene->res.height);
+	mlx_looping(scene, g_img);
 	mlx_image_to_window(scene->mlx, g_img, 0, 0);
 	mlx_loop_hook(scene->mlx, &close_program, (t_scene *)scene);
 	mlx_loop(scene->mlx);
 	mlx_delete_image(scene->mlx, g_img);
 	mlx_terminate(scene->mlx);
-	return (0);
 }

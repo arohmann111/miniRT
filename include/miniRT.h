@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   miniRT.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
+/*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:18:59 by arohmann          #+#    #+#             */
-/*   Updated: 2022/06/29 14:35:02 by arohmann         ###   ########.fr       */
+/*   Updated: 2022/06/29 18:57:25 by afrasch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,16 +179,20 @@ typedef struct s_scene
 /*                                  prototypes                                */
 /* ************************************************************************** */
 /* parsing */
-int			read_file(t_scene *scene, char *file);
+int			read_file(t_scene *scene, int fd);
 int			get_ambiente(t_scene *scene, char **split, int line_cnt);
 int			get_camera(t_scene *scene, char **split, int line_cnt);
 int			get_resolution(t_scene *scene, char **split, int line_cnt);
 int			get_background(t_scene *scene, char **split, int line_cnt);
 int			get_light(t_scene *scene, char **split, int line_cnt);
-int			get_obj(t_scene *scene, char **split, int line_cnt);
 int			get_tube(t_scene *scene, char **split, int line_cnt);
 int			get_circle(t_scene *scene, char **split, int line_cnt);
+int			get_cy_circle(t_scene *scene, char **split,
+							int line_cnt, t_vec3d pos);
 int			get_cylinder(t_scene *scene, char **split, int line_cnt);
+int			get_sphere(t_scene *scene, char **split, int line_cnt);
+int			get_plane(t_scene *scene, char **split, int line_cnt);
+int			get_bowl(t_scene *scene, char **split, int line_cnt);
 
 /* utils */
 int			arrlen(char **arr);
@@ -224,7 +228,7 @@ t_colors	col_cut(t_colors c);
 t_colors	add_col(t_colors col, t_colors color);
 
 /* window */
-int32_t		mlx_stuff(t_scene *scene);
+void		mlx_stuff(t_scene *scene);
 t_vec3d		get_corner_pixel(t_scene *scene);
 t_colors	trace(t_scene *scene, t_ray ray);
 int			multisample(t_scene	*scene, t_vec3d pix, int x, int y);

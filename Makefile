@@ -5,8 +5,9 @@ CFLAGS		= -Wall -Wextra -Werror -O2
 
 CC			= cc
 
-SRC			:= main.c read_file.c read_utils.c read_basics.c read_cy.c read_objs.c \
-				vec_math.c vec_math2.c window.c send_rays.c trace_rays.c light.c\
+SRC			:= main.c read_file.c read_utils.c read_elements.c read_objs_2.c \
+				read_items.c read_objs.c light.c \
+				vec_math.c vec_math2.c window.c send_rays.c trace_rays.c \
 				colors.c colors2.c find_t.c find_t2.c intersect.c multisample.c\
 
 LDLIBS		:= -lft -lglfw -L "/Users/$(USER)/.brew/opt/glfw/lib/" -lMLX42

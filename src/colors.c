@@ -3,14 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   colors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
+/*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 13:54:39 by arohmann          #+#    #+#             */
-/*   Updated: 2022/06/29 13:55:59 by arohmann         ###   ########.fr       */
+/*   Updated: 2022/06/29 16:03:59 by afrasch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
+
+int	col(int r, int g, int b)
+{
+	return ((int)r << 24 | (int)g << 16 | (int)b << 8 | (int)(0xFF));
+}
 
 t_colors	multi_colors(t_colors one, t_colors two)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
+/*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:23:07 by arohmann          #+#    #+#             */
-/*   Updated: 2022/06/29 11:45:59 by arohmann         ###   ########.fr       */
+/*   Updated: 2022/06/29 17:45:41 by afrasch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ int	print_input_instructions(void)
 int	main(int ac, char **av)
 {
 	t_scene	scene;
+	int		fd;
 
 	srand(time(0));
 	init_struct(&scene);
@@ -65,10 +66,10 @@ int	main(int ac, char **av)
 		ft_putendl_fd("Error\nFile must be an .rt file", STDERR_FILENO);
 		return (1);
 	}
-	if (read_file(&scene, av[1]) == ERROR)
+	fd = open(av[1], O_RDONLY);
+	if (fd == ERROR || read_file(&scene, fd) == ERROR)
 	{
 		ft_lstclear(&scene.list, free);
-		system("leaks miniRT");
 		return (ERROR);
 	}
 	mlx_stuff(&scene);
