@@ -6,7 +6,7 @@
 /*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 16:58:07 by afrasch           #+#    #+#             */
-/*   Updated: 2022/06/29 17:30:31 by afrasch          ###   ########.fr       */
+/*   Updated: 2022/06/30 11:58:46 by afrasch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@ static int	convert_colors(char **colors, t_colors *c, int line_cnt)
 	{
 		rgb[i] = ft_atoi(colors[i], &error);
 		if (error == ERROR)
-			return (print_error("Color can't be converted", line_cnt, colors));
+			return (print_error("Color can't be converted", line_cnt, NULL));
 		if (check_range(0.0, 255.0, (double)rgb[i]) == false)
 			return (print_error("Color is not in range [0-255]",
-					line_cnt, colors));
+					line_cnt, NULL));
 		i++;
 	}
 	c->r = rgb[0];
@@ -64,17 +64,17 @@ static int	convert_coordinates(char **vector, double xyz[3],
 		xyz[i] = ft_atod(vector[i], &error);
 		if (error == ERROR)
 			return (print_error("Vector can't be converted",
-					line_cnt, vector));
+					line_cnt, NULL));
 		if (type == COORDINATES)
 		{
 			if (check_range(-500.0, 500.0, xyz[i]) == false)
 				return (print_error("Coordinate vec is not in range [-500,500]",
-						line_cnt, vector));
+						line_cnt, NULL));
 		}
 		else if (type == ORIENTATION)
 			if (check_range(-1000.0, 1000.0, xyz[i]) == false)
 				return (print_error("Dir vector is not in range [-1000,1000]",
-						line_cnt, vector));
+						line_cnt, NULL));
 		i++;
 	}
 	return (0);

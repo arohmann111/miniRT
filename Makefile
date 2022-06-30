@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+         #
+#    By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/06/30 11:47:42 by arohmann          #+#    #+#              #
-#    Updated: 2022/06/30 12:55:24 by arohmann         ###   ########.fr        #
+#    Updated: 2022/06/30 14:32:04 by afrasch          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,8 +16,8 @@ CFLAGS		= -Wall -Wextra -Werror -O2
 
 CC			= cc
 
-SRC			:= main.c read_file.c read_utils.c read_elements.c read_objs_2.c \
-				read_items.c read_objs.c light.c \
+SRC			:= main.c read_file.c read_utils.c read_elements.c \
+				read_items.c read_objs.c read_objs_2.c light.c error.c \
 				vec_math.c vec_math2.c window.c send_rays.c trace_rays.c \
 				colors.c colors2.c find_t.c find_t2.c intersect.c multisample.c\
 
@@ -55,4 +55,4 @@ re: fclean $(NAME)
 libs/libft/libft.a:
 	@make -C ./libs/libft all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re libs/libft/libft.a

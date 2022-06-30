@@ -6,7 +6,7 @@
 /*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:18:59 by arohmann          #+#    #+#             */
-/*   Updated: 2022/06/30 11:00:17 by afrasch          ###   ########.fr       */
+/*   Updated: 2022/06/30 14:23:17 by afrasch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,15 +30,10 @@
 /*                                   macros                                   */
 /* ************************************************************************** */
 # define ERROR -1
-# define SUCCESS 0
-# define NEXT_NUM 1
-# define NEXT_SPACE 2
 # define ORIENTATION 0
 # define COORDINATES 1
 # define SAMPLE 20
 # define HIT 1000.0
-# define INSIDE 0
-# define OUTSIDE 1
 
 /* ************************************************************************** */
 /*                                    enums                                   */
@@ -103,8 +98,6 @@ typedef struct s_circle
 typedef struct s_object
 {
 	enum e_object	type;
-	double			matte;
-	double			spec;
 	t_vec3d			pos;
 	t_colors		colors;
 	union
@@ -157,7 +150,6 @@ typedef struct s_ray
 	t_vec3d		pos;
 	t_vec3d		dir;
 	t_colors	col;
-	bool		side;
 }t_ray;
 
 typedef struct s_scene
@@ -188,7 +180,7 @@ int			get_light(t_scene *scene, char **split, int line_cnt);
 int			get_tube(t_scene *scene, char **split, int line_cnt);
 int			get_circle(t_scene *scene, char **split, int line_cnt);
 int			get_cy_circle(t_scene *scene, char **split,
-							int line_cnt, t_vec3d pos);
+				int line_cnt, t_vec3d pos);
 int			get_cylinder(t_scene *scene, char **split, int line_cnt);
 int			get_sphere(t_scene *scene, char **split, int line_cnt);
 int			get_plane(t_scene *scene, char **split, int line_cnt);
@@ -199,7 +191,6 @@ int			arrlen(char **arr);
 bool		check_range(double range_start, double range_end, double val);
 int			check_must_haves(t_scene *scene);
 int			get_vector(t_vec3d *v, char *split_str, int type, int line_cnt);
-int			get_material(t_object *obj, char *split_str, int line_cnt);
 int			get_colors(t_colors *c, char *split_str, int line_cnt);
 t_list		*get_new_l(void);
 t_list		*get_new_obj(int type);
@@ -218,9 +209,6 @@ void		intersect_circle(t_scene *scene, t_ray *ray, t_object *obj);
 
 /* light */
 t_colors	get_multi_l(t_scene *scene, t_ray ray, t_vec3d n);
-double		intersect_light(t_scene *scene, t_ray ray, t_light *light,
-							t_vec3d n);
-t_vec3d		reflection_vec(t_vec3d n, t_ray ray);
 t_vec3d		in_unit_sphere(void);
 
 /* colors */
@@ -229,7 +217,6 @@ t_colors	mk_c(int r, int g, int b);
 t_colors	simple_multi_col(t_colors col, double factor);
 t_colors	multi_colors(t_colors one, t_colors two);
 t_colors	scale_color(t_colors c);
-t_colors	col_cut(t_colors c);
 t_colors	add_col(t_colors col, t_colors color);
 
 /* window */
@@ -240,6 +227,7 @@ int			multisample(t_scene	*scene, t_vec3d pix, int x, int y);
 double		ft_rand_double(double min, double max);
 
 /* error handling */
+int			print_input_instructions(void);
 int			print_error(char *err_msg, int line_cnt, char **arr);
 int			error_free(int error, char **arr);
 
