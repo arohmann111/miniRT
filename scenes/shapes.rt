@@ -9,8 +9,8 @@ C   0,0,23                0.0,0.0,-1.0             60
 #light
 ##L  pos,                 brightness ratio,        color
 L  10.0,5.0,0             0.08                     200,100,55
-# L  20,12,25               0.3                      255,0,0
-# L  0,15,25                0.3                      0,255,0
+L  20,12,25               0.3                      255,0,0
+L  0,15,25                0.3                      0,255,0
 
 #sphere
 ##sp pos,                 diameter,                colors
@@ -23,7 +23,7 @@ pl   0,-5,0               0,1.0,0                  0,0,155
 #cylinder
 ##cy pos,                 dir,                     diameter,   height,     colors
 cy   0.0,0.0,0.0          0.0,-1.0,0.0             10.0        10          255,255,255
-    
+
 #resolution
 ##R  width                height
 R    500                  500
