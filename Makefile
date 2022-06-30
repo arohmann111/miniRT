@@ -6,7 +6,7 @@
 #    By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/06/30 11:47:42 by arohmann          #+#    #+#              #
-#    Updated: 2022/06/30 14:29:08 by afrasch          ###   ########.fr        #
+#    Updated: 2022/06/30 14:32:04 by afrasch          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,4 +55,4 @@ re: fclean $(NAME)
 libs/libft/libft.a:
 	@make -C ./libs/libft all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re libs/libft/libft.a
