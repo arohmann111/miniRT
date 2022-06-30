@@ -6,7 +6,7 @@ CFLAGS		= -Wall -Wextra -Werror -O2
 CC			= cc
 
 SRC			:= main.c read_file.c read_utils.c read_elements.c read_objs_2.c \
-				read_items.c read_objs.c light.c \
+				read_items.c read_objs.c light.c error.c \
 				vec_math.c vec_math2.c window.c send_rays.c trace_rays.c \
 				colors.c colors2.c find_t.c find_t2.c intersect.c multisample.c\
 
@@ -39,7 +39,5 @@ fclean: clean
 	$(RM) $(NAME)
 
 re: fclean $(NAME)
-
-
 
 .PHONY: all clean fclean re

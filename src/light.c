@@ -6,20 +6,11 @@
 /*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 14:05:42 by arohmann          #+#    #+#             */
-/*   Updated: 2022/06/30 11:00:01 by afrasch          ###   ########.fr       */
+/*   Updated: 2022/06/30 14:20:40 by afrasch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
-
-t_vec3d	reflection_vec(t_vec3d n, t_ray ray)
-{
-	t_vec3d	reflection;
-
-	reflection = sub_vec3d(ray.dir, multi_vec3d(n, 2
-				* skalar_vec3d(ray.dir, n)));
-	return (reflection);
-}
 
 t_vec3d	in_unit_sphere(void)
 {
@@ -36,29 +27,7 @@ t_vec3d	in_unit_sphere(void)
 	}
 }
 
-t_colors	get_multi_l(t_scene *scene, t_ray ray, t_vec3d n)
-{
-	t_colors	uv;
-	double		uva;
-	t_list		*lights;
-
-	uv = mk_c(0, 0, 0);
-	lights = scene->lights;
-	while (lights)
-	{
-		uva = intersect_light(scene, ray, (t_light *)(lights->content), n);
-		if (uva > 0.0)
-		{
-			uv.r += ((t_light *)lights->content)->colors.r * uva;
-			uv.g += ((t_light *)lights->content)->colors.g * uva;
-			uv.b += ((t_light *)lights->content)->colors.b * uva;
-		}
-		lights = lights->next;
-	}
-	return (uv);
-}
-
-double	intersect_light(t_scene *scene, t_ray ray, t_light *light, t_vec3d n)
+static double	intersect_light(t_scene *scene, t_ray ray, t_light *light, t_vec3d n)
 {
 	t_ray	l_ray;
 	t_list	*list;
@@ -83,4 +52,26 @@ double	intersect_light(t_scene *scene, t_ray ray, t_light *light, t_vec3d n)
 	if (n_l < 0)
 		return (-2);
 	return (1 / pow(len, 2) * light->bright * 500);
+}
+
+t_colors	get_multi_l(t_scene *scene, t_ray ray, t_vec3d n)
+{
+	t_colors	uv;
+	double		uva;
+	t_list		*lights;
+
+	uv = mk_c(0, 0, 0);
+	lights = scene->lights;
+	while (lights)
+	{
+		uva = intersect_light(scene, ray, (t_light *)(lights->content), n);
+		if (uva > 0.0)
+		{
+			uv.r += ((t_light *)lights->content)->colors.r * uva;
+			uv.g += ((t_light *)lights->content)->colors.g * uva;
+			uv.b += ((t_light *)lights->content)->colors.b * uva;
+		}
+		lights = lights->next;
+	}
+	return (uv);
 }
