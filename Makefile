@@ -1,3 +1,14 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2022/06/30 11:47:42 by arohmann          #+#    #+#              #
+#    Updated: 2022/06/30 12:55:24 by arohmann         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
 
 NAME		= miniRT
 
@@ -5,14 +16,15 @@ CFLAGS		= -Wall -Wextra -Werror -O2
 
 CC			= cc
 
-SRC			:= main.c read_file.c vec_math.c window.c send_rays.c trace_rays.c \
-				multisample.c\
+SRC			:= main.c read_file.c read_utils.c read_elements.c read_objs_2.c \
+				read_items.c read_objs.c light.c \
+				vec_math.c vec_math2.c window.c send_rays.c trace_rays.c \
+				colors.c colors2.c find_t.c find_t2.c intersect.c multisample.c\
 
-LDLIBS		:= -lft -lglfw -L "/Users/$(USER)/.brew/opt/glfw/lib/" -lMLX42
+LLIB		:= -lglfw -L "/Users/$(USER)/.brew/opt/glfw/lib/" -L libs/MLX42 -lMLX42
 
-LIBDIRS		:= $(wildcard libs/*)
-LDLIBS		:= $(addprefix -L./, $(LIBDIRS)) $(LDLIBS)
-INCLUDES	:= -I./include/ $(addprefix -I./, $(addsuffix /include, $(LIBDIRS)))
+LIBRARIES	= -L libs/libft -lft $(LLIB)
+INCLUDES	= ./include/
 
 SDIR		:= src
 ODIR		:= obj
@@ -22,22 +34,25 @@ RM			= rm -rf
 
 all: $(NAME)
 
-$(NAME): $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LDLIBS)
+$(NAME): libs/libft/libft.a $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBRARIES) -o $(NAME)
 
 $(ODIR)/%.o: $(SDIR)/%.c
 	mkdir -p $(ODIR)
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	$(CC) $(CFLAGS) -I$(INCLUDES) -c $< -o $@
 
 clean:
+	@make -C libs/libft clean
 	$(RM) $(ODIR)
 	$(RM) -r *.dSYM $(SDIR)/*.dSYM $(SDIR)/$(NAME)
 
 fclean: clean
+	@make -C libs/libft fclean
 	$(RM) $(NAME)
 
 re: fclean $(NAME)
 
-
+libs/libft/libft.a:
+	@make -C ./libs/libft all
 
 .PHONY: all clean fclean re

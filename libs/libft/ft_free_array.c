@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_free_array.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: afrasch <afrasch@student.42.fr>            +#+  +:+       +#+        */
+/*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 23:00:10 by afrasch           #+#    #+#             */
-/*   Updated: 2021/12/06 12:59:01 by afrasch          ###   ########.fr       */
+/*   Updated: 2022/06/30 11:21:51 by arohmann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ void	ft_free_array(char **arr)
 	int	i;
 
 	i = 0;
+	if (arr == NULL)
+		return ;
 	while (arr[i])
 	{
 		free(arr[i]);
