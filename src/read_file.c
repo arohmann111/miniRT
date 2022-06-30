@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_file.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:37:28 by arohmann          #+#    #+#             */
-/*   Updated: 2022/06/29 18:29:15 by afrasch          ###   ########.fr       */
+/*   Updated: 2022/06/30 11:16:28 by arohmann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,10 @@ int	read_file(t_scene *scene, int fd)
 		if (line[0] == '#' || line[0] == '\n' || line[0] == '\0')
 			continue ;
 		if (parsing(scene, line, line_cnt) != 0)
-			return (error_free(ERROR, &line));
+		{
+			free(line);
+			return (ERROR);
+		}
 	}
 	free(line);
 	return (check_must_haves(scene));
