@@ -6,7 +6,7 @@
 /*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:18:59 by arohmann          #+#    #+#             */
-/*   Updated: 2022/06/29 18:57:25 by afrasch          ###   ########.fr       */
+/*   Updated: 2022/06/30 11:00:17 by afrasch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,6 +206,10 @@ t_list		*get_new_obj(int type);
 
 /* intersect */
 double		find_t(t_object *obj, t_ray ray);
+double		sp_find_t(t_object *sphere, t_ray ray);
+double		bo_find_t(t_object *bowl, t_ray ray);
+double		pl_find_t(t_object *plane, t_ray ray);
+double		circ_find_t(t_object *circle, t_ray ray);
 double		tube_find_t(t_object *tube, t_ray ray);
 void		intersect_sphere(t_scene *scene, t_ray *ray, t_object *obj);
 void		intersect_plane(t_scene *scene, t_ray *ray, t_object *obj);
@@ -214,7 +218,8 @@ void		intersect_circle(t_scene *scene, t_ray *ray, t_object *obj);
 
 /* light */
 t_colors	get_multi_l(t_scene *scene, t_ray ray, t_vec3d n);
-double		intersect_light(t_scene *scene, t_ray ray, t_light *light, t_vec3d n);
+double		intersect_light(t_scene *scene, t_ray ray, t_light *light,
+							t_vec3d n);
 t_vec3d		reflection_vec(t_vec3d n, t_ray ray);
 t_vec3d		in_unit_sphere(void);
 

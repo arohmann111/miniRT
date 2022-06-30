@@ -3,14 +3,38 @@
 /*                                                        :::      ::::::::   */
 /*   light.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
+/*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 14:05:42 by arohmann          #+#    #+#             */
-/*   Updated: 2022/06/29 14:34:44 by arohmann         ###   ########.fr       */
+/*   Updated: 2022/06/30 11:00:01 by afrasch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
+
+t_vec3d	reflection_vec(t_vec3d n, t_ray ray)
+{
+	t_vec3d	reflection;
+
+	reflection = sub_vec3d(ray.dir, multi_vec3d(n, 2
+				* skalar_vec3d(ray.dir, n)));
+	return (reflection);
+}
+
+t_vec3d	in_unit_sphere(void)
+{
+	t_vec3d	p;
+
+	while (11)
+	{
+		p.x = ft_rand_double(-1.0, 1.0);
+		p.y = ft_rand_double(-1.0, 1.0);
+		p.z = ft_rand_double(-1.0, 1.0);
+		if ((p.x * p.x + p.y * p.y + p.z * p.z) > 1.0)
+			continue ;
+		return (p);
+	}
+}
 
 t_colors	get_multi_l(t_scene *scene, t_ray ray, t_vec3d n)
 {
@@ -59,28 +83,4 @@ double	intersect_light(t_scene *scene, t_ray ray, t_light *light, t_vec3d n)
 	if (n_l < 0)
 		return (-2);
 	return (1 / pow(len, 2) * light->bright * 500);
-}
-
-t_vec3d	reflection_vec(t_vec3d n, t_ray ray)
-{
-	t_vec3d	reflection;
-
-	reflection = sub_vec3d(ray.dir, multi_vec3d(n, 2
-				* skalar_vec3d(ray.dir, n)));
-	return (reflection);
-}
-
-t_vec3d	in_unit_sphere(void)
-{
-	t_vec3d	p;
-
-	while (11)
-	{
-		p.x = ft_rand_double(-1.0, 1.0);
-		p.y = ft_rand_double(-1.0, 1.0);
-		p.z = ft_rand_double(-1.0, 1.0);
-		if ((p.x * p.x + p.y * p.y + p.z * p.z) > 1.0)
-			continue ;
-		return (p);
-	}
 }

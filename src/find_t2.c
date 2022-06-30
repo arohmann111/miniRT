@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   find_t2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
+/*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 14:07:52 by arohmann          #+#    #+#             */
-/*   Updated: 2022/06/30 10:27:18 by arohmann         ###   ########.fr       */
+/*   Updated: 2022/06/30 10:57:36 by afrasch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
 
-double	tube_t2(t_object *tube, t_ray ray, double t)
+static double	tube_t2(t_object *tube, t_ray ray, double t)
 {
 	t_vec3d	wtf;
 	t_vec3d	p;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   find_t.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arohmann <arohmann@student.42.fr>          +#+  +:+       +#+        */
+/*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 13:53:28 by arohmann          #+#    #+#             */
-/*   Updated: 2022/06/29 14:04:11 by arohmann         ###   ########.fr       */
+/*   Updated: 2022/06/30 11:00:43 by afrasch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,12 @@ double	sp_find_t(t_object *sphere, t_ray ray)
 	return (-1.0);
 }
 
+static t_vec3d	bowl_hit(t_ray ray, t_object *bowl, double t)
+{
+	return (norm_vec3d(sub_vec3d(add_vec3d(ray.pos, multi_vec3d(ray.dir, t)),
+				bowl->pos)));
+}
+
 double	bo_find_t(t_object *bowl, t_ray ray)
 {
 	double	a;
@@ -44,7 +50,6 @@ double	bo_find_t(t_object *bowl, t_ray ray)
 	double	c;
 	double	dis;
 	double	t;
-	t_vec3d	bowl_hit;
 
 	a = skalar_vec3d(ray.dir, ray.dir);
 	b = 2.0 * skalar_vec3d(sub_vec3d(ray.pos, bowl->pos), ray.dir);
@@ -55,15 +60,11 @@ double	bo_find_t(t_object *bowl, t_ray ray)
 	if (dis < 0.0)
 		return (-1.0);
 	t = (-b - sqrt(dis)) / (2.0 * a);
-	bowl_hit = norm_vec3d(sub_vec3d(add_vec3d(ray.pos,
-					multi_vec3d(ray.dir, t)), bowl->pos));
-	if (t > 0.0001 && skalar_vec3d(bowl->bo.orient, bowl_hit)
+	if (t > 0.0001 && skalar_vec3d(bowl->bo.orient, bowl_hit(ray, bowl, t))
 		< (cos(bowl->bo.angle * M_PI / 180)))
 		return (t);
 	t = (-b + sqrt(dis)) / (2.0 * a);
-	bowl_hit = norm_vec3d(sub_vec3d(add_vec3d(ray.pos,
-					multi_vec3d(ray.dir, t)), bowl->pos));
-	if (t > 0.0001 && skalar_vec3d(bowl->bo.orient, bowl_hit)
+	if (t > 0.0001 && skalar_vec3d(bowl->bo.orient, bowl_hit(ray, bowl, t))
 		< (cos(bowl->bo.angle * M_PI / 180)))
 		return (t);
 	return (-1.0);
@@ -106,22 +107,4 @@ double	circ_find_t(t_object *circle, t_ray ray)
 		else
 			return (-1);
 	}
-}
-
-double	find_t(t_object *obj, t_ray ray)
-{
-	double	t;
-
-	t = -2.0;
-	if (obj->type == SPHERE)
-		t = sp_find_t(obj, ray);
-	else if (obj->type == BOWL)
-		t = bo_find_t(obj, ray);
-	else if (obj->type == PLANE)
-		t = pl_find_t(obj, ray);
-	else if (obj->type == CIRCLE)
-		t = circ_find_t(obj, ray);
-	else if (obj->type == TUBE)
-		t = tube_find_t(obj, ray);
-	return (t);
 }

@@ -6,7 +6,7 @@
 /*   By: afrasch <afrasch@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 13:52:02 by arohmann          #+#    #+#             */
-/*   Updated: 2022/06/29 18:54:51 by afrasch          ###   ########.fr       */
+/*   Updated: 2022/06/30 11:00:10 by afrasch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,24 @@
 double	ft_rand_double(double min, double max)
 {
 	return (min + (rand() / ((RAND_MAX + 1.0) / (max - min))));
+}
+
+double	find_t(t_object *obj, t_ray ray)
+{
+	double	t;
+
+	t = -2.0;
+	if (obj->type == SPHERE)
+		t = sp_find_t(obj, ray);
+	else if (obj->type == BOWL)
+		t = bo_find_t(obj, ray);
+	else if (obj->type == PLANE)
+		t = pl_find_t(obj, ray);
+	else if (obj->type == CIRCLE)
+		t = circ_find_t(obj, ray);
+	else if (obj->type == TUBE)
+		t = tube_find_t(obj, ray);
+	return (t);
 }
 
 static void	call_intersection(t_scene *scene, t_ray *ray, t_object *obj)
